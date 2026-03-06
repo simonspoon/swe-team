@@ -12,6 +12,7 @@ Spawn multiple subagents for concurrent task execution.
 - [ ] Tasks don't produce output another task needs
 - [ ] Total concurrent agents ≤ 5
 - [ ] If dispatching in waves (>5 tasks), write down which tasks go in which wave
+- [ ] **Research source files via Explore agent** — for each file a subagent will modify, dispatch an Explore agent to extract the relevant functions, signatures, and surrounding context. Use those findings to write prompts with exact before/after diffs and preserved behaviors. Do NOT read entire files into the orchestrator's context. Do NOT write prompts from plan descriptions alone.
 
 ```bash
 # Quick check for unblocked tasks
@@ -39,10 +40,6 @@ flowchart LR
 ```
 Execute clipm task <ID>: "<description>"
 
-## Setup
-clipm claim <ID> <agent-name>
-clipm status <ID> in-progress
-
 ## Task
 <specific work instructions>
 
@@ -53,15 +50,12 @@ Choose verification strategy by code type:
   then extract and unit-test pure logic helpers (collision, scoring, AI, parsing)
 - **Library**: import and call key functions with sample data + assert results
 If verification fails: fix the issue and re-verify before proceeding.
-
-## Finish
-clipm note <ID> "Done: <summary>"
-clipm status <ID> done --outcome "<what was done, what was verified, result>"
 ```
 
-**The `## Finish` block must always be the last section.** Subagents tend to skip `clipm status done` when it's buried mid-list. Putting it under a named heading after all work is complete makes it harder to miss.
+**Do NOT include clipm commands in subagent prompts.** Subagents unreliably execute `clipm claim`/`clipm status`/`clipm note` — they skip them, run them in wrong order, or fail silently. The orchestrator owns all clipm state:
 
-**The `--outcome` flag is required.** The outcome should summarize what work was performed, how it was verified, and what the result is. This enforces the do→verify→reply contract.
+1. **Before dispatch**: `clipm claim <id> <agent-name> && clipm status <id> in-progress`
+2. **After agent returns**: Verify the result, then `clipm status <id> done --outcome "..."`
 
 ### ⚠️ CRITICAL: Scope-bound subagent prompts
 
@@ -163,11 +157,7 @@ Not all code can be fully exercised in a headless CI-style environment. Use the 
 ```
 Execute clipm task unke: "Implement auth"
 
-1. clipm claim unke auth-agent
-2. clipm status unke in-progress
-3. Implement the authentication
-4. clipm note unke "Done"
-5. clipm status unke done
+Implement the authentication.
 ```
 
 **Problem**: "Implement the authentication" gives no specifics.
@@ -176,10 +166,6 @@ Execute clipm task unke: "Implement auth"
 
 ```
 Execute clipm task unke: "Implement JWT token generation"
-
-## Setup
-clipm claim unke jwt-impl
-clipm status unke in-progress
 
 ## Task
 - Create src/auth/jwt.ts
@@ -192,10 +178,6 @@ clipm status unke in-progress
 
 ## Verification
 pnpm build && pnpm test
-
-## Finish
-clipm note unke "Done: created jwt.ts with generate/verify functions"
-clipm status unke done --outcome "Created jwt.ts with generateToken/verifyToken, HS256 24h expiry, handles expired tokens and empty userId. pnpm build+test pass."
 ```
 
 ### ✅ Good: Research task
@@ -203,19 +185,10 @@ clipm status unke done --outcome "Created jwt.ts with generateToken/verifyToken,
 ```
 Execute clipm task ozit: "Research search libraries"
 
-## Setup
-clipm claim ozit search-researcher
-clipm status ozit in-progress
-
 ## Task
 - Compare Elasticsearch, MeiliSearch, Typesense for our Node.js app
 - Evaluate: ease of setup, query syntax, performance, hosting options
 - Recommend one with justification
-- Document findings in clipm note
-
-## Finish
-clipm note ozit "Done: Recommend MeiliSearch - <brief reason>"
-clipm status ozit done --outcome "Evaluated 3 search libs. Recommend MeiliSearch: easiest setup, good Node.js SDK, sufficient for our scale."
 ```
 
 ## Agent Naming Conventions
@@ -233,8 +206,8 @@ clipm status ozit done --outcome "Evaluated 3 search libs. Recommend MeiliSearch
 ## After Dispatch
 
 1. Wait for all subagents to complete
-2. Check status: `clipm tree --show-all`
-3. Fix stale tasks: if a completed subagent's task still shows `[TODO]`, run `clipm status <id> done --outcome "<verified: summary>"`
+2. For each completed subagent: verify the result, then `clipm status <id> done --outcome "<verified: summary of agent result>"`
+3. Run `clipm tree` to confirm statuses and check for newly unblocked tasks
 4. Roll up parents: if all children of a parent are `[DONE]`, run `clipm status <parent-id> done --outcome "All child tasks completed"`
 5. Find newly unblocked: `clipm list --status todo --unblocked`
 6. Dispatch next wave

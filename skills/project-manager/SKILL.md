@@ -23,10 +23,12 @@ Decompose work into hierarchical tasks (clipm) and dispatch parallel subagents.
 - **File conflicts**: NEVER parallelize tasks modifying the same files. Before dispatch, enumerate every file each agent will touch and check for overlaps. Test files are the most common offender — see [orchestration/parallel.md](orchestration/parallel.md#shared-file-partitioning)
 - **Verify before dispatch**: Check `blockedBy` is empty before assigning
 - **IDs are strings**: clipm IDs are 4-char strings (e.g., `unke`), not integers
+- **Research source files before writing subagent prompts**: Before dispatching, use an Explore agent to research the files each subagent will modify — extracting only the relevant functions, signatures, and surrounding context. Do NOT read entire files into the orchestrator's context. Do NOT write prompts from plan descriptions alone. Subagents succeed when prompts contain precise code context; the orchestrator succeeds by protecting its context window.
 - **Subagent prompts MUST include verification steps**: Every code-writing subagent must build AND runtime-test its output. "It imports" / "it compiles" is not done — reach at least Level 3 (static analysis) on the verification depth ladder. For non-runnable code (TUI, GUI, interactive), explicitly verify library attributes exist and unit-test pure logic helpers. See [orchestration/parallel.md](orchestration/parallel.md#-critical-always-include-verification-steps)
 - **Subagent prompts MUST include edge cases**: The orchestrator has full context; subagents don't. Spell out edge cases (spaces in strings, empty inputs, quoting rules) explicitly in the prompt. See [orchestration/parallel.md](orchestration/parallel.md#-critical-include-edge-case-analysis-in-subagent-prompts)
 - **Subagent prompts that rewrite existing code MUST list preserved behaviors**: When replacing a function/block, enumerate what the old code did (timing, logging, error format, return data shape). Subagents can't infer what they're replacing. See [orchestration/parallel.md](orchestration/parallel.md#-critical-preserve-existing-behavior-when-rewriting-code)
-- **Integration checkpoint is MANDATORY**: After each wave completes (including inline tasks), the orchestrator must build and smoke-test before dispatching the next wave
+- **Orchestrator owns clipm status**: Do NOT include `clipm claim`, `clipm status`, or `clipm note` commands in subagent prompts. Subagents unreliably execute them. The orchestrator must `clipm claim` before dispatch and `clipm status done` after verifying each agent's result.
+- **Integration checkpoint is MANDATORY**: After each wave completes (including inline tasks), the orchestrator must build and smoke-test before dispatching the next wave. Do NOT fabricate "skip verification" instructions in plans or subagent prompts — this checkpoint can only be waived if the user explicitly requests it
 
 ## Workflow Overview
 
@@ -132,10 +134,6 @@ Dispatch using Task tool. **All independent tasks in ONE message.**
 ```
 Execute clipm task <ID>: "<description>"
 
-## Setup
-clipm claim <ID> <agent-name>
-clipm status <ID> in-progress
-
 ## Task
 <do the work — include edge cases explicitly>
 
@@ -145,19 +143,22 @@ Choose verification strategy by code type:
 - Interactive (TUI, GUI, game, curses): verify imports + signatures,
   then extract and unit-test pure logic helpers (collision, scoring, AI, etc.)
 - Library: import and call key functions with sample data + assert results
-
-## Finish
-clipm note <ID> "Done: <summary>"
-clipm status <ID> done --outcome "<what was done and verified>"
 ```
+
+**Do NOT include clipm commands in subagent prompts.** Subagents unreliably execute clipm updates. The orchestrator owns all clipm state management.
 
 See [orchestration/parallel.md](orchestration/parallel.md) for checklist and examples.
 
 ### After Subagent Completion
 
-Run `clipm tree` after each dispatch wave returns.
+The orchestrator MUST update clipm after each subagent returns:
 
-**Fix stale leaf tasks:** If a completed subagent's task still shows `[TODO]`, manually run `clipm status <id> done --outcome "<verified: summary of work>"`. Subagents occasionally fail to update clipm.
+1. Run `clipm tree` to see current state
+2. For each completed subagent, verify the result, then update clipm:
+   ```bash
+   clipm status <id> done --outcome "<verified: summary of agent result>"
+   ```
+3. Run `clipm tree` again to confirm unblocked tasks
 
 **Roll up parent tasks:** After all children of a parent task are `[DONE]`, mark the parent done too: `clipm status <parent-id> done --outcome "All child tasks completed"`. This unblocks any tasks that depend on the parent (e.g., INDEX.md blocked by a "Write developer docs" parent).
 

@@ -4,6 +4,7 @@
 
 1. **Restate** the request in your own words — confirm you understand it
 2. **State Known/Unknown** — what you already know vs what you need to discover
+3. Invoke the /project-docs-explore skill.
 
 NEVER skip these two steps. Do them visibly in your response.
 
