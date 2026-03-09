@@ -18,7 +18,7 @@ Only execute directly when: 1-2 tightly related files, single concern, under ~10
 
 ## Tech rules
 
-- When scripting, prefer Python over Javascript
+- When building scripts, the order of preference is bash, python, javascript.
 - Python: always use `uv` for package management
 - Javascript/Typescript: always use `pnpm`, never `npm`
 
