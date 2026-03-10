@@ -125,6 +125,21 @@ clipm watch --interval 1s         # Custom poll interval (default 500ms)
 }
 ```
 
+### Mutating Command Output
+
+Commands that modify a task (`status`, `claim`, `unclaim`, `parent`, `unparent`, `block`, `unblock`, `note`) return only the task ID and the changed field:
+
+```json
+{"id": "abcd", "status": "done"}
+{"id": "abcd", "owner": "agent-1"}
+{"id": "abcd", "owner": null}
+{"id": "abcd", "parent": "efgh"}
+{"id": "abcd", "parent": null}
+{"id": "abcd", "blockedBy": ["efgh"]}
+{"id": "abcd", "blockedBy": []}
+{"id": "abcd", "noteCount": 2}
+```
+
 ### `clipm next` Output
 
 ```json
