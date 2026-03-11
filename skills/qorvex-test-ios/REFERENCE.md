@@ -248,7 +248,7 @@ Convert a JSONL action log to a shell script.
 qorvex convert <INPUT_FILE>
 ```
 
-## Simulator Commands
+## Device Commands
 
 ### list-devices
 
@@ -258,6 +258,26 @@ List available simulator devices.
 qorvex list-devices
 ```
 
+### list-physical-devices
+
+List connected physical iOS devices (USB and WiFi).
+
+```bash
+qorvex list-physical-devices
+```
+
+Output shows UDID, device name, and connection type (`USB`, `localNetwork`, `wired`).
+
+### use-device
+
+Select a device (simulator or physical) by UDID.
+
+```bash
+qorvex use-device <UDID>
+```
+
+For physical devices over WiFi (`localNetwork`), this sets up direct mDNS connection (`<DeviceName>.local`). For wired devices, it uses USB tunneling or CoreDevice tunnel.
+
 ### boot-device
 
 Boot a simulator device.
@@ -265,6 +285,16 @@ Boot a simulator device.
 ```bash
 qorvex boot-device <DEVICE_ID>
 ```
+
+### target-info
+
+Get metadata about the target application.
+
+```bash
+qorvex target-info
+```
+
+Returns bundle ID, display name, version, build, and state (running/suspended/not installed).
 
 ## Element Types
 

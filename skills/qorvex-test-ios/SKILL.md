@@ -1,6 +1,6 @@
 ---
 name: qorvex-test-ios
-description: Test and verify iOS applications running in the simulator using the qorvex CLI automation tool. Use when user mentions qorvex, testing iOS apps, simulator testing, UI automation, verifying app behavior, tapping buttons, taking screenshots, or checking UI elements in an iOS simulator.
+description: Test and verify iOS applications running in the simulator or on physical devices using the qorvex CLI automation tool. Use when user mentions qorvex, testing iOS apps, simulator testing, physical device testing, WiFi device automation, UI automation, verifying app behavior, tapping buttons, taking screenshots, or checking UI elements on an iOS simulator or real device.
 ---
 
 # Testing iOS Apps with qorvex
@@ -42,6 +42,45 @@ qorvex tap -l "Submit"
 5. Start a qorvex session with `qorvex start`
 6. Select the device with `qorvex use-device` (choose the `localNetwork` entry)
 7. Set the target bundle ID with `qorvex set-target <BUNDLE_ID>`
+
+## Physical Device Workflow (WiFi)
+
+After completing the Physical Device setup checklist above:
+
+```bash
+# 1. Start session
+qorvex start
+
+# 2. List physical devices — find the UDID
+qorvex list-physical-devices
+
+# 3. Select the device (use the UDID from step 2)
+qorvex use-device <UDID>
+
+# 4. Start the agent (builds + deploys + connects over WiFi)
+qorvex start-agent
+# ⚠️ This can take 30-60s on physical devices. If it times out:
+#   - Ensure device is UNLOCKED
+#   - Retry — first attempt often fails with LaunchServicesDataMismatch
+#   - If agent is already running on device, start-agent detects and reuses it
+
+# 5. Set target app
+qorvex set-target <BUNDLE_ID>
+
+# 6. Launch the app — start-target is SIMULATOR ONLY
+# On physical devices, use devicectl instead:
+xcrun devicectl device process launch --device <UDID> <BUNDLE_ID>
+
+# 7. Now use tap, screenshot, screen-info, etc. as normal
+qorvex screenshot 2>/dev/null | base64 -d > /tmp/screenshot.png
+```
+
+### Physical Device Gotchas
+
+- **`start-target` / `stop-target` are simulator-only.** Use `xcrun devicectl device process launch` / `xcrun devicectl device process terminate` for physical devices.
+- **`screen-info` is very slow on SpringBoard.** Always launch your target app BEFORE calling `screen-info`. The home screen has thousands of elements and can hang for minutes.
+- **Latency is ~1-2s per command** over WiFi (vs near-instant on simulator). This is normal.
+- **Agent timeout on first deploy**: The first `start-agent` after a clean build often takes longer. If it times out, just retry.
 
 ## Common Operations
 
@@ -85,6 +124,12 @@ qorvex tap-location 200 500
 qorvex send-keys "Hello World"
 ```
 
+After typing, the keyboard stays visible and covers the bottom of the screen. **Dismiss it before tapping other elements:**
+
+```bash
+qorvex swipe down   # dismisses keyboard
+```
+
 ### Wait for Elements
 
 ```bash
@@ -116,8 +161,13 @@ qorvex swipe right
 ### Manage the Target App
 
 ```bash
+# Simulator only:
 qorvex start-target    # Launch the app
 qorvex stop-target     # Terminate the app
+
+# Physical device:
+xcrun devicectl device process launch --device <UDID> <BUNDLE_ID>
+xcrun devicectl device process terminate --device <UDID> <BUNDLE_ID>
 ```
 
 ## Verification Workflow
@@ -189,6 +239,14 @@ qorvex swipe up
 - **Stale session**: Run `qorvex status` to check; `qorvex start` to restart
 - **Architecture**: On Intel Macs, build for `iossimulator-x64`; on Apple Silicon, `iossimulator-arm64`
 - **Physical device hostname**: Use `<Name>.local` (Bonjour), NOT `<Name>.coredevice.local`
+- **`start-target` is simulator-only**: On physical devices, use `xcrun devicectl device process launch`
+- **`screen-info` on SpringBoard is very slow**: Launch target app first, then query
+- **Keyboard covers tab bar / buttons**: After tapping a text field, the on-screen keyboard hides elements behind it. Dismiss the keyboard before tapping anything below it. Use `qorvex swipe down` to dismiss, then retry the tap. Do NOT attempt to tap obscured elements — they will fail with "not found".
+- **Switch/Toggle elements don't respond to tap**: iOS Switch accessibility frames span the full row width (label + switch). The tap center lands on the label area, not the switch control. Workaround: use `qorvex tap-location` with coordinates targeting the right side of the switch (use `screen-info` frame data: `x + width - 30, y + height/2`).
+- **`list-physical-devices` shows "Unknown" for device name**: usbmuxd doesn't always have the human-readable name. Run `xcrun devicectl list devices` to confirm the device name, model, and connection type.
+- **Label matching is exact, not substring**: `get-value -l "Tapped:"` will NOT find an element with label `"Tapped: 3"`. For dynamic labels that include their value, use `screen-info` and grep for the text, or use the element's accessibility ID instead.
+- **Tapping a label doesn't focus the input field**: A `StaticText` element (e.g., "Password" above a text field) is a separate element from the field itself. Tapping it does nothing useful. Use `screen-info` to find the actual `TextField` or `SecureTextField` element and tap it by accessibility ID.
+- **Dev builds vs installed binary**: When running from the repo (not installed), use `cargo run --bin qorvex --` instead of `qorvex`. The `--` separator is required before flags like `-l`, `-T`, `-o`.
 
 ## Troubleshooting
 
