@@ -102,4 +102,17 @@ Parallel opportunities:
 - uvwx & cdef (engine setup + API can start together)
 - klmn & opqr (unit + E2E tests)
 
+## iOS Features
+
+If the feature involves iOS UI changes, add a verification task using `/qorvex-test-ios`:
+
+```bash
+clipm add "Verify iOS UI changes" --parent ghij \
+  --action "Run qorvex screenshot + screen-info to verify UI" \
+  --verify "Screenshots show expected layout, elements are tappable" \
+  --result "Before/after screenshots confirming feature works"
+```
+
+This task should depend on the implementation phase and run as part of (or alongside) testing.
+
 Back to [INDEX.md](INDEX.md) | [SKILL.md](../SKILL.md)

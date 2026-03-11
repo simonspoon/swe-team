@@ -5,6 +5,7 @@
 | **Parallel Dispatch** | Multiple independent tasks ready | [parallel.md](parallel.md) |
 | **Dependencies** | Tasks must wait for others | [dependencies.md](dependencies.md) |
 | **Recovery** | Resuming interrupted project | [recovery.md](recovery.md) |
+| **Templates** | Writing subagent prompts, verification depth | [templates.md](templates.md) |
 
 ## Key Principles
 

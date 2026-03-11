@@ -132,23 +132,9 @@ Claim the task (`clipm claim <ID> orchestrator`), do the work, mark done with `c
 
 Dispatch using Task tool. **All independent tasks in ONE message.**
 
-```
-Execute clipm task <ID>: "<description>"
+See [orchestration/templates.md](orchestration/templates.md) for prompt template, verification depth ladder, and research-before-dispatch checklist.
 
-## Task
-<do the work — include edge cases explicitly>
-
-## Verification
-Choose verification strategy by code type:
-- Runnable (CLI, API, script): build + run end-to-end with sample input
-- Interactive (TUI, GUI, game, curses): verify imports + signatures,
-  then extract and unit-test pure logic helpers (collision, scoring, AI, etc.)
-- Library: import and call key functions with sample data + assert results
-```
-
-**Do NOT include clipm commands in subagent prompts.** Subagents unreliably execute clipm updates. The orchestrator owns all clipm state management.
-
-See [orchestration/parallel.md](orchestration/parallel.md) for checklist and examples.
+**Do NOT include clipm commands in subagent prompts.** The orchestrator owns all clipm state management.
 
 ### After Subagent Completion
 

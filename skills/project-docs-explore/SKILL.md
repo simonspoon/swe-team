@@ -17,7 +17,7 @@ Orient yourself using a project's progressive-disclosure docs before writing cod
 Glob for `docs/INDEX.md` in the current working directory.
 
 - **Found** → Continue to Step 2.
-- **Not found** → Stop. This project does not use progressive-disclosure docs. Fall back to README and source code.
+- **Not found** → Fall back to README.md. If no README either, report to user: "No project documentation found. Proceeding with code-level exploration only." See [templates/index-template.md](templates/index-template.md) for the expected INDEX.md format.
 
 ## Step 2: Read INDEX.md
 

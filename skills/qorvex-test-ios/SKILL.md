@@ -5,9 +5,9 @@ description: Test and verify iOS applications running in the simulator using the
 
 # Testing iOS Apps with qorvex
 
-Automate and verify iOS application UI in the simulator using the `qorvex` CLI.
+Automate and verify iOS application UI on simulators and physical devices using the `qorvex` CLI.
 
-## Quick Start
+## Quick Start (Simulator)
 
 ```bash
 # Start a qorvex session
@@ -28,11 +28,20 @@ qorvex tap -l "Submit"
 
 ## Setup Checklist
 
-Before testing, ensure:
+### Simulator
 1. A simulator is booted (`xcrun simctl list devices booted`)
 2. The app is installed and running on the simulator
 3. Start a qorvex session with `qorvex start`
 4. Set the target bundle ID with `qorvex set-target <BUNDLE_ID>`
+
+### Physical Device (WiFi)
+1. Device and Mac are on the same WiFi network
+2. **UI Automation** is enabled on device: Settings > Developer > Enable UI Automation
+3. Device is **unlocked** and stays unlocked during testing
+4. App is code-signed for the physical device (see [troubleshooting.md](troubleshooting.md#code-signing-errors))
+5. Start a qorvex session with `qorvex start`
+6. Select the device with `qorvex use-device` (choose the `localNetwork` entry)
+7. Set the target bundle ID with `qorvex set-target <BUNDLE_ID>`
 
 ## Common Operations
 
@@ -179,6 +188,11 @@ qorvex swipe up
 - **Multiple elements with same label**: Use `-T` to filter by type (e.g., `-T Button`)
 - **Stale session**: Run `qorvex status` to check; `qorvex start` to restart
 - **Architecture**: On Intel Macs, build for `iossimulator-x64`; on Apple Silicon, `iossimulator-arm64`
+- **Physical device hostname**: Use `<Name>.local` (Bonjour), NOT `<Name>.coredevice.local`
+
+## Troubleshooting
+
+See [troubleshooting.md](troubleshooting.md) for device connectivity, code signing, and common errors.
 
 ## Reference
 

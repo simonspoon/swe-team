@@ -110,4 +110,11 @@ clipm block uvwx ghij
 
 Note: Fix tasks yzab & cdef can run in parallel once investigation completes.
 
+## iOS Bugs
+
+For bugs involving iOS UI, use `/qorvex-test-ios` in the investigation and verification phases:
+
+- **Reproduce**: `qorvex screenshot` + `screen-info` to capture the broken state
+- **Verify fix**: Screenshot after fix, compare with broken state, confirm elements behave correctly
+
 Back to [INDEX.md](INDEX.md) | [SKILL.md](../SKILL.md)
