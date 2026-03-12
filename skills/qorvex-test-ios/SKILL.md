@@ -39,8 +39,8 @@ qorvex tap -l "Submit"
 2. **UI Automation** is enabled on device: Settings > Developer > Enable UI Automation
 3. Device is **unlocked** and stays unlocked during testing
 4. App is code-signed for the physical device (see [troubleshooting.md](troubleshooting.md#code-signing-errors))
-5. Start a qorvex session with `qorvex start`
-6. Select the device with `qorvex use-device` (choose the `localNetwork` entry)
+5. Find the device UDID with `qorvex list-physical-devices`
+6. Start a qorvex session with `qorvex start --device <UDID>`
 7. Set the target bundle ID with `qorvex set-target <BUNDLE_ID>`
 
 ## Physical Device Workflow (WiFi)
@@ -48,30 +48,27 @@ qorvex tap -l "Submit"
 After completing the Physical Device setup checklist above:
 
 ```bash
-# 1. Start session
-qorvex start
-
-# 2. List physical devices — find the UDID
+# 1. List physical devices — find the UDID
 qorvex list-physical-devices
 
-# 3. Select the device (use the UDID from step 2)
-qorvex use-device <UDID>
+# 2. Start session with the device selected
+qorvex start --device <UDID>
 
-# 4. Start the agent (builds + deploys + connects over WiFi)
+# 3. Start the agent (builds + deploys + connects over WiFi)
 qorvex start-agent
 # ⚠️ This can take 30-60s on physical devices. If it times out:
 #   - Ensure device is UNLOCKED
 #   - Retry — first attempt often fails with LaunchServicesDataMismatch
 #   - If agent is already running on device, start-agent detects and reuses it
 
-# 5. Set target app
+# 4. Set target app
 qorvex set-target <BUNDLE_ID>
 
-# 6. Launch the app — start-target is SIMULATOR ONLY
+# 5. Launch the app — start-target is SIMULATOR ONLY
 # On physical devices, use devicectl instead:
 xcrun devicectl device process launch --device <UDID> <BUNDLE_ID>
 
-# 7. Now use tap, screenshot, screen-info, etc. as normal
+# 6. Now use tap, screenshot, screen-info, etc. as normal
 qorvex screenshot 2>/dev/null | base64 -d > /tmp/screenshot.png
 ```
 
