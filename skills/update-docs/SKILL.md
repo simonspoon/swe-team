@@ -53,6 +53,13 @@ Determine the scope of code changes using one of these strategies:
 **If changes were just made in this session:**
 - You already know what changed — list the modified files and what was added/removed/renamed
 
+**If there are uncommitted working tree changes:**
+```bash
+git status
+git diff HEAD --name-only -- ':!docs/' ':!*.md'
+git diff HEAD -- ':!docs/' ':!*.md'
+```
+
 **If asked to sync docs generally:**
 ```bash
 # Find the last commit that touched docs
@@ -68,6 +75,8 @@ git diff <that-commit>..HEAD --stat -- ':!docs/' ':!*.md'
 git diff main..HEAD --name-only
 git diff main..HEAD --stat
 ```
+
+**Filter out noise:** Skip lock files (`Cargo.lock`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`), generated files, and build artifacts. These never require doc updates.
 
 Read the changed source files to understand what actually changed — don't rely on filenames alone.
 

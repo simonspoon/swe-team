@@ -75,6 +75,15 @@ flowchart TD
     N -->|Yes| Q[Report results]
 ```
 
+## CLAUDE.md Compliance Check
+
+Before creating tasks, verify you have completed the mandatory steps from CLAUDE.md:
+
+1. **If the task involves writing code** and `/software-engineering` has not been invoked in this conversation, invoke it NOW. It loads design preferences and domain knowledge that affect architecture decisions and subagent prompts. Skipping it means subagents may violate project conventions.
+2. **If `/project-docs-explore` has not been invoked**, invoke it NOW. It surfaces architecture docs that inform task decomposition.
+
+Do NOT proceed to task creation until these are satisfied.
+
 ## Plan Mode Interop
 
 If you already created a plan file (via plan mode) before invoking this skill, **use the plan as your task source** — don't re-research. Convert the plan's steps directly into limbo tasks with dependencies. The plan file is your Phase 0 output; skip to task creation.

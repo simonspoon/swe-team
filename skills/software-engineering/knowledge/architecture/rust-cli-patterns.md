@@ -1,5 +1,5 @@
 # Rust CLI Architecture Patterns
-Last updated: 2026-03-14
+Last updated: 2026-03-15
 Sources: experience (dante project — Kraken trading CLI)
 
 ## Summary
@@ -61,13 +61,56 @@ fn main() {
 
 ### Recommended crate stack
 
-| Purpose | Crate | Notes |
-|---------|-------|-------|
-| CLI parsing | `clap` (derive) | Use `ValueEnum` for enums as positional args |
-| HTTP | `reqwest` (blocking) | Only use async if the CLI does parallel requests |
-| Serialization | `serde` + `serde_json` | |
-| Errors | `thiserror` | |
-| Crypto signing | `hmac`, `sha2`, `base64` | If the API needs request signing |
+| Purpose | Crate | Version | Notes |
+|---------|-------|---------|-------|
+| CLI parsing | `clap` (derive) | 4.x | Use `ValueEnum` for enums as positional args |
+| HTTP | `reqwest` (blocking) | 0.13.x | `query` feature is opt-in since 0.13. Only use async if the CLI does parallel requests |
+| Serialization | `serde` + `serde_json` | 1.x | |
+| Errors | `thiserror` | 2.x | |
+| Crypto signing | `hmac`, `sha2`, `base64` | 0.12/0.10/0.22 | If the API needs request signing |
+
+> For current version details and upgrade guidance, see [Rust Dependency Management](../tooling/rust-dependency-management.md)
+
+### Feature-gated optional subsystems
+
+When adding a heavy optional subsystem (e.g., an embedded HTTP server) to a CLI:
+
+- Gate the module with `#[cfg(feature = "...")]` on the `mod` declaration in main.rs
+- Gate enum variants that reference the feature's types with the same `#[cfg(feature = "...")]`
+- Declare heavy deps as `optional = true` and use `dep:` syntax in the feature list:
+  ```toml
+  [features]
+  paper = ["dep:axum", "dep:tokio", "dep:uuid"]
+
+  [dependencies]
+  axum = { version = "0.8", optional = true }
+  ```
+- This keeps the base binary lean — users who don't need the feature don't pay for the compile time or binary size
+
+### Transparent backend routing via constructors
+
+When adding an alternate backend (e.g., paper trading server alongside real API):
+
+- Add a new constructor to the client struct (`paper(url)`) alongside existing ones (`public()`, `authenticated()`)
+- Create a single routing helper that checks the env var and returns the right client:
+  ```rust
+  fn private_client() -> Result<Client, Error> {
+      match env::var("ALTERNATE_URL") {
+          Ok(url) => Ok(Client::paper(&url)),
+          Err(_) => Client::authenticated(),
+      }
+  }
+  ```
+- Replace all direct `Client::authenticated()` calls with the helper
+- No output formatters, CLI parsing, or other code needs to change — the alternate backend returns compatible response shapes
+
+### Mixing blocking reqwest with async axum
+
+When an axum handler needs to call `reqwest::blocking`:
+
+- Use `tokio::task::spawn_blocking` to avoid blocking the async runtime
+- The blocking client does the HTTP call inside the spawned task
+- Handle the `JoinError` from `spawn_blocking` gracefully (return error response, don't unwrap)
 
 ### Testing strategy
 
@@ -78,4 +121,5 @@ fn main() {
 
 ## Related Topics
 
-- None yet
+- [Rust Dependency Management](../tooling/rust-dependency-management.md)
+- [Rust Testing Strategies](../testing/rust-testing-strategies.md)

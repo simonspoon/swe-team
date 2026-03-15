@@ -5,4 +5,4 @@ Last updated: 2026-03-14
 |----------|------|---------|
 | style | preferences/style.md | 0 |
 | tooling | preferences/tooling.md | 0 |
-| lessons | preferences/lessons.md | 0 |
+| lessons | preferences/lessons.md | 2 |

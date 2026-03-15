@@ -9,16 +9,21 @@ A self-evolving knowledge base that starts minimal and grows by researching topi
 
 **Skill root**: `~/.claude/skills/software-engineering/`
 
+## Critical Requirements
+
+- **Never upgrade project dependencies, toolchains, frameworks, or libraries without explicitly asking the user first.** Even if versions are outdated, present findings and ask for confirmation before making any changes.
+
 ## Activation Protocol
 
 On every activation:
 
 1. Read `preferences/INDEX.md`. If any category has >0 entries, read those preference files. If all are 0, skip to step 2.
-2. Determine the SE domain(s) of the current task: architecture, debugging, patterns, testing, performance, security, code-review, or other.
+2. Determine the SE domain(s) of the current task: architecture, debugging, patterns, testing, performance, security, code-review, tooling, or other.
 3. Read `knowledge/INDEX.md`. If a relevant entry exists, read the knowledge file(s). If the index is empty, skip to step 5.
 4. Apply combined knowledge to the task. **Preferences override general knowledge when they conflict.**
-5. If knowledge gaps are detected AND the task involves design decisions (not just implementation), follow the Research Protocol.
-6. If the user expresses a preference or lesson, follow the Preference Capture Protocol.
+5. **Staleness check**: If any read knowledge file has a `Last researched` date older than 3 months, flag it as potentially stale. If the task depends on version-specific info (e.g., library versions, framework features), re-research before relying on that data.
+6. If knowledge gaps are detected AND the task involves design decisions (not just implementation), follow the Research Protocol.
+7. If the user expresses a preference or lesson, follow the Preference Capture Protocol.
 
 ## Research Protocol
 
@@ -60,6 +65,7 @@ Every file in `knowledge/` follows this structure:
 ```markdown
 # [Topic Title]
 Last updated: [YYYY-MM-DD]
+Last researched: [YYYY-MM-DD] (required for tooling/library/framework files)
 Sources: [URLs or "experience"]
 
 ## Summary
@@ -88,7 +94,8 @@ After every activation, check `meta/evolution-log.md` entry count.
 **Guardrails**:
 - **150 lines per file max.** If a file exceeds this, split into sub-topic files.
 - **30 knowledge files max.** If exceeded, consolidate smallest/most-related files before creating new ones.
-- **Staleness**: If a file's "Last updated" date is 6+ months old and the topic comes up, re-research and refresh it.
+- **Staleness (general)**: If a file's "Last updated" date is 6+ months old and the topic comes up, re-research and refresh it.
+- **Staleness (tooling/libraries/frameworks)**: If a file's "Last researched" date is 3+ months old and the task depends on version-specific info, re-research before relying on it. Update the "Last researched" date after refreshing.
 - **Preference deduplication**: If a new preference contradicts an existing one, replace the old one (latest wins).
 
 ## Index Formats
