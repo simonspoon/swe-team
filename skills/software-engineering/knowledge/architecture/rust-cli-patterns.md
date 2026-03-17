@@ -1,5 +1,5 @@
 # Rust CLI Architecture Patterns
-Last updated: 2026-03-15
+Last updated: 2026-03-16
 Sources: experience (dante project — Kraken trading CLI)
 
 ## Summary
@@ -111,6 +111,17 @@ When an axum handler needs to call `reqwest::blocking`:
 - Use `tokio::task::spawn_blocking` to avoid blocking the async runtime
 - The blocking client does the HTTP call inside the spawned task
 - Handle the `JoinError` from `spawn_blocking` gracefully (return error response, don't unwrap)
+
+### Background polling tasks in axum servers
+
+When a server needs to periodically check external state (e.g., polling an API to fill pending orders):
+
+- Spawn via `tokio::spawn` in `run_server` before `axum::serve`
+- Use `tokio::time::interval` for the cadence; skip the first immediate tick
+- Wrap blocking network calls in `spawn_blocking` inside the async loop
+- **Release the mutex before network I/O**: lock → read needed data → unlock → make API call → lock → apply results. This prevents blocking request handlers during the network call
+- Batch API calls where possible (e.g., one multi-pair ticker request instead of N single-pair requests)
+- Bail early when there's no work (e.g., no pending orders → skip the API call entirely)
 
 ### Testing strategy
 

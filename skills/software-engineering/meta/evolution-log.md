@@ -12,3 +12,4 @@ Tracks additions and changes to the knowledge base.
 | 2026-03-15 | modified | SKILL.md | Added critical requirement: ask before upgrading deps. Added staleness tracking (Last researched date, 3-month threshold for tooling). Added tooling domain to activation protocol |
 | 2026-03-15 | modified | knowledge/architecture/rust-cli-patterns.md | Added: feature-gated optional subsystems, transparent backend routing via constructors, mixing blocking reqwest with async axum |
 | 2026-03-15 | modified | preferences/lessons.md | Added 2 lessons: prefer stdlib over heavyweight deps, mutex poison recovery in servers |
+| 2026-03-16 | modified | knowledge/architecture/rust-cli-patterns.md | Added: background polling tasks in axum servers — lock/unlock/network/lock pattern, interval usage, batched API calls, early bail |

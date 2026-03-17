@@ -8,7 +8,6 @@ triggers:
   - docs are stale
   - update the readme
   - /update-docs
-model: sonnet
 ---
 
 # Update Docs
