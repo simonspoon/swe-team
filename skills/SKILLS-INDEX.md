@@ -17,6 +17,7 @@ Quick reference for all active skills — when to use each and how they compose.
 | **devops** | CI/CD pipelines, Docker, deployment scripts, infrastructure | GitHub Actions, CI/CD, Docker, deployment, infrastructure, pipelines | test-engineer (CI test step), code-reviewer (PR checks) |
 | **agent-composer** | Generate agent .md definitions from role descriptions and skills | Creating a new agent, composing an agent from skills, generating agent definitions | skill-creator (skill structure), SKILLS-INDEX.md (skill discovery) |
 | **team-evaluator** | Benchmark and score team capabilities, identify gaps | Evaluating team performance, running benchmarks, auditing capabilities, gap analysis | All skills (benchmarks exercise them), skill-reflection (improvement loop) |
+| **session-handoff** | Update SESSION_STATE.md to preserve context across sessions | End of session, wrapping up, user says goodbye, significant milestone | software-engineering (lessons), all projects (status updates) |
 
 ## Composition Patterns
 
