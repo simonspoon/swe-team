@@ -36,7 +36,7 @@ limbo show <id>
 **If owner is stale/unknown**: Reset the task:
 ```bash
 limbo note <id> "Reset: previous agent abandoned"
-limbo unclaim <id>
+limbo unclaim <id>              # ← use `unclaim`, NOT `claim` with empty string
 limbo status <id> todo
 ```
 

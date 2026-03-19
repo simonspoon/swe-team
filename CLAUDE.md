@@ -9,13 +9,15 @@
 
 NEVER skip these steps. Do them visibly in your response. If you catch yourself about to write code without having invoked `/software-engineering`, STOP and invoke it first.
 
-## MANDATORY: Route multi-file tasks to /project-manager
+## MANDATORY: Route to agents when applicable
 
+**Multi-file tasks → `project-manager` agent**
 Before writing code, check: does this task create or modify 3+ files, span 2+ concerns, require exploration, produce 100+ lines, or have independent parts?
-
-If ANY of those are true → invoke `/project-manager` FIRST. Do NOT execute directly.
-
+If ANY of those are true → launch the `project-manager` agent. Do NOT execute directly.
 Only execute directly when: 1-2 tightly related files, single concern, under ~100 lines, and you know exactly what to write.
+
+**Skill training/testing → `skill-trainer` agent**
+When the user asks to train, test, validate, calibrate, or harden a skill → launch the `skill-trainer` agent.
 
 ## Tech rules
 

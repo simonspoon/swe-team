@@ -30,9 +30,9 @@ limbo add "Task name" -d "Detailed description" \
 ## Task Status
 
 ```bash
-limbo status <id> todo         # Set to todo
-limbo status <id> in-progress  # Set to in-progress
-limbo status <id> done --outcome "What was done and verified"  # Set to done (--outcome required)
+limbo status <id> todo         # Set to todo (no --outcome)
+limbo status <id> in-progress  # Set to in-progress (no --outcome)
+limbo status <id> done --outcome "What was done and verified"  # Set to done (--outcome REQUIRED, only for done)
 ```
 
 ## Task Ownership
