@@ -1,6 +1,5 @@
 ---
 name: project-docs-explore
-model: sonnet
 description: >
   Explore and understand a project's documentation structure. Use this skill
   proactively when onboarding to a new project, exploring an unfamiliar

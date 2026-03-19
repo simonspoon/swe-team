@@ -7,7 +7,6 @@ triggers:
   - set up documentation
   - progressive disclosure docs
   - /setup-docs
-model: sonnet
 ---
 
 # Setup Docs
