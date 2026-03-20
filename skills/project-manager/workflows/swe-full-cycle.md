@@ -14,11 +14,14 @@ Use this workflow when the task requires the full engineering cycle — not just
 |-------|-------|---------|
 | Plan | `/software-engineering` | Load conventions, architecture knowledge |
 | Plan | `/project-docs-explore` | Understand existing codebase |
+| Plan | `/code-index` | Generate structural map of unfamiliar code |
 | Implement | (subagents) | Write code per task decomposition |
 | Test | `/test-engineer` | Generate tests, run suites, analyze coverage |
 | Review | `/code-reviewer` | Review diffs for bugs, security, conventions |
+| Review | `/simplify` | Analyze changed code for unnecessary complexity |
 | CI/CD | `/devops` | Create/update CI pipeline if needed |
 | Retrospective | `/software-engineering`, `/skill-reflection` | Capture lessons, fix skill/workflow gaps |
+| Deliver | `/update-docs` | Update project docs to reflect changes |
 
 ## Task Hierarchy Pattern
 
@@ -26,7 +29,7 @@ Use this workflow when the task requires the full engineering cycle — not just
 SWE: <description>
 ├── Plan
 │   ├── Research & understand requirements
-│   ├── Explore codebase (project-docs-explore)
+│   ├── Explore codebase (project-docs-explore, code-index)
 │   ├── Design approach
 │   └── Define test plan (acceptance criteria)
 ├── Implement
@@ -38,6 +41,7 @@ SWE: <description>
 │   └── Coverage analysis
 ├── Review
 │   ├── Code review (code-reviewer)
+│   ├── Simplify pass (simplify) — optional
 │   └── Address review feedback
 ├── CI/CD (if needed)
 │   └── Update pipeline (devops)
@@ -47,6 +51,7 @@ SWE: <description>
 │   ├── Answer 3 questions
 │   └── Create follow-up tasks for findings
 └── Deliver
+    ├── Update docs (update-docs)
     ├── Commit
     └── Create PR
 ```
@@ -61,6 +66,7 @@ Load context before decomposing:
 # Load skills (orchestrator does this, not subagents)
 # /software-engineering — conventions and preferences
 # /project-docs-explore — architecture docs
+# /code-index — structural map of unfamiliar areas (optional, use when codebase is new)
 ```
 
 Create the root and plan tasks:
@@ -140,7 +146,9 @@ The code review task should:
 3. Produce structured output (Critical/Warnings/Info/Verdict)
 4. If verdict is REQUEST CHANGES, the "Address feedback" task becomes active
 
-If review passes with APPROVE, mark "Address feedback" as done with outcome "No changes needed."
+**Simplify pass (optional):** After code review, run `/simplify` on changed files to catch unnecessary complexity (dead code, over-abstraction, duplication). Skip this for trivial changes. If simplify finds issues, fold them into the "Address feedback" task.
+
+If review passes with APPROVE and no simplify findings, mark "Address feedback" as done with outcome "No changes needed."
 
 ### 5. CI/CD Phase (Optional)
 
@@ -229,35 +237,41 @@ Follow-up: [task created / none needed]
 
 ### 8. Deliver Phase
 
+Before committing, update docs to reflect the changes being shipped:
+
 ```bash
+limbo add "Update docs" --parent dlvr                    # → docs
 limbo add "Create commit" --parent dlvr                  # → cmit
 limbo add "Create PR" --parent dlvr                      # → pr
 
+limbo block docs cmit    # Commit after docs updated
 limbo block cmit pr      # PR after commit
 ```
+
+Run `/update-docs` for the docs task — it discovers existing doc structure and makes targeted updates for affected docs. Skip if changes are purely internal with no doc-facing impact.
 
 ## Dependency Graph
 
 ```
 req ──┐
-      ├→ dsgn → tpln → impl ──→ test ──→ rev ──→ gate ──→ retro ──→ dlvr
+      ├→ dsgn → tpln → impl ──→ test ──→ rev ──→ gate ──→ retro ──→ dlvr (docs → cmit → pr)
 expl ─┘                     │         ↗
                              └→ cicd ─┘ (optional)
 ```
 
 ## Wave Execution
 
-- **Wave 1**: req + expl (parallel research)
+- **Wave 1**: req + expl (parallel research; use `/code-index` if codebase is unfamiliar)
 - **Wave 2**: dsgn (depends on both)
 - **Wave 3**: tpln (test plan from design)
 - **Wave 4**: core + supp (parallel implementation)
 - **Wave 5**: tgen + cicd (parallel — tests + CI)
 - **Wave 6**: trun → tcov (sequential test execution)
 - **Wave 7**: crev (review all changes)
-- **Wave 8**: addr (if review has feedback)
+- **Wave 8**: simplify pass + addr (if review/simplify has feedback)
 - **Wave 9**: gate (verify all phases, produce evidence)
 - **Wave 10**: retro (retrospective — capture lessons, create follow-ups)
-- **Wave 11**: cmit → pr (deliver)
+- **Wave 11**: docs → cmit → pr (update docs, commit, deliver)
 
 ## Review Loop
 
@@ -301,6 +315,7 @@ limbo add "Retrospective" --parent root                   # → retro
 
 # Deliver
 limbo add "Deliver search" --parent root                  # → dlvr
+limbo add "Update docs" --parent dlvr                     # → docs
 limbo add "Commit changes" --parent dlvr                  # → cmit
 limbo add "Create PR" --parent dlvr                       # → pr
 
@@ -316,6 +331,7 @@ limbo block crev addr
 limbo block rev gate
 limbo block gate retro
 limbo block retro dlvr
+limbo block docs cmit
 limbo block cmit pr
 ```
 
