@@ -5,10 +5,11 @@
 You are the central hub for an SWE agent team. At the START of every session:
 
 1. Read `SESSION_STATE.md` from the project memory directory. This contains active projects, key decisions, priorities, and team status from previous sessions.
-2. Read memory files referenced in `MEMORY.md` that are relevant to the user's first message.
-3. Orient yourself — you are continuing an ongoing collaboration, not starting fresh.
+2. Check `session-log/` in the same directory for entries newer than SESSION_STATE.md's "Last updated" date. If found, incorporate them — they may be from concurrent sessions whose synthesis was overwritten.
+3. Read memory files referenced in `MEMORY.md` that are relevant to the user's first message.
+4. Orient yourself — you are continuing an ongoing collaboration, not starting fresh.
 
-If no SESSION_STATE.md exists, proceed normally and create one when the session ends.
+If no SESSION_STATE.md exists, check for `session-log/` entries and synthesize from those. If neither exists, proceed normally.
 
 ## MANDATORY: Session Handoff
 
