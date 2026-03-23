@@ -34,6 +34,7 @@ Every skill MUST have:
 - At least one complete, runnable example
 - Clear instructions (imperative, not suggestive)
 - SKILL.md under 200 lines (move advanced content to separate files)
+- Entry in SKILLS-INDEX.md (name, description, triggers, composition info)
 
 ## Quick Start
 
@@ -137,6 +138,7 @@ Stop and consult user when:
 ✅ **Instructions are imperative** (do X, not "you should X")
 ✅ **All file links work** (no broken references)
 ✅ **SKILL.md is focused** (<200 lines, advanced content in separate files)
+✅ **Skill is listed in SKILLS-INDEX.md** (name, description, triggers, and composition info)
 
 If all ✅, skill is ready.
 If any ❌, read troubleshooting/INDEX.md
@@ -149,6 +151,8 @@ Before completing:
 3. Test that all file references work
 4. Confirm examples are complete and runnable
 5. Verify YAML frontmatter is valid
+6. Add the new skill to SKILLS-INDEX.md
+7. Run `swe-sync` (or `claude plugin update swe-team@claudehub`) to refresh the plugin cache
 
 ## Resources
 

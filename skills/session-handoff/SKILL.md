@@ -20,17 +20,19 @@ Multiple Claude Code sessions can run concurrently against the same project. A r
 
 ## Activation Protocol
 
-### Step 0: Check for uncommitted changes in key repos
+### Step 0: Check for uncommitted changes in all touched repos
 
-Before writing the log entry, check whether claude-setup (the skill/agent repo) has uncommitted changes:
+Before writing the log entry, enumerate every repo touched during this session and check each one for uncommitted changes. Always include `~/claudehub/swe-team/` (the skill/agent repo). Add any other project repos where files were modified during the session.
 
 ```bash
-cd ~/Documents/Development/opensource/claude-setup && git status --porcelain
+# Always check swe-team; add other repos touched in this session
+for repo in ~/claudehub/swe-team <other-repos-touched-this-session>; do
+  echo "=== $repo ==="
+  git -C "$repo" status --porcelain
+done
 ```
 
-If there is output (dirty working tree), commit and push those changes using `/swe-team:git-commit` before proceeding. Skills and knowledge evolve during sessions and changes accumulate — leaving them uncommitted means the remote drifts from the local state.
-
-This applies to any repo where the session modified files but didn't commit (e.g., skill updates, knowledge additions, CI fixes). Check every repo you touched during the session.
+For each repo with output (dirty working tree), commit and push those changes using `/swe-team:git-commit` before proceeding. Skills and knowledge evolve during sessions and changes accumulate — leaving them uncommitted means the remote drifts from the local state.
 
 ### Step 1: Write a log entry
 
