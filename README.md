@@ -71,6 +71,18 @@ Skills are specialized capabilities invoked with `/skill-name`. They provide dom
 |-------|---------|-------------|
 | **devops** | `/devops` | Creates and manages CI/CD pipelines, Docker configs, deployment scripts, Terraform, and infrastructure. |
 
+### Desktop Testing (Loki)
+
+| Skill | Command | Description |
+|-------|---------|-------------|
+| **loki-test-desktop** | `/loki-test-desktop` | Tests and verifies desktop apps on macOS using loki CLI automation via the Accessibility API. |
+
+### Web Testing (Khora)
+
+| Skill | Command | Description |
+|-------|---------|-------------|
+| **khora-test-web** | `/khora-test-web` | Tests and verifies web apps using khora CLI automation via Chrome DevTools Protocol. |
+
 ### iOS Testing (Qorvex)
 
 | Skill | Command | Description |
@@ -92,6 +104,51 @@ Commands are lightweight, single-purpose instructions invoked with `/command-nam
 | Command | Description |
 |---------|-------------|
 | **git-commit** | Stages and commits changes with a clear, concise commit message following conventional style. |
+
+---
+
+## Tool Setup
+
+Several skills depend on external CLI tools. Install them so the skills work out of the box.
+
+### Homebrew (recommended)
+
+All tools are available from the `simonspoon/tap` tap:
+
+```bash
+brew tap simonspoon/tap
+
+# Task management (used by project-manager)
+brew install simonspoon/tap/limbo
+
+# Conversation search (used by nyx skill)
+brew install simonspoon/tap/nyx
+
+# iOS testing (used by qorvex-test-ios, qorvex-app-explorer)
+brew install simonspoon/tap/qorvex
+
+# Desktop testing (used by loki-test-desktop)
+brew install simonspoon/tap/loki
+
+# Web testing (used by khora-test-web)
+brew install simonspoon/tap/khora
+
+# UI design canvas (used by wisp skills)
+brew install simonspoon/tap/wisp-cli
+```
+
+### From GitHub Releases
+
+Each tool publishes pre-built binaries on its GitHub Releases page:
+
+| Tool | Repository |
+|------|------------|
+| limbo | [simonspoon/limbo](https://github.com/simonspoon/limbo/releases) |
+| nyx | [simonspoon/nyx](https://github.com/simonspoon/nyx/releases) |
+| qorvex | [simonspoon/qorvex](https://github.com/simonspoon/qorvex/releases) |
+| loki | [simonspoon/loki](https://github.com/simonspoon/loki/releases) |
+| khora | [simonspoon/khora](https://github.com/simonspoon/khora/releases) |
+| wisp | [simonspoon/wisp](https://github.com/simonspoon/wisp/releases) |
 
 ---
 
