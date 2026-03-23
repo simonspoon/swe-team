@@ -15,18 +15,18 @@ Analyze code for unnecessary complexity and apply focused refactorings that pres
 
 ## Prerequisites
 
-- Invoke `/software-engineering` first to load project conventions and preferences.
-- Project must have tests. If no tests exist, write them before refactoring (invoke `/test-engineer`).
+- Invoke `/swe-team:software-engineering` first to load project conventions and preferences.
+- Project must have tests. If no tests exist, write them before refactoring (invoke `/swe-team:test-engineer`).
 
 ## Activation Protocol
 
-1. Invoke `/software-engineering` to load project conventions. If the user's message indicates it was already invoked in this conversation, skip this step.
+1. Invoke `/swe-team:software-engineering` to load project conventions. If the user's message indicates it was already invoked in this conversation, skip this step.
 2. Determine scope: specific files, staged changes, or a module/class the user identified. If the user says "simplify everything" or gives no specific target, ask them to identify the files or module to analyze. Do not scan the entire codebase unprompted.
 3. Run the Analysis Workflow (which starts by reading the refactoring catalog, THEN the target code).
 5. Present findings to the user. Wait for approval before applying changes.
 6. Run the Refactoring Workflow for each approved change.
-7. Invoke `/test-engineer` to verify all tests pass after changes.
-8. Invoke `/code-reviewer` to review the refactored code.
+7. Invoke `/swe-team:test-engineer` to verify all tests pass after changes.
+8. Invoke `/swe-team:code-reviewer` to review the refactored code.
 
 ## Analysis Workflow
 
@@ -120,7 +120,7 @@ If tests fail:
 2. Check if the failure is a test that was testing implementation details, not behavior (update the test).
 3. If unclear, ask the user.
 
-**If the refactoring extracted new modules or files**, invoke `/test-engineer` to generate unit tests for each newly created module. Existing tests only cover the original code — the new modules need their own tests.
+**If the refactoring extracted new modules or files**, invoke `/swe-team:test-engineer` to generate unit tests for each newly created module. Existing tests only cover the original code — the new modules need their own tests.
 
 ### Step 4: Report
 

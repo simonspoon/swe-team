@@ -16,9 +16,9 @@ This creates the standard hierarchy with dependencies pre-wired. Customize by ad
 ## SWE Team Skills
 
 For features that need full engineering rigor, compose with these skills:
-- **Test phase**: Use `/test-engineer` to generate tests and analyze coverage for new code
-- **Review phase**: Use `/code-reviewer` to review the implementation before merging
-- **CI phase**: Use `/devops` if the feature requires CI/CD pipeline changes
+- **Test phase**: Use `/swe-team:test-engineer` to generate tests and analyze coverage for new code
+- **Review phase**: Use `/swe-team:code-reviewer` to review the implementation before merging
+- **CI phase**: Use `/swe-team:devops` if the feature requires CI/CD pipeline changes
 
 For the complete plan→implement→test→review→deliver cycle, use [swe-full-cycle.md](swe-full-cycle.md) instead.
 
@@ -123,7 +123,7 @@ Parallel opportunities:
 
 ## iOS Features
 
-If the feature involves iOS UI changes, add a verification task using `/qorvex-test-ios`:
+If the feature involves iOS UI changes, add a verification task using `/swe-team:qorvex-test-ios`:
 
 ```bash
 limbo add "Verify iOS UI changes" --parent ghij \

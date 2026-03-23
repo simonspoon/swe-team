@@ -122,7 +122,7 @@ The Post-Task Protocol checks the evolution log entry count after every task. **
 
 ## Rules
 
-1. **Only modify SKILL.md via /skill-reflection or explicit user request.** During normal activation, only knowledge/, preferences/, and meta/ evolve.
+1. **Only modify SKILL.md via /swe-team:skill-reflection or explicit user request.** During normal activation, only knowledge/, preferences/, and meta/ evolve.
 2. **Read before write.** Always check existing knowledge before creating new files.
 3. **Preferences win.** When general knowledge and a user preference conflict, follow the preference.
 4. **Skip research during urgent debugging** unless asked. Apply best available knowledge; note the gap for later.

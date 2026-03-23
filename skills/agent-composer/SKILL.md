@@ -156,8 +156,8 @@ architecture, and producing clear, accurate documentation.
 
 ## First Steps (EVERY time)
 
-1. Load `/software-engineering` to understand project conventions.
-2. Load `/project-docs-explore` to find existing documentation.
+1. Load `/swe-team:software-engineering` to understand project conventions.
+2. Load `/swe-team:project-docs-explore` to find existing documentation.
 3. Identify the documentation scope from the user's request.
 
 ## Core Workflow
@@ -180,7 +180,7 @@ Stop and consult the user when:
 - Agent purpose is ambiguous or overlaps with an existing agent (check `~/.claude/agents/`)
 - Unclear which tools the agent needs
 - Uncertain whether to use opus or sonnet model
-- Agent would need skills that don't exist yet — suggest: (a) create the skill first with `/skill-creator`, (b) find a similar existing skill in SKILLS-INDEX.md, or (c) proceed without the skill and handle the capability inline
+- Agent would need skills that don't exist yet — suggest: (a) create the skill first with `/swe-team:skill-creator`, (b) find a similar existing skill in SKILLS-INDEX.md, or (c) proceed without the skill and handle the capability inline
 - Workflow has unclear decision points
 
 ## Reference

@@ -21,16 +21,16 @@ Use this workflow when the task requires the full engineering cycle — not just
 
 | Phase | Skill | Purpose |
 |-------|-------|---------|
-| Plan | `/software-engineering` | Load conventions, architecture knowledge |
-| Plan | `/project-docs-explore` | Understand existing codebase |
-| Plan | `/code-index` | Generate structural map of unfamiliar code |
+| Plan | `/swe-team:software-engineering` | Load conventions, architecture knowledge |
+| Plan | `/swe-team:project-docs-explore` | Understand existing codebase |
+| Plan | `/swe-team:code-index` | Generate structural map of unfamiliar code |
 | Implement | (subagents) | Write code per task decomposition |
-| Test | `/test-engineer` | Generate tests, run suites, analyze coverage |
-| Review | `/code-reviewer` | Review diffs for bugs, security, conventions |
-| Review | `/simplify` | Analyze changed code for unnecessary complexity |
-| CI/CD | `/devops` | Create/update CI pipeline if needed |
-| Retrospective | `/software-engineering`, `/skill-reflection` | Capture lessons, fix skill/workflow gaps |
-| Deliver | `/update-docs` | Update project docs to reflect changes |
+| Test | `/swe-team:test-engineer` | Generate tests, run suites, analyze coverage |
+| Review | `/swe-team:code-reviewer` | Review diffs for bugs, security, conventions |
+| Review | `/swe-team:simplify` | Analyze changed code for unnecessary complexity |
+| CI/CD | `/swe-team:devops` | Create/update CI pipeline if needed |
+| Retrospective | `/swe-team:software-engineering`, `/swe-team:skill-reflection` | Capture lessons, fix skill/workflow gaps |
+| Deliver | `/swe-team:update-docs` | Update project docs to reflect changes |
 
 ## Task Hierarchy Pattern
 
@@ -73,9 +73,9 @@ Load context before decomposing:
 
 ```bash
 # Load skills (orchestrator does this, not subagents)
-# /software-engineering — conventions and preferences
-# /project-docs-explore — architecture docs
-# /code-index — structural map of unfamiliar areas (optional, use when codebase is new)
+# /swe-team:software-engineering — conventions and preferences
+# /swe-team:project-docs-explore — architecture docs
+# /swe-team:code-index — structural map of unfamiliar areas (optional, use when codebase is new)
 ```
 
 Create the root and plan tasks:
@@ -115,7 +115,7 @@ Dispatch core and support tasks to subagents in parallel (if no file conflicts).
 
 ### 3. Test Phase
 
-Use `/test-engineer` for test generation and coverage:
+Use `/swe-team:test-engineer` for test generation and coverage:
 
 ```bash
 limbo add "Test" --parent root                           # → test
@@ -138,7 +138,7 @@ Subagent prompt for test generation should include:
 
 ### 4. Review Phase
 
-Use `/code-reviewer` on all changes:
+Use `/swe-team:code-reviewer` on all changes:
 
 ```bash
 limbo add "Review" --parent root                         # → rev
@@ -155,7 +155,7 @@ The code review task should:
 3. Produce structured output (Critical/Warnings/Info/Verdict)
 4. If verdict is REQUEST CHANGES, the "Address feedback" task becomes active
 
-**Simplify pass (optional):** After code review, run `/simplify` on changed files to catch unnecessary complexity (dead code, over-abstraction, duplication). Skip this for trivial changes. If simplify finds issues, fold them into the "Address feedback" task.
+**Simplify pass (optional):** After code review, run `/swe-team:simplify` on changed files to catch unnecessary complexity (dead code, over-abstraction, duplication). Skip this for trivial changes. If simplify finds issues, fold them into the "Address feedback" task.
 
 If review passes with APPROVE and no simplify findings, mark "Address feedback" as done with outcome "No changes needed."
 
@@ -228,8 +228,8 @@ Conventions discovered, preferences to capture, mistakes to avoid. Only save thi
 
 | Finding type | Action | Destination |
 |-------------|--------|-------------|
-| Skill produced wrong/incomplete output | Fix the skill's docs directly, or run `/skill-reflection` | Skill's SKILL.md or reference files |
-| New convention or preference | Save via `/software-engineering` preference capture | `software-engineering/preferences/` |
+| Skill produced wrong/incomplete output | Fix the skill's docs directly, or run `/swe-team:skill-reflection` | Skill's SKILL.md or reference files |
+| New convention or preference | Save via `/swe-team:software-engineering` preference capture | `software-engineering/preferences/` |
 | Workflow gap (missing step, wrong ordering) | Update the workflow template directly | `workflows/swe-full-cycle.md` or other template |
 | Tool limitation or missing capability | Create a follow-up task or note for user | Limbo task or user communication |
 | Nothing noteworthy | Record "No findings" — this is a valid outcome | Gate task outcome |
@@ -257,7 +257,7 @@ limbo block docs cmit    # Commit after docs updated
 limbo block cmit pr      # PR after commit
 ```
 
-Run `/update-docs` for the docs task — it discovers existing doc structure and makes targeted updates for affected docs. Skip if changes are purely internal with no doc-facing impact.
+Run `/swe-team:update-docs` for the docs task — it discovers existing doc structure and makes targeted updates for affected docs. Skip if changes are purely internal with no doc-facing impact.
 
 ## Dependency Graph
 
@@ -270,7 +270,7 @@ expl ─┘                     │         ↗
 
 ## Wave Execution
 
-- **Wave 1**: req + expl (parallel research; use `/code-index` if codebase is unfamiliar)
+- **Wave 1**: req + expl (parallel research; use `/swe-team:code-index` if codebase is unfamiliar)
 - **Wave 2**: dsgn (depends on both)
 - **Wave 3**: tpln (test plan from design)
 - **Wave 4**: core + supp (parallel implementation)

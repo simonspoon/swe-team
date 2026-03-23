@@ -10,13 +10,13 @@ Systematic code review for diffs, files, and pull requests. Checks for bugs, sec
 ## Prerequisites
 
 - For PR reviews: `gh` CLI must be authenticated
-- For convention checking: invoke `/software-engineering` first to load project preferences
+- For convention checking: invoke `/swe-team:software-engineering` first to load project preferences
 
 ## Activation Protocol
 
 1. Determine review scope (see "What Are You Reviewing?" below).
 2. Read `reference/security-checklist.md` (once per session is sufficient).
-3. If `/software-engineering` preferences have been loaded, apply them as style/convention rules. If not loaded, skip convention checking or note it as a limitation in your review.
+3. If `/swe-team:software-engineering` preferences have been loaded, apply them as style/convention rules. If not loaded, skip convention checking or note it as a limitation in your review.
 4. Produce structured output using the Review Output Format below.
 
 ## What Are You Reviewing?

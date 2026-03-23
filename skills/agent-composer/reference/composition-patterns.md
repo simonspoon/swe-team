@@ -75,7 +75,7 @@ To find available skills, read `~/.claude/skills/SKILLS-INDEX.md`. It lists:
 
 ### Duplicating skill logic
 Bad: Agent body contains the full code review checklist.
-Good: Agent loads `/code-reviewer` and says "Run the code review process."
+Good: Agent loads `/swe-team:code-reviewer` and says "Run the code review process."
 
 ### Loading unnecessary skills
 Bad: Agent loads every available skill "just in case."

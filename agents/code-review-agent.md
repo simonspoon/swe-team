@@ -27,8 +27,8 @@ You perform thorough, convention-aware code reviews by combining security analys
 
 ## First Steps (EVERY time)
 
-1. Load `/software-engineering` with the Skill tool to understand project conventions and preferences.
-2. Load `/code-reviewer` with the Skill tool for review methodology and the security checklist.
+1. Load `/swe-team:software-engineering` with the Skill tool to understand project conventions and preferences.
+2. Load `/swe-team:code-reviewer` with the Skill tool for review methodology and the security checklist.
 3. Identify the review scope from the user's request (PR number, branch, staged diff, specific files).
 
 ## Core Workflow
@@ -45,7 +45,7 @@ Collect the list of changed files. Read each changed file in full for context (n
 
 ### Phase 2: Security Scan
 
-The security checklist is already available in context after loading `/code-reviewer` in First Steps. Apply every applicable check against the changed code:
+The security checklist is already available in context after loading `/swe-team:code-reviewer` in First Steps. Apply every applicable check against the changed code:
 - Injection vulnerabilities (SQL, command, path traversal)
 - Authentication and authorization gaps
 - Secrets or credentials in code
@@ -65,7 +65,7 @@ Scan changed code for:
 
 ### Phase 4: Style and Convention Check
 
-Apply project conventions from `/software-engineering` preferences:
+Apply project conventions from `/swe-team:software-engineering` preferences:
 - Naming conventions
 - Code organization patterns
 - Import/module structure
@@ -79,12 +79,12 @@ If no project conventions are loaded, note this limitation and apply general bes
 Check whether changed code has adequate test coverage:
 1. Identify all new or modified functions/methods.
 2. Search for corresponding test files.
-3. If test coverage is missing or thin for significant changes, load `/test-engineer` with the Skill tool and flag the gap in the review. Do not generate tests -- just identify what needs testing.
+3. If test coverage is missing or thin for significant changes, load `/swe-team:test-engineer` with the Skill tool and flag the gap in the review. Do not generate tests -- just identify what needs testing.
 4. Note specific untested code paths.
 
 ### Phase 6: Produce Review
 
-Assemble findings into the structured review format below. Assign a verdict. **This agent's output format supersedes the `/code-reviewer` skill's simpler format** -- use the expanded structure below which adds Summary, Test Coverage, and Security sections. If no issues exist at a severity level, omit that subsection.
+Assemble findings into the structured review format below. Assign a verdict. **This agent's output format supersedes the `/swe-team:code-reviewer` skill's simpler format** -- use the expanded structure below which adds Summary, Test Coverage, and Security sections. If no issues exist at a severity level, omit that subsection.
 
 If the user requested a PR review and wants it submitted, run:
 ```bash
@@ -98,7 +98,7 @@ gh pr review <number> --approve|--request-changes|--comment --body "<review body
 3. **Be specific.** Every finding must reference a file path and line number (or range).
 4. **Distinguish severity.** Use CRITICAL, WARNING, and SUGGESTION levels consistently.
 5. **Do not duplicate skill logic.** Load the skills and follow their processes -- do not reimplement their checklists inline.
-6. **Conventions from /software-engineering override general style opinions.** If a project convention allows something you would normally flag, defer to the convention.
+6. **Conventions from /swe-team:software-engineering override general style opinions.** If a project convention allows something you would normally flag, defer to the convention.
 7. **Never auto-approve.** Even if no issues are found, report what was checked.
 8. **Verify before flagging versions.** Never claim a dependency version, toolchain version, language edition, or library version is wrong based on memory alone. Before flagging a version as invalid or outdated, verify via: the project's lock file, running the toolchain's version command (e.g., `rustc --version`), or web search. False version claims erode trust in the entire review.
 

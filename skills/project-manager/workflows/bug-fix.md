@@ -16,9 +16,9 @@ This creates the standard hierarchy with dependencies pre-wired. Customize by ad
 ## SWE Team Skills
 
 For bug fixes that need thorough verification, compose with these skills:
-- **Test phase**: Use `/test-engineer` to generate regression tests that prevent recurrence
-- **Review phase**: Use `/code-reviewer` to review the fix for security and correctness
-- **CI phase**: Use `/devops` if the fix reveals a CI gap (missing test step, etc.)
+- **Test phase**: Use `/swe-team:test-engineer` to generate regression tests that prevent recurrence
+- **Review phase**: Use `/swe-team:code-reviewer` to review the fix for security and correctness
+- **CI phase**: Use `/swe-team:devops` if the fix reveals a CI gap (missing test step, etc.)
 
 ## Task Hierarchy Pattern
 
@@ -128,7 +128,7 @@ Note: Fix tasks yzab & cdef can run in parallel once investigation completes.
 
 ## iOS Bugs
 
-For bugs involving iOS UI, use `/qorvex-test-ios` in the investigation and verification phases:
+For bugs involving iOS UI, use `/swe-team:qorvex-test-ios` in the investigation and verification phases:
 
 - **Reproduce**: `qorvex screenshot` + `screen-info` to capture the broken state
 - **Verify fix**: Screenshot after fix, compare with broken state, confirm elements behave correctly

@@ -22,12 +22,12 @@ Before doing anything else, verify `limbo` is installed:
 command -v limbo >/dev/null 2>&1 && echo "OK" || echo "MISSING"
 ```
 
-If `MISSING`: **STOP.** Tell the user: "limbo CLI is not installed. Install it before using /project-manager." Do NOT attempt to work around this — limbo is required for task tracking, dependency management, and status rollup.
+If `MISSING`: **STOP.** Tell the user: "limbo CLI is not installed. Install it before using /swe-team:project-manager." Do NOT attempt to work around this — limbo is required for task tracking, dependency management, and status rollup.
 
 ## ⚠️ CRITICAL REQUIREMENTS
 
 - **Execute fully when invoked as subagent**: When launched via the Agent tool (i.e., you are a subagent), the parent agent has already decided to act. Do NOT return a plan and ask "shall I proceed?" — plan, execute, commit, push, and return results. The parent's prompt IS the green light. Only pause for confirmation if you encounter a genuinely ambiguous or destructive situation the prompt didn't anticipate.
-- **Multi-repo workflows**: When tasks span multiple Git repositories, the final commit/push step must cover ALL repos with changes. Before returning results, run `git status` in every repo you touched and ensure nothing is left uncommitted. Use `/git-commit` for each repo separately. Do NOT return with dirty working trees.
+- **Multi-repo workflows**: When tasks span multiple Git repositories, the final commit/push step must cover ALL repos with changes. Before returning results, run `git status` in every repo you touched and ensure nothing is left uncommitted. Use `/swe-team:git-commit` for each repo separately. Do NOT return with dirty working trees.
 - **Update upstream indexes when creating skills or tools**: When a task creates a new skill in claude-setup, include a task to add it to the claude-setup README.md (skill table under the appropriate section). When a task creates a new CLI tool with a Homebrew formula, include a task to add brew install instructions to the tool's README and add it to the claude-setup "Tool Setup" section. Missing index entries make new work invisible.
 - **Structured task fields**: Every `limbo add` MUST include `--action`, `--verify`, and `--result` flags. Every `limbo status <id> done` MUST include `--outcome "..."`. These are enforced by the CLI and will error if omitted.
 - **Block order**: `limbo block <blocker> <blocked>` — first arg blocks the second
@@ -88,8 +88,8 @@ flowchart TD
 
 Before creating tasks, verify you have completed the mandatory steps from CLAUDE.md:
 
-1. **If the task involves writing code** and `/software-engineering` has not been invoked in this conversation, invoke it NOW. It loads design preferences and domain knowledge that affect architecture decisions and subagent prompts. Skipping it means subagents may violate project conventions.
-2. **If `/project-docs-explore` has not been invoked**, invoke it NOW. It surfaces architecture docs that inform task decomposition.
+1. **If the task involves writing code** and `/swe-team:software-engineering` has not been invoked in this conversation, invoke it NOW. It loads design preferences and domain knowledge that affect architecture decisions and subagent prompts. Skipping it means subagents may violate project conventions.
+2. **If `/swe-team:project-docs-explore` has not been invoked**, invoke it NOW. It surfaces architecture docs that inform task decomposition.
 
 Do NOT proceed to task creation until these are satisfied.
 

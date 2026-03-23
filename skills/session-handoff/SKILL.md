@@ -28,7 +28,7 @@ Before writing the log entry, check whether claude-setup (the skill/agent repo) 
 cd ~/Documents/Development/opensource/claude-setup && git status --porcelain
 ```
 
-If there is output (dirty working tree), commit and push those changes using `/git-commit` before proceeding. Skills and knowledge evolve during sessions and changes accumulate — leaving them uncommitted means the remote drifts from the local state.
+If there is output (dirty working tree), commit and push those changes using `/swe-team:git-commit` before proceeding. Skills and knowledge evolve during sessions and changes accumulate — leaving them uncommitted means the remote drifts from the local state.
 
 This applies to any repo where the session modified files but didn't commit (e.g., skill updates, knowledge additions, CI fixes). Check every repo you touched during the session.
 

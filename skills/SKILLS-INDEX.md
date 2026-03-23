@@ -31,91 +31,91 @@ Quick reference for all active skills — when to use each and how they compose.
 ## Composition Patterns
 
 ### Multi-file feature work
-1. `/project-docs-explore` → read relevant docs
-2. `/project-manager` → decompose into tasks, dispatch subagents
-3. `/qorvex-test-ios` → verify iOS UI changes in verification phase
+1. `/swe-team:project-docs-explore` → read relevant docs
+2. `/swe-team:project-manager` → decompose into tasks, dispatch subagents
+3. `/swe-team:qorvex-test-ios` → verify iOS UI changes in verification phase
 
 ### iOS bug fix
-1. `/project-docs-explore` → understand subsystem
-2. `/project-manager` → investigate → fix → test
-3. `/qorvex-test-ios` → reproduce bug, verify fix on device
+1. `/swe-team:project-docs-explore` → understand subsystem
+2. `/swe-team:project-manager` → investigate → fix → test
+3. `/swe-team:qorvex-test-ios` → reproduce bug, verify fix on device
 
 ### Desktop app verification
-1. `/project-docs-explore` → understand the desktop app's subsystem
-2. `/project-manager` → decompose into tasks, dispatch subagents
-3. `/loki-test-desktop` → verify macOS desktop UI changes (screenshot, inspect tree, interact, verify)
+1. `/swe-team:project-docs-explore` → understand the desktop app's subsystem
+2. `/swe-team:project-manager` → decompose into tasks, dispatch subagents
+3. `/swe-team:loki-test-desktop` → verify macOS desktop UI changes (screenshot, inspect tree, interact, verify)
 
 ### Desktop bug fix
-1. `/project-docs-explore` → understand subsystem
-2. `/project-manager` → investigate → fix → test
-3. `/loki-test-desktop` → reproduce bug, verify fix on desktop app
+1. `/swe-team:project-docs-explore` → understand subsystem
+2. `/swe-team:project-manager` → investigate → fix → test
+3. `/swe-team:loki-test-desktop` → reproduce bug, verify fix on desktop app
 
 ### Web app verification
-1. `/project-docs-explore` → understand the web app's subsystem
-2. `/project-manager` → decompose into tasks, dispatch subagents
-3. `/khora-test-web` → verify web UI changes (launch Chrome, navigate, screenshot, inspect, verify)
+1. `/swe-team:project-docs-explore` → understand the web app's subsystem
+2. `/swe-team:project-manager` → decompose into tasks, dispatch subagents
+3. `/swe-team:khora-test-web` → verify web UI changes (launch Chrome, navigate, screenshot, inspect, verify)
 
 ### Web bug fix
-1. `/project-docs-explore` → understand subsystem
-2. `/project-manager` → investigate → fix → test
-3. `/khora-test-web` → reproduce bug in browser, verify fix on web app
+1. `/swe-team:project-docs-explore` → understand subsystem
+2. `/swe-team:project-manager` → investigate → fix → test
+3. `/swe-team:khora-test-web` → reproduce bug in browser, verify fix on web app
 
 ### New project setup
-1. `/setup-docs` → create docs/ structure
-2. `/project-manager` → orchestrate implementation
-3. `/update-docs` → keep docs current as code evolves
+1. `/swe-team:setup-docs` → create docs/ structure
+2. `/swe-team:project-manager` → orchestrate implementation
+3. `/swe-team:update-docs` → keep docs current as code evolves
 
 ### Code review workflow
-1. `/software-engineering` → load project conventions and preferences
-2. `/code-reviewer` → review diff/PR against security, bugs, style, conventions
-3. `/test-engineer` → verify test coverage for changed code
+1. `/swe-team:software-engineering` → load project conventions and preferences
+2. `/swe-team:code-reviewer` → review diff/PR against security, bugs, style, conventions
+3. `/swe-team:test-engineer` → verify test coverage for changed code
 
 ### CI/CD setup
-1. `/devops` → create GitHub Actions workflow, Docker config
-2. `/test-engineer` → ensure test commands match CI pipeline
-3. `/code-reviewer` → review the pipeline config itself
+1. `/swe-team:devops` → create GitHub Actions workflow, Docker config
+2. `/swe-team:test-engineer` → ensure test commands match CI pipeline
+3. `/swe-team:code-reviewer` → review the pipeline config itself
 
 ### Test-driven development
-1. `/software-engineering` → load project conventions
-2. `/test-engineer` → generate tests for new feature
-3. `/code-reviewer` → review implementation against tests
+1. `/swe-team:software-engineering` → load project conventions
+2. `/swe-team:test-engineer` → generate tests for new feature
+3. `/swe-team:code-reviewer` → review implementation against tests
 
 ### SWE Full Cycle (issue → merge)
-1. `/software-engineering` → load conventions and architecture knowledge
-2. `/project-docs-explore` → understand existing codebase
-3. `/project-manager` → decompose work, dispatch subagents (uses `swe-full-cycle` workflow)
-4. `/test-engineer` → generate tests, run suites, analyze coverage
-5. `/code-reviewer` → review all changes for bugs, security, conventions
-6. `/devops` → update CI pipeline if needed
+1. `/swe-team:software-engineering` → load conventions and architecture knowledge
+2. `/swe-team:project-docs-explore` → understand existing codebase
+3. `/swe-team:project-manager` → decompose work, dispatch subagents (uses `swe-full-cycle` workflow)
+4. `/swe-team:test-engineer` → generate tests, run suites, analyze coverage
+5. `/swe-team:code-reviewer` → review all changes for bugs, security, conventions
+6. `/swe-team:devops` → update CI pipeline if needed
 7. Deliver: commit + create PR
 
 This is the primary workflow for the SWE agent team. The project-manager orchestrates all other skills via its `workflows/swe-full-cycle.md` template.
 
 ### New agent creation
-1. `/agent-composer` → generate agent definition from requirements
-2. `/skill-creator` → create any new skills the agent needs
-3. `/team-evaluator` → benchmark the new agent's capabilities
+1. `/swe-team:agent-composer` → generate agent definition from requirements
+2. `/swe-team:skill-creator` → create any new skills the agent needs
+3. `/swe-team:team-evaluator` → benchmark the new agent's capabilities
 
 ### Simplify/Refactor workflow
-1. `/software-engineering` → load project conventions and preferences
-2. `/simplify` → analyze code, identify opportunities, present findings
+1. `/swe-team:software-engineering` → load project conventions and preferences
+2. `/swe-team:simplify` → analyze code, identify opportunities, present findings
 3. User approves specific refactorings
-4. `/simplify` → apply refactorings one at a time, verify tests after each
-5. `/test-engineer` → run full test suite, confirm no regressions
-6. `/code-reviewer` → review the refactored code for quality
+4. `/swe-team:simplify` → apply refactorings one at a time, verify tests after each
+5. `/swe-team:test-engineer` → run full test suite, confirm no regressions
+6. `/swe-team:code-reviewer` → review the refactored code for quality
 
 ### Recall prior context
-1. `/nyx` → search conversation history for past decisions, discussions, or patterns
-2. `/session-handoff` → check SESSION_STATE.md for strategic context
+1. `/swe-team:nyx` → search conversation history for past decisions, discussions, or patterns
+2. `/swe-team:session-handoff` → check SESSION_STATE.md for strategic context
 3. Combine findings to inform current task
 
 ### UI design workflow
-1. `/wisp-design` → build the visual layout on the Wisp canvas using CLI commands
-2. `/wisp-design` → screenshot and inspect, iterate on positioning and styling
-3. `/wisp-design` → save the final design to a JSON file
-4. `/project-manager` → if the design informs code generation, orchestrate implementation from the saved design
+1. `/swe-team:wisp-design` → build the visual layout on the Wisp canvas using CLI commands
+2. `/swe-team:wisp-design` → screenshot and inspect, iterate on positioning and styling
+3. `/swe-team:wisp-design` → save the final design to a JSON file
+4. `/swe-team:project-manager` → if the design informs code generation, orchestrate implementation from the saved design
 
 ### Team improvement cycle
-1. `/team-evaluator` → run benchmarks, identify gaps
-2. `/skill-reflection` → improve weak skills based on evaluation findings
-3. `/team-evaluator` → re-run benchmarks to verify improvement
+1. `/swe-team:team-evaluator` → run benchmarks, identify gaps
+2. `/swe-team:skill-reflection` → improve weak skills based on evaluation findings
+3. `/swe-team:team-evaluator` → re-run benchmarks to verify improvement

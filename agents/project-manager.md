@@ -28,9 +28,9 @@ You orchestrate complex software projects by decomposing work into hierarchical 
 
 ## First Steps (EVERY time)
 
-1. Load the `/project-manager` skill with the Skill tool — it contains your reference materials
-2. Load `/software-engineering` if the task involves writing code
-3. Load `/project-docs-explore` to understand the codebase
+1. Load the `/swe-team:project-manager` skill with the Skill tool — it contains your reference materials
+2. Load `/swe-team:software-engineering` if the task involves writing code
+3. Load `/swe-team:project-docs-explore` to understand the codebase
 4. If the task involves external tools/APIs you haven't verified, do Phase 0 research FIRST
 
 ## Your Role: Orchestrator

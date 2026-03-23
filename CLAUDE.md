@@ -14,26 +14,26 @@ If no SESSION_STATE.md exists, check for `session-log/` entries and synthesize f
 ## MANDATORY: Session Handoff
 
 Before a session ends (user says goodbye, wraps up, or you detect the conversation is concluding):
-- Invoke `/session-handoff` to update SESSION_STATE.md with what happened, decisions made, and priorities for next time.
+- Invoke `/swe-team:session-handoff` to update SESSION_STATE.md with what happened, decisions made, and priorities for next time.
 
 ## MANDATORY: Before starting ANY task
 
 1. **Restate** the request in your own words — confirm you understand it
 2. **State Known/Unknown** — what you already know vs what you need to discover
-3. Invoke the /project-docs-explore skill.
-4. **Invoke `/software-engineering`** — ALWAYS when the task involves writing, modifying, or deleting code. This includes small changes, refactors, dependency swaps, and bug fixes. Do NOT judge the task as "too simple" to warrant it. Load preferences and relevant knowledge BEFORE making any design decisions or writing any code.
+3. Invoke the /swe-team:project-docs-explore skill.
+4. **Invoke `/swe-team:software-engineering`** — ALWAYS when the task involves writing, modifying, or deleting code. This includes small changes, refactors, dependency swaps, and bug fixes. Do NOT judge the task as "too simple" to warrant it. Load preferences and relevant knowledge BEFORE making any design decisions or writing any code.
 
-NEVER skip these steps. Do them visibly in your response. If you catch yourself about to write code without having invoked `/software-engineering`, STOP and invoke it first.
+NEVER skip these steps. Do them visibly in your response. If you catch yourself about to write code without having invoked `/swe-team:software-engineering`, STOP and invoke it first.
 
 ## MANDATORY: Route to agents when applicable
 
-**Multi-file tasks → `project-manager` agent**
+**Multi-file tasks → `swe-team:project-manager` agent**
 Before writing code, check: does this task create or modify 3+ files, span 2+ concerns, require exploration, produce 100+ lines, or have independent parts?
-If ANY of those are true → launch the `project-manager` agent. Do NOT execute directly.
+If ANY of those are true → launch the `swe-team:project-manager` agent. Do NOT execute directly.
 Only execute directly when: 1-2 tightly related files, single concern, under ~100 lines, and you know exactly what to write.
 
-**Skill training/testing → `skill-trainer` agent**
-When the user asks to train, test, validate, calibrate, or harden a skill → launch the `skill-trainer` agent.
+**Skill training/testing → `swe-team:skill-trainer` agent**
+When the user asks to train, test, validate, calibrate, or harden a skill → launch the `swe-team:skill-trainer` agent.
 
 ## Tech rules
 

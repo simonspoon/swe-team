@@ -27,8 +27,8 @@ You conduct deep, multi-source research by exploring codebases, reading document
 
 ## First Steps (EVERY time)
 
-1. Load `/software-engineering` with the Skill tool to access existing knowledge and project conventions. If the skill fails to load, continue without it -- note in the report that existing knowledge was not consulted.
-2. Load `/project-docs-explore` with the Skill tool to understand project documentation structure. If the skill fails to load, manually search for docs/ directories and README files.
+1. Load `/swe-team:software-engineering` with the Skill tool to access existing knowledge and project conventions. If the skill fails to load, continue without it -- note in the report that existing knowledge was not consulted.
+2. Load `/swe-team:project-docs-explore` with the Skill tool to understand project documentation structure. If the skill fails to load, manually search for docs/ directories and README files.
 3. Restate the research question in your own words and confirm the scope with the user if ambiguous.
 
 ## Core Workflow
@@ -39,7 +39,7 @@ You conduct deep, multi-source research by exploring codebases, reading document
    - The core question to answer
    - Related sub-questions
    - What "done" looks like (deliverable format, depth, audience)
-2. Check existing knowledge in `/software-engineering` -- read `knowledge/INDEX.md` for prior research on this topic.
+2. Check existing knowledge in `/swe-team:software-engineering` -- read `knowledge/INDEX.md` for prior research on this topic.
 3. If prior research exists and is not stale, summarize it and ask: "I have existing research on this. Want me to build on it or start fresh?"
 4. Draft a research plan listing sources to consult:
    - Codebase exploration (files, patterns, architecture)
@@ -58,7 +58,7 @@ When the question involves the current codebase:
 
 ### Phase 3: Documentation Research
 
-1. Follow the `/project-docs-explore` process to find relevant project docs.
+1. Follow the `/swe-team:project-docs-explore` process to find relevant project docs.
 2. Read applicable docs in full.
 3. For external documentation, use WebFetch to retrieve official docs pages.
 4. Cross-reference documentation claims against actual code behavior: Grep for function names, config keys, and patterns mentioned in docs to verify they exist and match the documented behavior.
@@ -87,7 +87,7 @@ When the question extends beyond the codebase:
 
 If the research produced reusable knowledge:
 1. Ask the user: "This research produced reusable findings about [topic]. Save to the software-engineering knowledge base?"
-2. If approved, follow the `/software-engineering` Research Protocol to write a knowledge file.
+2. If approved, follow the `/swe-team:software-engineering` Research Protocol to write a knowledge file.
 3. Update `knowledge/INDEX.md` and `meta/evolution-log.md`.
 
 ## Critical Rules
@@ -140,5 +140,5 @@ Structure every research report as:
 - [Anything that could not be resolved or needs further investigation]
 
 ### Knowledge Base
-[Whether findings were saved to /software-engineering knowledge base, or recommendation to do so]
+[Whether findings were saved to /swe-team:software-engineering knowledge base, or recommendation to do so]
 ```

@@ -7,7 +7,7 @@ Verify that a weaker model (Haiku) can follow the skill's instructions to comple
 ## Prerequisites
 
 - cmux must be running (`cmux ping` → `PONG`)
-- The `/cmux-control` skill must be available
+- The `/swe-team:cmux-control` skill must be available
 - The target skill must be installed in `~/.claude/skills/`
 
 ## Reducing Approval Friction

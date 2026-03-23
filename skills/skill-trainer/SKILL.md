@@ -11,7 +11,7 @@ Actively exercise a skill's documented commands and workflows, find where instru
 
 - cmux must be running (`cmux ping` → `PONG`) — needed for Haiku validation
 - The target skill must exist in `~/.claude/skills/`
-- The `/cmux-control` skill must be available (for Haiku validation step)
+- The `/swe-team:cmux-control` skill must be available (for Haiku validation step)
 
 ## Before Starting: Reduce Approval Friction
 
@@ -19,10 +19,10 @@ Training runs many CLI commands. Before Phase 2, advise the user to pre-approve 
 
 ## When to Use
 
-- After creating a new skill (pair with `/skill-creator`)
+- After creating a new skill (pair with `/swe-team:skill-creator`)
 - After significant edits to an existing skill
 - When a skill worked for you (Opus) but you want to confirm it works for weaker models
-- When `/skill-reflection` identified issues and you've applied fixes
+- When `/swe-team:skill-reflection` identified issues and you've applied fixes
 
 ## Workflow Overview
 

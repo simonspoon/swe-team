@@ -63,7 +63,7 @@ For each benchmark:
 
 For each benchmark:
 1. Record the start state.
-2. Invoke the target skill or agent with the benchmark task. Invocation method: use the skill's documented activation (e.g., `/software-engineering` or `/code-reviewer`) directly in the current session. For benchmarks requiring composition of multiple skills, invoke them in sequence as the workflow dictates. Scaffold the benchmark code in the language most natural for the benchmark scenario (default to Python or JavaScript/TypeScript unless the benchmark specifies otherwise).
+2. Invoke the target skill or agent with the benchmark task. Invocation method: use the skill's documented activation (e.g., `/swe-team:software-engineering` or `/swe-team:code-reviewer`) directly in the current session. For benchmarks requiring composition of multiple skills, invoke them in sequence as the workflow dictates. Scaffold the benchmark code in the language most natural for the benchmark scenario (default to Python or JavaScript/TypeScript unless the benchmark specifies otherwise).
 3. Capture all output and artifacts.
 4. Record the end state and elapsed time.
 
@@ -157,7 +157,7 @@ Compare with previous entries to track improvement trends. The per-benchmark sco
 
 **Benchmark:** Review a Python file with 3 planted bugs (SQL injection, unclosed file handle, off-by-one error).
 
-**Run:** Invoke `/code-reviewer` on the file.
+**Run:** Invoke `/swe-team:code-reviewer` on the file.
 
 **Score:**
 - Correctness: 3 (found all 3 bugs)
