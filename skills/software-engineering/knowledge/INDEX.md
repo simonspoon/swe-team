@@ -1,5 +1,5 @@
 # Knowledge Index
-Last updated: 2026-03-22
+Last updated: 2026-03-23
 
 | Domain | Topic | File | Added |
 |--------|-------|------|-------|
@@ -10,3 +10,4 @@ Last updated: 2026-03-22
 | tooling | Tauri v2 + SolidJS desktop apps | [tooling/tauri-v2-solidjs.md](tooling/tauri-v2-solidjs.md) | 2026-03-20 |
 | tooling | macOS desktop automation APIs | [tooling/macos-desktop-automation.md](tooling/macos-desktop-automation.md) | 2026-03-22 |
 | tooling | Chromiumoxide CDP library | [tooling/chromiumoxide-cdp.md](tooling/chromiumoxide-cdp.md) | 2026-03-22 |
+| tooling | Claude Code plugin workflows | [tooling/claude-code-plugin-workflows.md](tooling/claude-code-plugin-workflows.md) | 2026-03-23 |
