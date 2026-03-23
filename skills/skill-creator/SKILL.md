@@ -1,164 +1,131 @@
 ---
 name: skill-creator
-description: Create custom Agent Skills with proper structure, YAML frontmatter, instructions, and best practices. Use when the user asks to create a new skill, build a skill, or make a custom Agent Skill.
+description: Create custom Agent Skills with proper structure, YAML frontmatter, and instructions. Use when the user asks to create a new skill, build a skill, or make a custom Agent Skill.
 ---
 
 # Skill Creator
 
-Create high-quality custom Agent Skills following Anthropic's specifications and best practices.
+Create new skills for the swe-team plugin. Skills are markdown files that teach Claude how to perform a specific task.
 
-## Core Principle
+## When to Use
 
-**You are a skill structure architect, not a domain expert.**
+- User asks to create a new skill
+- User wants to wrap a CLI tool as a skill
+- User needs a workflow codified as a repeatable skill
 
-Your role is to:
-- ✅ Create valid YAML frontmatter
-- ✅ Organize skill structure properly
-- ✅ Write clear, actionable instructions
-- ✅ Provide complete examples
-- ✅ Ensure proper file organization
+## Core Rules
 
-You do NOT:
-- ❌ Guess at domain requirements without user input
-- ❌ Create skills without understanding trigger conditions
-- ❌ Make assumptions about what the skill should do
+1. **SKILL.md under 200 lines.** Move large reference content to `reference/` files.
+2. **One skill, one concern.** If it does two things, it's two skills.
+3. **Derive from reality.** Look at existing skills in this plugin as templates, not abstract patterns.
+4. **Ask before guessing.** If the skill's purpose or triggers are unclear, ask the user.
 
-When domain knowledge is needed → Ask the user
+## Activation Protocol
 
-## ⚠️ CRITICAL REQUIREMENTS
+### Step 1: Gather Requirements
 
-Every skill MUST have:
-- SKILL.md file with valid YAML frontmatter
-- Name: lowercase, hyphens only, <64 chars, no "anthropic"/"claude"
-- Description: <1024 chars, specifies WHAT and WHEN (trigger conditions)
-- At least one complete, runnable example
-- Clear instructions (imperative, not suggestive)
-- SKILL.md under 200 lines (move advanced content to separate files)
-- Entry in SKILLS-INDEX.md (name, description, triggers, composition info)
+Clarify with the user:
+- **What does it do?** (one sentence)
+- **When should it trigger?** (what keywords/scenarios)
+- **Does it wrap a CLI tool?** (if so, which one)
+- **Does it compose with other skills?** (which ones, at what stage)
 
-## Quick Start
+If the user already provided clear requirements, skip to Step 2.
 
-When user requests a skill:
+### Step 2: Pick a Reference Skill
 
-1. **Gather requirements** - Read workflow/gather-requirements.md if unclear
-2. **Choose pattern** - Read patterns/INDEX.md to select appropriate pattern
-3. **Create structure** - Use selected pattern as template
-4. **Validate** - Read validation/CHECKLIST.md before finalizing
-5. **Test triggers** - Verify description includes relevant keywords
+Read 1-2 existing skills that are closest to what's being built:
 
-## What Type of Skill Are You Creating?
+| Building... | Read this skill as reference |
+|---|---|
+| CLI tool wrapper | `code-index/SKILL.md` or `nyx/SKILL.md` |
+| Analysis/workflow | `simplify/SKILL.md` |
+| Stateful process | `session-handoff/SKILL.md` |
+| Multi-step with composition | `code-reviewer/SKILL.md` |
+| Testing/verification | `loki-test-desktop/SKILL.md` or `khora-test-web/SKILL.md` |
 
-**User provided complete requirements:**
-→ Read workflow/create-from-requirements.md
+Use the reference skill's structure as your template. Don't invent new structures.
 
-**User said "create a skill" but unclear scope:**
-→ Read workflow/gather-requirements.md, ask clarifying questions
+### Step 3: Create the Skill
 
-**Need to see examples of different skill types:**
-→ Read patterns/INDEX.md
+#### Directory structure
 
-**User wants simple single-file skill:**
-→ Read examples/minimal-skill.md, follow that pattern
+**Simple skill** (most skills):
+```
+skill-name/
+└── SKILL.md
+```
 
-**User wants skill with scripts/automation:**
-→ Read examples/comprehensive-skill.md
+**Skill with reference material** (when SKILL.md would exceed 200 lines):
+```
+skill-name/
+├── SKILL.md
+└── reference/
+    └── topic-name.md
+```
 
-## YAML Frontmatter Requirements
+#### SKILL.md format
 
-Template and documentation: Read templates/YAML-FRONTMATTER.md
-
-**Quick reference:**
-```yaml
+```markdown
 ---
 name: skill-name
-description: Brief description of what this skill does and when to use it
+description: What this skill does and when to use it. Include trigger keywords.
 ---
+
+# Skill Name
+
+One-line summary of what this skill does.
+
+## When to Use
+- Bullet list of trigger scenarios
+
+## Prerequisites
+- Required tools, install instructions (omit if none)
+
+## Activation Protocol
+1. Step-by-step instructions
+2. Use imperative voice ("Read the file", not "You should read the file")
+3. Include actual commands and examples inline
+
+## [Domain-Specific Sections]
+- Commands, workflows, rules — whatever the skill needs
+- Keep it concrete and actionable
+
+## Reference
+- Links to reference/ files if they exist
 ```
 
-Critical rules:
-- Name: lowercase-with-hyphens, <64 chars
-- Description: Include capabilities AND trigger keywords
-- No XML tags in either field
+#### Frontmatter rules
 
-## Skill Structure
+- **name**: lowercase-with-hyphens, under 64 chars, no "anthropic" or "claude"
+- **description**: under 1024 chars. Must answer WHAT it does and WHEN to use it. Include trigger keywords that users would say (e.g., "testing iOS apps, simulator testing, UI automation").
 
-**Minimal skill:**
-```
-skill-name/
-└── SKILL.md (frontmatter + instructions + examples)
-```
+### Step 4: Register the Skill
 
-**Comprehensive skill:**
+Add an entry to `SKILLS-INDEX.md` following the existing table format:
 ```
-skill-name/
-├── SKILL.md (frontmatter + core instructions + navigation)
-├── additional-guides/
-│   ├── INDEX.md
-│   └── guide-name.md
-├── scripts/
-│   └── utility.py
-└── resources/
-    └── reference.json
+| **skill-name** | Purpose | When to invoke | Composes with |
 ```
 
-## When Things Go Wrong
+### Step 5: Validate
 
-**Skill doesn't trigger:**
-→ Read troubleshooting/trigger-problems.md
+Before declaring done:
 
-**YAML validation fails:**
-→ Read troubleshooting/yaml-errors.md
+- [ ] SKILL.md has valid frontmatter (name + description)
+- [ ] Description includes trigger keywords
+- [ ] SKILL.md is under 200 lines
+- [ ] Instructions use imperative voice
+- [ ] At least one concrete example or command
+- [ ] Added to SKILLS-INDEX.md
+- [ ] All file references resolve (no broken links)
 
-**SKILL.md too long (>200 lines):**
-→ Read troubleshooting/file-too-long.md
+### Step 6: Sync
 
-**Unsure about structure:**
-→ Read patterns/INDEX.md, pick closest match
+Run `swe-sync` to refresh the plugin cache so the new skill is available.
 
-**Validation fails:**
-→ Read validation/CHECKLIST.md, identify failing requirement
+## Anti-Patterns
 
-## When to Stop and Ask User
-
-Stop and consult user when:
-- User said "create a skill for X" but X is ambiguous
-- Unclear what triggers the skill (what keywords/scenarios)
-- Don't know if skill needs scripts or multiple files
-- Uncertain whether something is a critical requirement
-- User mentions domain-specific terms without context
-- Unclear what the skill's main purpose is
-
-**Don't hesitate to ask** - getting requirements from user is better than creating wrong skill.
-
-## How to Know the Skill Is Ready
-
-✅ **YAML frontmatter is valid** (name and description meet all requirements)
-✅ **Description includes triggers** (answers "when to use")
-✅ **Has at least one complete example** (user can copy and run)
-✅ **Instructions are imperative** (do X, not "you should X")
-✅ **All file links work** (no broken references)
-✅ **SKILL.md is focused** (<200 lines, advanced content in separate files)
-✅ **Skill is listed in SKILLS-INDEX.md** (name, description, triggers, and composition info)
-
-If all ✅, skill is ready.
-If any ❌, read troubleshooting/INDEX.md
-
-## Validation Before Finalizing
-
-Before completing:
-1. Read validation/CHECKLIST.md
-2. Verify all critical requirements met
-3. Test that all file references work
-4. Confirm examples are complete and runnable
-5. Verify YAML frontmatter is valid
-6. Add the new skill to SKILLS-INDEX.md
-7. Run `swe-sync` (or `claude plugin update swe-team@claudehub`) to refresh the plugin cache
-
-## Resources
-
-- [patterns/INDEX.md](patterns/INDEX.md) - Skill patterns and examples
-- [workflow/](workflow/) - Creation workflows for different scenarios
-- [validation/CHECKLIST.md](validation/CHECKLIST.md) - Complete validation checklist
-- [troubleshooting/INDEX.md](troubleshooting/INDEX.md) - Common issues and fixes
-- [templates/](templates/) - Templates for YAML, examples, etc.
-- [examples/](examples/) - Complete skill examples
+- **Don't create troubleshooting files.** Put troubleshooting guidance inline where the problem would occur.
+- **Don't create pattern/template libraries.** Real skills are the templates.
+- **Don't over-structure.** A 50-line skill doesn't need subdirectories.
+- **Don't duplicate content.** If guidance exists in another skill, link to it.
