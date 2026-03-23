@@ -200,11 +200,6 @@ Follow implementation checklist:
 ❌ Bad: "Remember to use WITH (NOLOCK)" buried in paragraph
 ✅ Good: "⚠️ CRITICAL: Always use `WITH (NOLOCK)`" at top of SKILL.md
 
-## Resources
-
-- [IMPROVEMENT-BEST-PRACTICES.md](IMPROVEMENT-BEST-PRACTICES.md) - Detailed examples and patterns
-- [analysis-guide.md](analysis-guide.md) - Session analysis techniques
-
 ## Validation Checklist
 
 After improvements:
