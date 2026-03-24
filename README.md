@@ -124,20 +124,46 @@ Skills are specialized capabilities invoked with `/swe-team:skill-name`. They pr
 
 Several skills depend on external CLI tools. Install them so the skills work out of the box.
 
-The following CLI tools must be installed and on PATH for their corresponding skills to work:
+All tools below (except cmux) are available via Homebrew:
 
-| Tool | Skill |
-|------|-------|
-| `limbo` | project-manager |
-| `nyx` | nyx (conversation search) |
-| `qorvex` | qorvex-test-ios |
-| `loki` | loki-test-desktop |
-| `khora` | khora-test-web |
-| `wisp-cli` | wisp-design |
+```bash
+brew tap simonspoon/tap
+brew install limbo nyx qorvex loki khora wisp-cli suda
+```
 
-Install them from their GitHub releases or via Homebrew if a tap is available.
+Or download pre-built binaries from each tool's GitHub Releases page.
 
-Check each tool's GitHub repository for release binaries and installation instructions.
+### [limbo](https://github.com/simonspoon/limbo) — Task Manager for Agents
+
+Hierarchical task manager designed for LLMs and AI agents. Stores tasks in a single JSON file (`.limbo/tasks.json`), outputs JSON for easy parsing, and supports progressive decomposition workflows. Used by the **project-manager** skill to orchestrate multi-file projects with parallel subagent execution.
+
+### [nyx](https://github.com/simonspoon/nyx) — Conversation History Search
+
+Indexes and searches Claude Code conversation history stored in `~/.claude/projects/`. Build a full-text index with `nyx index`, then search across all past sessions. Used by the **nyx** skill to recall prior decisions, find code patterns from earlier sessions, and answer "did we already..." questions.
+
+### [qorvex](https://github.com/simonspoon/qorvex) — iOS Automation Toolkit
+
+Native iOS Simulator and physical device automation via a Swift XCTest agent. Supports tap, swipe, type, screenshot, accessibility tree inspection, long-press, and JSONL log-to-script conversion. Connects to simulators over localhost and to physical devices over WiFi/USB via mDNS. Used by the **qorvex-test-ios** and **qorvex-app-explorer** skills.
+
+### [loki](https://github.com/simonspoon/loki) — Desktop QA Automation
+
+macOS desktop app automation via the Accessibility API. Launch apps, inspect accessibility trees, find elements, click, type, drag, and take screenshots — all from the command line. Built for CI/CD pipelines and agent workflows. Used by the **loki-test-desktop** skill.
+
+### [khora](https://github.com/simonspoon/khora) — Web QA Automation
+
+Cross-platform web app automation via Chrome DevTools Protocol. Launch headless or headed Chrome sessions, navigate pages, find elements by CSS selector, click, type, screenshot, and evaluate JavaScript. Used by the **khora-test-web** skill.
+
+### [wisp](https://github.com/simonspoon/wisp) — Visual Design Canvas for Agents
+
+A desktop design surface that agents control through a CLI over WebSocket. The Wisp desktop app renders a live canvas; the `wisp` CLI sends JSON-RPC commands to create, edit, and arrange design nodes. Both human and agent share the same real-time view. Available for macOS, Windows, and Linux. Used by the **wisp-design** skill.
+
+### [suda](https://github.com/simonspoon/suda) — Structured Memory for Agents
+
+SQLite-backed memory and knowledge management CLI. Stores typed memories (user, feedback, project, reference), manages session state, and maintains a project registry. Used by the session startup protocol and **session-handoff** skill to persist context across conversations.
+
+### [cmux](https://cmux.dev) — Terminal & Browser Multiplexer
+
+Third-party tool for spawning and controlling terminals, Claude Code sessions, and browser windows. Used by the **cmux-control** skill to run REPLs, TUIs, interactive shells, and browser-based testing from within agent workflows.
 
 ---
 
