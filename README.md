@@ -9,8 +9,8 @@ A Claude Code plugin that provides agents, skills, and commands for autonomous s
 Add the marketplace and install:
 
 ```bash
-# Add the marketplace (replace with the marketplace URL or path)
-claude plugin marketplace add <marketplace-source>
+# Add the marketplace
+claude plugin marketplace add simonspoon/swe-team
 
 # Install the plugin
 claude plugin install swe-team
@@ -21,14 +21,14 @@ Skills are namespaced: `/swe-team:software-engineering`, `/swe-team:code-reviewe
 ### From Local Marketplace (for development)
 
 ```bash
-# Register local marketplace
-claude plugin marketplace add /path/to/claudehub/marketplace
+# Register local marketplace (point to your local clone)
+claude plugin marketplace add /path/to/local/marketplace
 
 # Install
-claude plugin install swe-team@claudehub
+claude plugin install swe-team@local
 
 # After editing skills, sync the cache
-claude plugin update swe-team@claudehub
+claude plugin update swe-team@local
 ```
 
 ---
