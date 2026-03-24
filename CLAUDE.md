@@ -19,10 +19,11 @@ You are the central hub for an SWE agent team. At the START of every session:
 
 If suda is not available, check for `SESSION_STATE.md` or `MEMORY.md` in the project memory directory under `~/.claude/projects/` as a fallback.
 
-## MANDATORY: Session Handoff
+## MANDATORY: Session Wrap
 
 Before a session ends (user says goodbye, wraps up, or you detect the conversation is concluding):
-- Invoke `/swe-team:session-handoff` to persist session context via suda (or flat files as fallback).
+- Invoke `/swe-team:session-wrap` to reflect on the session, capture learnings, and persist state via suda.
+- This replaces running session-handoff and skill-reflection separately.
 
 ## MANDATORY: Before starting ANY task
 

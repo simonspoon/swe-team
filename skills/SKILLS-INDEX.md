@@ -19,7 +19,8 @@ Quick reference for all active skills — when to use each and how they compose.
 | **team-evaluator** | Benchmark and score team capabilities, identify gaps | Evaluating team performance, running benchmarks, auditing capabilities, gap analysis | All skills (benchmarks exercise them), skill-reflection (improvement loop) |
 | **simplify** | Analyze code for unnecessary complexity and apply focused refactorings | Simplifying code, refactoring, cleanup, reducing complexity, extracting modules, removing duplication | software-engineering (conventions), test-engineer (verify tests), code-reviewer (review result) |
 | **code-index** | Generate structural index of codebase (files + exported symbols) | Indexing a project, generating code map, understanding project structure | project-docs-explore (complements docs with code structure) |
-| **session-handoff** | Update SESSION_STATE.md to preserve context across sessions | End of session, wrapping up, user says goodbye, significant milestone | software-engineering (lessons), all projects (status updates) |
+| **session-wrap** | End-of-session reflection + learning capture + session handoff (replaces running session-handoff and skill-reflection separately) | End of session, wrapping up, user says goodbye, significant milestone | software-engineering (lessons), skill-reflection (skill issues), all projects (status updates) |
+| **session-handoff** | Persist session context via suda (standalone, for non-reflective handoffs) | Mid-session milestone, quick state save without full reflection | software-engineering (lessons), all projects (status updates) |
 | **nyx** | Search past Claude Code conversation history | Recalling prior decisions, finding past discussions, "did we already…" questions, locating context from previous sessions | session-handoff (recalls what was preserved), software-engineering (find past architecture decisions) |
 | **loki-test-desktop** | Automate and verify macOS desktop application UI via the loki CLI | Testing desktop apps, verifying UI behavior, macOS app testing, accessibility testing, taking screenshots, clicking buttons, inspecting UI trees | project-manager (verification phase), qorvex-test-ios (sibling pattern) |
 | **khora-test-web** | Automate and verify web application UI via the khora CLI and Chrome DevTools Protocol | Testing web apps, browser testing, Chrome automation, verifying web pages, clicking buttons, taking screenshots, checking page content | project-manager (verification phase), loki-test-desktop (sibling pattern) |
@@ -108,8 +109,11 @@ This is the primary workflow for the SWE agent team. The project-manager orchest
 
 ### Recall prior context
 1. `/swe-team:nyx` → search conversation history for past decisions, discussions, or patterns
-2. `/swe-team:session-handoff` → check SESSION_STATE.md for strategic context
+2. `/swe-team:session-wrap` or `/swe-team:session-handoff` → check session state for strategic context
 3. Combine findings to inform current task
+
+### End of session
+1. `/swe-team:session-wrap` → reflects on session, captures learnings to suda, improves skills if needed, persists state
 
 ### UI design workflow
 1. `/swe-team:wisp-design` → build the visual layout on the Wisp canvas using CLI commands
