@@ -14,11 +14,26 @@ Cut a versioned release for a project with CI-driven binary builds and Homebrew 
 
 ## Prerequisites
 
+- `gh` CLI authenticated
 - Project has `.github/workflows/release.yml` triggered by `v*` tags
 - Project has a Homebrew formula in a tap repo (detect from `.github/workflows/release.yml` or ask the user)
-- `gh` CLI authenticated
+
+If this is the **first release** of a new project, some prerequisites may not be met yet. See "First Release" section below.
 
 ## Activation Protocol
+
+### Step 0: Detect first release
+
+Check if any releases exist:
+```bash
+gh release list --limit 1
+```
+
+If no releases exist AND no Homebrew formula exists for this project, follow the **First Release** path:
+1. Verify `.github/workflows/release.yml` exists. If not, create one from the project's CI pattern.
+2. Note that the Homebrew formula will need to be created AFTER the release produces binaries (can't compute SHA256 checksums without artifacts).
+3. Warn: "The `HOMEBREW_TAP_TOKEN` secret must be set on this repo for automatic tap updates. If not configured, the tap update will fail and you'll need to update it manually."
+4. Proceed with Steps 1-7 as normal, then handle formula creation in Step 8.
 
 ### Step 1: Determine Version
 
@@ -104,16 +119,26 @@ Verify the tap update succeeded:
 gh run list --repo <TAP_REPO> --limit 3
 ```
 
-If the tap update failed, run the update manually:
+If the tap update failed (common on first release — secret may not be configured), update manually:
 ```bash
 # Find the local tap repo path
 brew --repository <tap-owner>/<tap-name>
 # Or ask the user for the local tap repo path
 
 cd <LOCAL_TAP_REPO>
+```
+
+**If a formula already exists:**
+```bash
 bash scripts/update-formula.sh <FORMULA_NAME> <VERSION_WITHOUT_V> <OWNER/REPO>
 # IMPORTANT: VERSION must NOT have the v prefix (use 0.2.0, not v0.2.0)
-git add -A && git commit -m "update <FORMULA_NAME> to <VERSION>" && git push
+```
+
+**If this is the first release (no formula exists):**
+Create a new formula file at `Formula/<TOOL_NAME>.rb` using an existing formula as a template. Then run `update-formula.sh` to fill in the correct SHA256 checksums.
+
+```bash
+git add -A && git commit -m "add/update <FORMULA_NAME> to <VERSION>" && git push
 ```
 
 ## Gotchas

@@ -12,6 +12,27 @@ Store and recall structured memories in a SQLite database via the `suda` CLI. Me
 - `suda` must be installed and on PATH
 - Database lives at `~/.suda/suda.db` (override with `SUDA_HOME` env var)
 
+## Setup
+
+For suda to load automatically at session start, `~/.claude/CLAUDE.md` must contain the bootstrap instructions. Add this once:
+
+```markdown
+## Suda — Structured Memory System
+
+At the start of every session, load context from suda before doing other work:
+
+1. Check if suda is available: `which suda`
+2. If available, load relevant memories and state:
+   suda state get session-state 2>/dev/null
+   suda recall --type user --json --limit 20 2>/dev/null
+   suda recall --type feedback --json --limit 20 2>/dev/null
+   suda projects --json 2>/dev/null
+3. If the CWD matches a registered project, also load project-specific memories:
+   suda recall --project <project-name> --json 2>/dev/null
+```
+
+Without this bootstrap, suda works but must be invoked manually.
+
 ## When to Use
 
 ### On session start
