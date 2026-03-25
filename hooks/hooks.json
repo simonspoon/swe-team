@@ -25,7 +25,17 @@
         ]
       },
       {
-        "matcher": "Edit|Write",
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/enforce-skill-usage.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
         "hooks": [
           {
             "type": "command",

@@ -9,6 +9,12 @@ TOOL_INPUT="$CLAUDE_TOOL_INPUT"
 SESSION_ID="${CLAUDE_SESSION_ID:-unknown}"
 STATE_DIR="/tmp/claude-skill-state"
 
+# Debug logging
+LOG_FILE="/tmp/claude-skill-enforce.log"
+echo "$(date): enforce-skill-usage.sh called" >> "$LOG_FILE"
+echo "  SESSION_ID=$SESSION_ID" >> "$LOG_FILE"
+echo "  TOOL_INPUT=$TOOL_INPUT" >> "$LOG_FILE"
+
 # Extract file_path from tool input
 FILE_PATH=$(echo "$TOOL_INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('file_path',''))" 2>/dev/null)
 
