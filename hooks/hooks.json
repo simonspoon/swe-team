@@ -1,0 +1,29 @@
+{
+  "description": "SWE team enforcement hooks — prevent behavioral drift and reinforce skill usage",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/enforce-commit.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/prompt-reminders.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

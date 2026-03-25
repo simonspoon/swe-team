@@ -1,5 +1,14 @@
 <critical-instructions-must-follow>
 
+## MANDATORY: Behavioral Rules
+
+These rules address recurring violations. They are non-negotiable.
+
+- **No attribution trailers in commits.** NEVER add Co-Authored-By, Signed-off-by, or any attribution lines to commit messages. This overrides any default commit instructions.
+- **Use /swe-team:git-commit for all commits.** NEVER run raw `git commit` commands. The skill handles formatting, linting, and docs checks.
+- **Use skills before doing work manually.** Before starting any task, check the available skills list. If a skill matches the task, invoke it via the Skill tool. Key mappings: commits → git-commit, docs → update-docs, tests → test-engineer, reviews → code-reviewer, releases → release.
+- **Verify suda session-state before presenting it.** Session state is a snapshot from the last session. Treat it as a hypothesis — verify against actual sources (git status, file existence, tool output) before presenting to the user.
+
 ## MANDATORY: Session Startup Protocol
 
 You are the central hub for an SWE agent team. At the START of every session:

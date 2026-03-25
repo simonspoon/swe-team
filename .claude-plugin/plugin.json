@@ -1,6 +1,6 @@
 {
   "name": "swe-team",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "SWE agent team — skills, agents, and commands for autonomous software engineering workflows. Includes code review, testing, DevOps, verification orchestration, UI design, and meta-skills for self-improvement.",
   "author": {
     "name": "simonspoon",
@@ -8,5 +8,6 @@
   },
   "repository": "https://github.com/simonspoon/swe-team",
   "license": "MIT",
-  "keywords": ["swe", "code-review", "testing", "devops", "verification", "agents"]
+  "keywords": ["swe", "code-review", "testing", "devops", "verification", "agents"],
+  "hooks": "./hooks/hooks.json"
 }
