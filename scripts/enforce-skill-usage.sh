@@ -50,14 +50,14 @@ check_skill_flag() {
 # --- Enforce ---
 if [ "$IS_DOC" = true ]; then
   if ! check_skill_flag "update-docs"; then
-    echo "BLOCKED: You are editing a documentation file without having invoked /swe-team:update-docs first. Call the Skill tool with skill=\"swe-team:update-docs\" BEFORE editing documentation files."
+    echo "BLOCKED: You are editing a documentation file without having invoked /swe-team:update-docs first. Call the Skill tool with skill=\"swe-team:update-docs\" BEFORE editing documentation files." >&2
     exit 2
   fi
 fi
 
 if [ "$IS_TEST" = true ]; then
   if ! check_skill_flag "test-engineer"; then
-    echo "BLOCKED: You are editing a test file without having invoked /swe-team:test-engineer first. Call the Skill tool with skill=\"swe-team:test-engineer\" BEFORE writing or editing tests."
+    echo "BLOCKED: You are editing a test file without having invoked /swe-team:test-engineer first. Call the Skill tool with skill=\"swe-team:test-engineer\" BEFORE writing or editing tests." >&2
     exit 2
   fi
 fi
