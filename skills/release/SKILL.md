@@ -1,6 +1,9 @@
 ---
 name: release
-description: Cut a versioned release for a Rust CLI or Tauri app. Bumps version, commits, tags, pushes, and verifies CI release + Homebrew tap update. Use when releasing a tool, cutting a release, bumping version, tagging a release, or publishing to Homebrew.
+description: >
+  Release engineering expert. ALWAYS invoke this skill when cutting a release, bumping
+  versions, or tagging. Do NOT run version bumps or git tag commands directly — use this
+  skill. Triggers: release, cut a release, bump version, tag and push, publish to Homebrew.
 ---
 
 # Release

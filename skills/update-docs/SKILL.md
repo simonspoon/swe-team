@@ -1,6 +1,10 @@
 ---
 name: update-docs
-description: Update project documentation (docs/ and README.md) to reflect recent code changes. Discovers the existing doc structure, detects what changed in code, and makes targeted updates to affected docs.
+description: >
+  Documentation update expert. ALWAYS invoke this skill when updating, syncing, or fixing
+  project documentation (docs/, README.md). Do NOT edit documentation files directly —
+  use this skill. Triggers: update docs, sync docs, docs are stale, update the readme,
+  after any code change that affects user-facing behavior.
 triggers:
   - update docs
   - update documentation

@@ -1,6 +1,10 @@
 ---
 name: test-engineer
-description: Generate tests, run test suites, analyze coverage, and report results across languages. Use when writing tests, generating tests, running tests, analyzing test coverage, test engineering, unit tests, integration tests, e2e tests, pytest, vitest, jest, cargo test, or checking test quality.
+description: >
+  Test engineering expert. ALWAYS invoke this skill when writing, generating, running,
+  or analyzing tests. Do NOT write test files or run test suites directly — use this skill.
+  Triggers: write tests, generate tests, run tests, test coverage, unit tests, integration
+  tests, e2e tests, pytest, vitest, jest, cargo test, check test quality.
 ---
 
 # Test Engineer

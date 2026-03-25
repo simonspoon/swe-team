@@ -1,10 +1,10 @@
 ---
 name: project-docs-explore
 description: >
-  Explore and understand a project's documentation structure. Use this skill
-  proactively when onboarding to a new project, exploring an unfamiliar
-  codebase, or starting work on a subsystem you haven't touched before.
-  Helps agents discover what docs exist and read only the relevant ones.
+  Project documentation explorer. ALWAYS invoke this skill when starting work on any
+  project or subsystem. Do NOT skip this step — it discovers what docs exist so you
+  read only the relevant ones. Triggers: onboarding, new project, unfamiliar codebase,
+  starting work on a subsystem, exploring project docs.
 ---
 
 # Project Docs Explore

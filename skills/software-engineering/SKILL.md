@@ -1,6 +1,11 @@
 ---
 name: software-engineering
-description: Self-evolving software engineering knowledge base. Apply and grow knowledge on architecture, debugging, code review, design patterns, testing, performance, and security. Captures personal preferences and lessons learned. Use when working on architecture decisions, debugging, code review, design patterns, testing strategy, performance optimization, security review, or when user shares engineering preferences or lessons.
+description: >
+  Software engineering knowledge base. ALWAYS invoke this skill BEFORE writing, modifying,
+  or deleting any code. Do NOT skip this step — it loads user preferences, project
+  conventions, and domain knowledge that must inform your work. Triggers: any code task,
+  architecture decisions, debugging, design patterns, testing strategy, performance,
+  security, or when user shares engineering preferences.
 ---
 
 # Software Engineering Knowledge Base

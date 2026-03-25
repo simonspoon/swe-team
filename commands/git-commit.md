@@ -1,6 +1,9 @@
 ---
 name: git-commit
-description: Stage and commit changes with a clear, concise commit message.
+description: >
+  Git commit expert. ALWAYS invoke this skill when committing changes. Do NOT run raw
+  git commit commands — use this skill. It handles formatting, linting, and docs checks.
+  Triggers: commit, commit changes, save progress, stage and commit.
 ---
 
 ## Steps

@@ -1,6 +1,10 @@
 ---
 name: code-reviewer
-description: Review code diffs, PRs, and files for quality, bugs, security issues, and project conventions. Use when reviewing code, reviewing a PR, checking code quality, reviewing diffs, code review, review staged changes, security review, or checking for bugs.
+description: >
+  Code review expert. ALWAYS invoke this skill when reviewing code, PRs, diffs, or
+  checking for bugs and security issues. Do NOT review code manually — use this skill.
+  Triggers: review code, review PR, code review, check code quality, review diffs,
+  review staged changes, security review, check for bugs.
 ---
 
 # Code Reviewer
