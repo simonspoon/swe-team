@@ -58,8 +58,8 @@ wisp screenshot --out design.png
 
 **Hierarchy (add only):** `-p, --parent <id>` (parent node ID, defaults to root)
 **Layout:** `-x`, `-y`, `--width`, `--height`
-**Style:** `--fill <hex>`, `--radius`, `--opacity`, `--z-index <int>`
-**Text:** `--text <string>`, `--font-size`, `--text-wrap`
+**Style:** `--fill <hex>`, `--stroke <hex>`, `--stroke-width`, `--radius`, `--opacity`, `--z-index <int>`, `--clip`
+**Text:** `--text <string>`, `--font-size`, `--font-family`, `--font-weight`, `--color <hex>`, `--text-align <left|center|right>`, `--text-wrap`
 **Rename (edit only):** `--name <string>`
 **Auto-layout:** `--layout-mode <none|flex>`, `--direction <row|column>`, `--align`, `--justify`, `--gap`, `--padding`
 **Global:** `--json` (raw JSON output), `--url <ws-url>`

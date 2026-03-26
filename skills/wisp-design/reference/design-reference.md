@@ -48,6 +48,53 @@ wisp node add "Description" -t text --width 280 \
 
 Without `--text-wrap`, text renders on a single line. With it, text wraps at the node's width and height adjusts automatically.
 
+## Text Color
+
+Text nodes default to dark gray (#111111). Override with `--color`:
+
+```bash
+wisp node add "Error" -t text --text "Something went wrong" --color "#ef4444" --font-size 14
+wisp node add "Success" -t text --text "Saved!" --color "#10b981"
+```
+
+## Text Alignment
+
+Align text within its node width:
+
+```bash
+wisp node add "Centered" -t text --width 300 --text "Welcome" --text-align center --font-size 24
+wisp node add "Right" -t text --width 200 --text "$12,400" --text-align right
+```
+
+Values: `left` (default), `center`, `right`.
+
+## Font Controls
+
+```bash
+# Monospace code-like text
+wisp node add "Code" -t text --text "fn main()" --font-family "monospace" --font-size 13
+
+# Bold heading
+wisp node add "Heading" -t text --text "Dashboard" --font-weight 700 --font-size 24
+```
+
+## Stroke (Borders)
+
+Add borders to any node:
+
+```bash
+wisp node add "Card" -t frame --width 300 --height 200 --stroke "#e2e8f0" --stroke-width 1 --radius 8
+wisp node add "Input" -t frame --width 250 --height 36 --stroke "#94a3b8" --stroke-width 1 --radius 4
+```
+
+## Overflow Clipping
+
+Clip children that extend beyond a container's bounds:
+
+```bash
+wisp node add "Container" -t frame --width 200 --height 100 --clip --fill "#ffffff"
+```
+
 ## Human Interactive Editing
 
 The Wisp desktop app supports direct manipulation on the canvas:
