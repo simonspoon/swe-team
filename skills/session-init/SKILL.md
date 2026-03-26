@@ -1,7 +1,6 @@
 ---
 name: session-init
 description: Load and summarize suda context at session start via a Sonnet agent, keeping the main context window lean. Replaces raw suda dumps with a condensed briefing.
-model: sonnet
 ---
 
 # Session Init
