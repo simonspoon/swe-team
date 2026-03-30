@@ -1,6 +1,6 @@
 {
   "name": "swe-team",
-  "version": "1.19.0",
+  "version": "1.20.0",
   "description": "SWE agent team — skills, agents, and commands for autonomous software engineering workflows. Includes code review, testing, DevOps, verification orchestration, UI design, and meta-skills for self-improvement.",
   "author": {
     "name": "simonspoon",
