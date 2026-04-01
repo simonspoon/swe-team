@@ -86,15 +86,9 @@ limbo block uvwx ghij    # Test after fix
 limbo block ghij stuv    # Verify after test
 ```
 
-### 5. Execute Sequentially
+### 5. Execution Order
 
-Bug fixes are typically sequential (investigate → fix → test → verify).
-
-Dispatch investigation first:
-```bash
-limbo claim ijkl bug-investigator
-limbo status ijkl in-progress
-```
+Bug fixes are typically sequential (investigate → fix → test → verify). The orchestrator picks up unblocked leaf tasks in dependency order.
 
 ## Example: Login Failure Bug
 
@@ -124,7 +118,7 @@ limbo block efgh uvwx
 limbo block uvwx ghij
 ```
 
-Note: Fix tasks yzab & cdef can run in parallel once investigation completes.
+Note: Fix tasks yzab & cdef are independent and can execute in any order once investigation completes.
 
 ## iOS Bugs
 

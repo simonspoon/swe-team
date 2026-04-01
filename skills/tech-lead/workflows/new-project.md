@@ -98,9 +98,9 @@ Initial parallel tasks (no dependencies):
 limbo list --status todo
 ```
 
-### 6. Dispatch
+### 6. Execution Order
 
-Spawn subagents for independent tasks. See [parallel.md](../orchestration/parallel.md).
+Independent tasks (no `blockedBy`) can be executed in any order. The external orchestrator picks up unblocked leaf tasks automatically.
 
 ## Example: REST API Project
 
@@ -126,9 +126,9 @@ limbo block yzab cdef   # Impl after design
 limbo block cdef ghij   # Tests after impl
 ```
 
-Parallel execution waves:
-1. Wave 1: ijkl, yzab (init + design)
-2. Wave 2: mnop, cdef (after wave 1)
-3. Wave 3: qrst, ghij (after wave 2)
+Execution order (based on dependencies):
+1. ijkl, yzab (init + design — no blockers)
+2. mnop, cdef (unblocked after step 1)
+3. qrst, ghij (unblocked after step 2)
 
 Back to [INDEX.md](INDEX.md) | [SKILL.md](../SKILL.md)

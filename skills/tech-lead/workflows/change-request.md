@@ -65,11 +65,12 @@ For change requests that involve refactoring, compose with:
 - **Test phase**: Use `/swe-team:test-engineer` — especially important for refactoring. Generate tests for newly extracted modules, don't just verify existing tests pass.
 - **Review phase**: Use `/swe-team:code-reviewer` to verify refactoring preserves behavior and doesn't break encapsulation.
 
-### 5. Parallel Opportunities
+### 5. Independent Tasks
 
-- Analysis sub-tasks can often run in parallel
-- Multiple component updates can run in parallel
-- Different test types can run in parallel
+These groups have no dependencies between them and can execute in any order:
+- Analysis sub-tasks
+- Multiple component updates (after analysis)
+- Different test types (after implementation)
 
 ## Example: Update API Response Format
 
@@ -100,9 +101,9 @@ limbo block efgh uvwx    # Modification after analysis
 limbo block uvwx klmn    # Test after modification
 ```
 
-Parallel execution:
-- Wave 1: ijkl & mnop (endpoint list + client check)
-- Wave 2: yzab, cdef, ghij (all endpoint updates)
-- Wave 3: opqr & stuv (endpoint tests + client tests)
+Execution order (based on dependencies):
+1. ijkl & mnop (endpoint list + client check — no blockers)
+2. yzab, cdef, ghij (endpoint updates — unblocked after analysis)
+3. opqr & stuv (endpoint + client tests — unblocked after implementation)
 
 Back to [INDEX.md](INDEX.md) | [SKILL.md](../SKILL.md)

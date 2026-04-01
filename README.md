@@ -39,8 +39,8 @@ Agents are autonomous subprocesses that handle complex, multi-step tasks. They a
 
 | Agent | Description |
 |-------|-------------|
-| **project-manager** | Entry point for all work. Performs problem analysis, decomposes tasks in limbo, routes to tech-lead for execution, and verifies completion. Owns the full task lifecycle from intake through delivery. |
-| **tech-lead** | Engineering executor. Receives decomposed task trees from the project-manager, dispatches parallel subagents, runs integration checkpoints, and enforces review/test gates. |
+| **project-manager** | Stateless per-task evaluator. Receives a single task, evaluates it, and either decomposes into subtasks or executes via tech-lead + verifies + commits. Only agent that commits code. |
+| **tech-lead** | Single-task code executor. Receives one task from the PM, implements the change, verifies it works, and returns. Never commits — the PM handles that. |
 | **code-review-agent** | Performs thorough, convention-aware code reviews combining security analysis, bug detection, performance checks, and style enforcement. |
 | **researcher-agent** | Conducts deep research across codebases, documentation, and the web. Produces structured, actionable reports. |
 | **skill-trainer** | Tests, validates, and hardens skills through structured multi-phase training and weak-model (Haiku) calibration. |
@@ -63,7 +63,7 @@ Skills are specialized capabilities invoked with `/swe-team:skill-name`. They pr
 
 | Skill | Command | Description |
 |-------|---------|-------------|
-| **tech-lead** | `/swe-team:tech-lead` | Engineering executor — receives tasks from the project-manager, dispatches subagents, enforces review/test gates. |
+| **tech-lead** | `/swe-team:tech-lead` | Single-task code executor — receives one task from the PM, implements, verifies, returns (no commits). |
 | **session-wrap** | `/swe-team:session-wrap` | End-of-session cleanup — commits dirty repos and optionally improves skills. |
 | **status** | `/swe-team:status` | Force-refreshes all project state by re-running every command live. Never uses cached data. |
 | **global-backlog** | `/swe-team:global-backlog` | Manages cross-project tasks in the global limbo backlog (`~/.limbo/`). |
@@ -141,7 +141,7 @@ Or download pre-built binaries from each tool's GitHub Releases page.
 
 ### [limbo](https://github.com/simonspoon/limbo) — Task Manager for Agents
 
-Hierarchical task manager designed for LLMs and AI agents. Stores tasks in a single JSON file (`.limbo/tasks.json`), outputs JSON for easy parsing, and supports progressive decomposition workflows. Used by the **tech-lead** skill to orchestrate projects with parallel subagent execution.
+Hierarchical task manager designed for LLMs and AI agents. Stores tasks in a single JSON file (`.limbo/tasks.json`), outputs JSON for easy parsing, and supports progressive decomposition workflows. Used by the **project-manager** agent for task decomposition and the external orchestrator for sequencing execution.
 
 ### [nyx](https://github.com/simonspoon/nyx) — Conversation History Search
 
@@ -175,4 +175,4 @@ Headless terminal multiplexer for spawning and controlling terminal sessions, Cl
 
 ## CLAUDE.md
 
-The included `CLAUDE.md` configures Claude Code with a session startup/wrap protocol, mandatory pre-task steps, and automatic routing to the project-manager agent for all code-producing tasks.
+The included `CLAUDE.md` configures Claude Code with mandatory pre-task steps and routing to the project-manager agent for all code-producing tasks. An external orchestrator watches limbo for unblocked leaf tasks and spawns PM sessions to handle them.

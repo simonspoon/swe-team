@@ -59,4 +59,4 @@ Use correct ID from list.
 
 **Fix**: Every `limbo add` requires `--action`, `--verify`, `--result`. Every `limbo status <id> done` requires `--outcome "..."`. These are not optional.
 
-Back to [INDEX.md](INDEX.md) | [SKILL.md](../SKILL.md)
+Back to [SKILL.md](../SKILL.md)

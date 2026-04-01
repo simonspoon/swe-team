@@ -79,18 +79,9 @@ limbo block efgh qrst
 limbo block qrst cdef
 ```
 
-### 4. Dispatch Design Phase
+### 4. Execution Order
 
-Start with design tasks (can run in parallel if independent):
-
-```bash
-limbo claim ijkl design-analyst
-limbo status ijkl in-progress
-```
-
-### 5. Progress Through Phases
-
-As each phase completes, next phase unblocks automatically.
+Design tasks run first (no blockers). As each phase completes, the next phase unblocks automatically. The orchestrator picks up unblocked leaf tasks.
 
 ## Example: Add Search Feature
 
@@ -116,7 +107,7 @@ limbo block qrst ghij   # Test after implement
 limbo block uvwx yzab   # Index after engine setup
 ```
 
-Parallel opportunities:
+Independent tasks (can execute in any order):
 - ijkl & mnop (research + schema design)
 - uvwx & cdef (engine setup + API can start together)
 - klmn & opqr (unit + E2E tests)

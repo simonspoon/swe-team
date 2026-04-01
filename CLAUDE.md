@@ -29,11 +29,11 @@ NEVER skip these steps. Do them visibly in your response. If you catch yourself 
 ## MANDATORY: Route to agents when applicable
 
 **All code-producing tasks → `swe-team:project-manager` agent**
-ANY task that writes, modifies, or deletes code MUST be routed through the `swe-team:project-manager` agent. The PM is the entry point for all work — it performs problem analysis (restate, known/unknown), decomposes the task in limbo, routes engineering execution to the `swe-team:tech-lead` agent, and verifies completion. Do NOT bypass it because a task "seems simple." Every task gets the same discipline: analysis, decomposition, execution, verification.
+ANY task that writes, modifies, or deletes code MUST be routed through the `swe-team:project-manager` agent. The PM receives a single task, evaluates it, and either decomposes it into subtasks (then exits for the orchestrator to pick up the leaves) or executes it via the tech-lead subagent, verifies, and commits. The PM is the only agent that commits code.
 
 **If you are already running as the project-manager agent**, follow your own workflow — do not re-dispatch to yourself.
 
-**Direct tech-lead dispatch**: Only when task analysis and decomposition have already been done (e.g., tasks already exist in limbo). In normal flow, the PM handles this.
+**Never dispatch tech-lead directly.** The tech-lead only runs as a subagent of the PM. It writes code but never commits.
 
 **Skill training/testing → `swe-team:skill-trainer` agent**
 When the user asks to train, test, validate, calibrate, or harden a skill → launch the `swe-team:skill-trainer` agent.

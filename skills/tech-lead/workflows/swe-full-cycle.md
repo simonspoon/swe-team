@@ -24,7 +24,7 @@ Use this workflow when the task requires the full engineering cycle — not just
 | Plan | `/swe-team:software-engineering` | Load conventions, architecture knowledge |
 | Plan | `/swe-team:project-docs-explore` | Understand existing codebase |
 | Plan | `/swe-team:code-index` | Generate structural map of unfamiliar code |
-| Implement | (subagents) | Write code per task decomposition |
+| Implement | (tech-lead) | Write code per task decomposition |
 | Test | `/swe-team:test-engineer` | Generate tests, run suites, analyze coverage |
 | Review | `/swe-team:code-reviewer` | Review diffs for bugs, security, conventions |
 | Review | `/swe-team:simplify` | Analyze changed code for unnecessary complexity |
@@ -72,10 +72,10 @@ SWE: <description>
 Load context before decomposing:
 
 ```bash
-# Load skills (orchestrator does this, not subagents)
+# PM loads these during planning:
 # /swe-team:software-engineering — conventions and preferences
 # /swe-team:project-docs-explore — architecture docs
-# /swe-team:code-index — structural map of unfamiliar areas (optional, use when codebase is new)
+# /swe-team:code-index — structural map of unfamiliar areas (optional)
 ```
 
 Create the root and plan tasks:
@@ -111,7 +111,7 @@ limbo add "Support: <secondary>" --parent impl           # → supp
 limbo block plan impl   # Implement after plan
 ```
 
-Dispatch core and support tasks to subagents in parallel (if no file conflicts).
+Core and support tasks are independent and can be executed in any order by the orchestrator.
 
 ### 3. Test Phase
 
@@ -128,13 +128,11 @@ limbo block tgen trun   # Run after generation
 limbo block trun tcov   # Coverage after run
 ```
 
-Subagent prompt for test generation should include:
+Test generation task should include context about:
 - Files that were changed (from implement phase)
-- The test-engineer skill activation protocol
-- Framework detection commands
-- Expected output format
+- Framework and test conventions
 
-**Refactoring note:** When the implement phase is a refactoring (extracting modules, splitting files), the test generation task MUST generate tests for newly created modules, not just verify existing tests still pass. Include in the subagent prompt: "Generate tests for any newly extracted modules that don't have their own test coverage."
+**Refactoring note:** When the implement phase is a refactoring (extracting modules, splitting files), the test generation task MUST generate tests for newly created modules, not just verify existing tests still pass.
 
 ### 4. Review Phase
 
@@ -172,7 +170,7 @@ limbo block impl cicd   # CI after implement (can parallel with test)
 
 ### 6. Completion Gate (MANDATORY)
 
-**Do NOT skip this step.** Before delivery, the orchestrator must verify every phase actually executed and produce evidence.
+**Do NOT skip this step.** Before delivery, the PM must verify every phase actually executed and produce evidence.
 
 ```bash
 limbo add "Completion gate" --parent root                # → gate
@@ -182,7 +180,7 @@ limbo add "Deliver" --parent root                        # → dlvr
 limbo block gate dlvr    # Deliver BLOCKED on gate
 ```
 
-To pass the gate, the orchestrator must verify ALL of the following and record the evidence in the gate task outcome:
+To pass the gate, the PM must verify ALL of the following and record the evidence in the gate task outcome:
 
 1. **Plan phase**: Test plan was defined with acceptance criteria
 2. **Implement phase**: Code was written and builds clean
@@ -268,19 +266,21 @@ expl ─┘                     │         ↗
                              └→ cicd ─┘ (optional)
 ```
 
-## Wave Execution
+## Execution Order
 
-- **Wave 1**: req + expl (parallel research; use `/swe-team:code-index` if codebase is unfamiliar)
-- **Wave 2**: dsgn (depends on both)
-- **Wave 3**: tpln (test plan from design)
-- **Wave 4**: core + supp (parallel implementation)
-- **Wave 5**: tgen + cicd (parallel — tests + CI)
-- **Wave 6**: trun → tcov (sequential test execution)
-- **Wave 7**: crev (review all changes)
-- **Wave 8**: simplify pass + addr (if review/simplify has feedback)
-- **Wave 9**: gate (verify all phases, produce evidence)
-- **Wave 10**: retro (retrospective — capture lessons, create follow-ups)
-- **Wave 11**: docs → cmit → pr (update docs, commit, deliver)
+The orchestrator picks up unblocked leaf tasks based on dependencies:
+
+1. req + expl (no blockers — use `/swe-team:code-index` if codebase is unfamiliar)
+2. dsgn (unblocked after req + expl)
+3. tpln (unblocked after dsgn)
+4. core + supp (unblocked after plan)
+5. tgen + cicd (unblocked after impl)
+6. trun → tcov (sequential — test execution)
+7. crev (unblocked after test)
+8. simplify pass + addr (if review/simplify has feedback)
+9. gate (verify all phases, produce evidence)
+10. retro (capture lessons, create follow-ups)
+11. docs → cmit → pr (update docs, commit, deliver)
 
 ## Review Loop
 

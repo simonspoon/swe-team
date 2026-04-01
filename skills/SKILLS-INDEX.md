@@ -4,7 +4,7 @@ Quick reference for all active skills — when to use each and how they compose.
 
 | Skill | Purpose | When to invoke | Composes with |
 |-------|---------|----------------|---------------|
-| **tech-lead** | Engineering gateway for all code tasks — plans, dispatches, reviews, tests, verifies | ANY task that writes, modifies, or deletes code | project-docs-explore (Phase 0), code-reviewer, test-engineer, qorvex-test-ios (verification) |
+| **tech-lead** | Single-task code executor — implements one task, verifies, returns (no commits) | Dispatched by PM to execute a single leaf task | software-engineering (conventions), project-docs-explore (codebase context) |
 | **project-docs-explore** | Orient via progressive-disclosure docs before coding | Starting work on unfamiliar subsystem or onboarding to project | tech-lead (Phase 0 research) |
 | **qorvex-test-ios** | Automate and verify iOS app UI on simulator or physical device | Testing iOS apps, verifying UI behavior, taking screenshots | tech-lead (verification phase) |
 | **setup-docs** | Create docs/ structure with INDEX.md for progressive disclosure | New project needs documentation scaffolding | project-docs-explore (consumer of its output) |
@@ -36,38 +36,19 @@ Quick reference for all active skills — when to use each and how they compose.
 ## Composition Patterns
 
 ### Multi-file feature work
-1. `/swe-team:project-docs-explore` → read relevant docs
-2. `/swe-team:tech-lead` → decompose into tasks, dispatch subagents
-3. `/swe-team:qorvex-test-ios` → verify iOS UI changes in verification phase
+1. PM decomposes feature into leaf tasks in limbo
+2. Orchestrator picks up each leaf → PM dispatches tech-lead per task
+3. PM verifies and commits each completed task
+4. `/swe-team:qorvex-test-ios` or `/swe-team:loki-test-desktop` or `/swe-team:khora-test-web` → platform-specific verification
 
-### iOS bug fix
-1. `/swe-team:project-docs-explore` → understand subsystem
-2. `/swe-team:tech-lead` → investigate → fix → test
-3. `/swe-team:qorvex-test-ios` → reproduce bug, verify fix on device
-
-### Desktop app verification
-1. `/swe-team:project-docs-explore` → understand the desktop app's subsystem
-2. `/swe-team:tech-lead` → decompose into tasks, dispatch subagents
-3. `/swe-team:loki-test-desktop` → verify macOS desktop UI changes (screenshot, inspect tree, interact, verify)
-
-### Desktop bug fix
-1. `/swe-team:project-docs-explore` → understand subsystem
-2. `/swe-team:tech-lead` → investigate → fix → test
-3. `/swe-team:loki-test-desktop` → reproduce bug, verify fix on desktop app
-
-### Web app verification
-1. `/swe-team:project-docs-explore` → understand the web app's subsystem
-2. `/swe-team:tech-lead` → decompose into tasks, dispatch subagents
-3. `/swe-team:khora-test-web` → verify web UI changes (launch Chrome, navigate, screenshot, inspect, verify)
-
-### Web bug fix
-1. `/swe-team:project-docs-explore` → understand subsystem
-2. `/swe-team:tech-lead` → investigate → fix → test
-3. `/swe-team:khora-test-web` → reproduce bug in browser, verify fix on web app
+### Bug fix
+1. PM receives bug task, dispatches tech-lead to investigate and fix
+2. PM verifies fix, commits
+3. Platform QA skill (qorvex/loki/khora) → verify fix on device/desktop/browser
 
 ### New project setup
 1. `/swe-team:setup-docs` → create docs/ structure
-2. `/swe-team:tech-lead` → orchestrate implementation
+2. PM decomposes implementation into tasks → orchestrator handles execution
 3. `/swe-team:update-docs` → keep docs current as code evolves
 
 ### Code review workflow
@@ -86,15 +67,14 @@ Quick reference for all active skills — when to use each and how they compose.
 3. `/swe-team:code-reviewer` → review implementation against tests
 
 ### SWE Full Cycle (issue → merge)
-1. `/swe-team:software-engineering` → load conventions and architecture knowledge
-2. `/swe-team:project-docs-explore` → understand existing codebase
-3. `/swe-team:tech-lead` → decompose work, dispatch subagents (uses `swe-full-cycle` workflow)
-4. `/swe-team:test-engineer` → generate tests, run suites, analyze coverage
-5. `/swe-team:code-reviewer` → review all changes for bugs, security, conventions
-6. `/swe-team:devops` → update CI pipeline if needed
-7. Deliver: commit + create PR
+1. PM analyzes issue, decomposes into leaf tasks in limbo
+2. Orchestrator picks each leaf → PM dispatches tech-lead per task
+3. PM verifies each task (includes test-engineer, code-reviewer as needed)
+4. PM commits after verification
+5. `/swe-team:devops` → update CI pipeline if needed
+6. Deliver: create PR
 
-This is the primary workflow for the SWE agent team. The tech-lead orchestrates all other skills via its `workflows/swe-full-cycle.md` template.
+The orchestrator drives the outer loop. Each PM session handles one task end-to-end.
 
 ### New agent creation
 1. `/swe-team:agent-composer` → generate agent definition from requirements
