@@ -31,7 +31,7 @@ session_id="$(echo "$payload" | jq -r '.session_id // empty')"
   [ "$new_bytes" -lt 500 ] && exit 0
 
   # --- Read new content with trailing context ---
-  # Get ~20 lines of context before the offset for Haiku to understand the conversation
+  # Get ~20 lines of context before the offset for Sonnet to understand the conversation
   context_window=""
   if [ "$last_offset" -gt 0 ]; then
     # Read some content before the offset for context
@@ -48,19 +48,19 @@ session_id="$(echo "$payload" | jq -r '.session_id // empty')"
   # Update the offset to current file size
   echo "$file_size" > "$OFFSET_FILE"
 
-  # --- Build the prompt for Haiku ---
-  haiku_input=""
+  # --- Build the prompt for Sonnet ---
+  sonnet_input=""
   if [ -n "$context_window" ]; then
-    haiku_input="=== PRIOR CONTEXT (for reference only — already observed) ===
+    sonnet_input="=== PRIOR CONTEXT (for reference only — already observed) ===
 $context_window
 
 === NEW CONTENT (analyze this for memory-worthy items) ===
 $new_content"
   else
-    haiku_input="$new_content"
+    sonnet_input="$new_content"
   fi
 
-  echo "$haiku_input" | claude --bare -p --model haiku \
+  echo "$sonnet_input" | claude --bare -p --model sonnet \
     --tools "Bash" \
     --system-prompt 'You are a memory observer analyzing a Claude Code conversation transcript.
 
