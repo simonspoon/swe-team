@@ -38,6 +38,8 @@ captured --> refined --> planned --> ready --> in-progress --> in-review --> don
 
 Each stage has gate validation. Backward transitions require `--reason`.
 
+**Every task goes through every stage. No skipping. No exceptions.**
+
 Any stage can be manually blocked:
 - Block:   `limbo block <id> --reason "..." --by pm`
 - Unblock: `limbo unblock <id> --by pm`  (restores previous stage)
@@ -67,33 +69,6 @@ Any stage can be manually blocked:
 - Check task's current stage
 - Advance through stages until done or blocked
 - Exit when done
-
----
-
-## Fast-Track (simple tasks)
-
-Before starting stage-by-stage, evaluate the heuristic checklist:
-
-- [ ] Touches > 1 file?
-- [ ] Changes public API/interface?
-- [ ] Codebase unfamiliar?
-- [ ] Bug with unclear cause?
-
-**All false** --> fast-track: fill ALL gate fields in one pass, advance directly to `ready`.
-
-```bash
-limbo edit <id> --acceptance-criteria "..." --scope-out "..." \
-  --approach "..." --affected-areas "..." --test-strategy "..." --risks "..." \
-  --verify "..."
-limbo note <id> "FAST-TRACK: [which heuristic checks were false]"
-limbo status <id> refined --by pm
-limbo status <id> planned --by pm
-limbo status <id> ready --by pm
-```
-
-Gates still validate all fields. The thinking still happens. Only the ceremony of separate stops is skipped.
-
-**Any true** --> full stage-by-stage below.
 
 ---
 
