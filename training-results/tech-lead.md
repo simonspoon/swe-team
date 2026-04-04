@@ -15,7 +15,7 @@
 | # | Test Name | Category | What It Tests |
 |---|-----------|----------|---------------|
 | 1 | Initialize limbo | core | `limbo init` creates .limbo/ directory |
-| 2 | Create task with structured fields | core | `limbo add` with --action, --verify, --result |
+| 2 | Create task with structured fields | core | `limbo add` with --approach, --verify, --result |
 | 3 | Create child task | core | `limbo add --parent` creates hierarchy |
 | 4 | Set blocking dependency | core | `limbo block <blocker> <blocked>` argument order |
 | 5 | View task tree | core | `limbo tree` shows hierarchy |

@@ -11,7 +11,7 @@ limbo template apply feature --parent <id>  # Nest under existing task
 
 This creates the standard hierarchy with dependencies pre-wired. Customize by adding tasks or notes after applying. Use the manual approach below for features that need a different structure.
 
-> **Note:** All `limbo add` calls require `--action`, `--verify`, `--result` flags. All `limbo status <id> done` calls require `--outcome`. Examples below use abbreviated form for readability — fill in the structured fields for each task when creating.
+> **Note:** All `limbo add` calls require `--approach`, `--verify`, `--result` flags. All `limbo status <id> done` calls require `--outcome`. Examples below use abbreviated form for readability — fill in the structured fields for each task when creating.
 
 ## SWE Team Skills
 
@@ -45,7 +45,7 @@ Feature: <name>
 
 ```bash
 limbo add "Feature: <name>" \
-  --action "Complete all child tasks for <name>" \
+  --approach "Complete all child tasks for <name>" \
   --verify "All children done, integration test passes" \
   --result "Summary of feature implementation"              # → abcd
 ```
@@ -118,7 +118,7 @@ If the feature involves iOS UI changes, add a verification task using `/swe-team
 
 ```bash
 limbo add "Verify iOS UI changes" --parent ghij \
-  --action "Run qorvex screenshot + screen-info to verify UI" \
+  --approach "Run qorvex screenshot + screen-info to verify UI" \
   --verify "Screenshots show expected layout, elements are tappable" \
   --result "Before/after screenshots confirming feature works"
 ```

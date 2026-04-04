@@ -30,9 +30,9 @@ limbo -g list --pretty              # Flat list
 limbo -g list -s todo --pretty      # Only todos
 limbo -g next                       # Next task to work on
 
-# Add items (--action, --verify, --result are REQUIRED)
-limbo -g add "Task name" --action "What to do" --verify "How to confirm" --result "Expected outcome"
-limbo -g add "Subtask" --parent <id> --action "..." --verify "..." --result "..."
+# Add items (--approach, --verify, --result are REQUIRED)
+limbo -g add "Task name" --approach "What to do" --verify "How to confirm" --result "Expected outcome"
+limbo -g add "Subtask" --parent <id> --approach "..." --verify "..." --result "..."
 # add returns the new task's short ID (e.g., "jpbc")
 
 # Manage items
@@ -64,7 +64,7 @@ limbo -g search "keyword"
 
 ## Important Behaviors
 
-- **Structured fields are required**: `--action`, `--verify`, and `--result` are mandatory when adding tasks. You cannot add a task without all three.
+- **Structured fields are required**: `--approach`, `--verify`, and `--result` are mandatory when adding tasks. You cannot add a task without all three.
 - **`--outcome` required for done**: When marking a structured task as done, you must provide `--outcome "description"` or the command will fail.
 - **Parent completion gating**: A parent task cannot be marked done while it has undone children. Complete all children first.
 - **Done tasks are hidden by default**: `list` and `tree` hide completed tasks. Use `--show-all` to include them (e.g., `limbo -g list --show-all --pretty`).

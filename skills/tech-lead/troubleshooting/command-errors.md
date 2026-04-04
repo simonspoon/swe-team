@@ -57,6 +57,6 @@ Use correct ID from list.
 
 **Symptom**: `limbo add` or `limbo status done` errors about missing fields.
 
-**Fix**: Every `limbo add` requires `--action`, `--verify`, `--result`. Every `limbo status <id> done` requires `--outcome "..."`. These are not optional.
+**Fix**: Every `limbo add` requires `--approach`, `--verify`, `--result`. Every `limbo status <id> done` requires `--outcome "..."`. These are not optional.
 
 Back to [SKILL.md](../SKILL.md)

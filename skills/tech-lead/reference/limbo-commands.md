@@ -16,15 +16,15 @@ All three structured fields are **required** by the CLI:
 
 ```bash
 limbo add "Task name" \
-  --action "What concrete work to perform" \
-  --verify "How to confirm the action succeeded" \
+  --approach "What concrete work to perform" \
+  --verify "How to confirm the approach succeeded" \
   --result "Template for what to report back"              # → outputs task ID
 
 limbo add "Task name" --parent <id> \
-  --action "..." --verify "..." --result "..."             # Create child task
+  --approach "..." --verify "..." --result "..."             # Create child task
 
 limbo add "Task name" -d "Detailed description" \
-  --action "..." --verify "..." --result "..."             # With description
+  --approach "..." --verify "..." --result "..."             # With description
 ```
 
 ## Task Status
@@ -124,7 +124,7 @@ limbo watch --interval 1s         # Custom poll interval (default 500ms)
 {
   "id": "unke",
   "name": "Task name",
-  "action": "What to do",
+  "approach": "What to do",
   "verify": "How to confirm",
   "result": "What to report",
   "outcome": "",
@@ -167,7 +167,7 @@ Commands that modify a task (`status`, `claim`, `unclaim`, `parent`, `unparent`,
 
 ```bash
 limbo add "New task" \
-  --action "Do X" --verify "Check Y" --result "Report Z"  # → "abcd"
+  --approach "Do X" --verify "Check Y" --result "Report Z"  # → "abcd"
 limbo claim abcd my-agent
 limbo status abcd in-progress
 ```
