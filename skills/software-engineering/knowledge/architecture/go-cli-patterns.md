@@ -1,5 +1,5 @@
 # Go CLI Patterns (Cobra)
-Last updated: 2026-03-19
+Last updated: 2026-04-03
 Sources: experience (limbo project)
 
 ## Summary
@@ -21,6 +21,13 @@ Patterns for building Go CLI tools with Cobra, based on the limbo task manager. 
 - Use `strings.Contains(strings.ToLower(...))` for case-insensitive search — no regex needed for simple matching
 - **Portable data with ID remapping**: when importing data that references IDs (parent, blockedBy), build an old→new ID map first, then remap all references in a second pass. Drop references to IDs not in the import set rather than erroring.
 - **Import modes**: `--replace` (wipe then load) vs merge (add alongside existing) is a common pattern for CLI import commands. Default to merge (safer), flag for replace.
+
+## Linting (gocritic)
+Projects using `golangci-lint` with gocritic enabled (check `.golangci.yml`) enforce these common rules:
+- **paramTypeCombine**: `func(id string, content string, ...)` → `func(id, content string, ...)` — combine consecutive params of the same type
+- **appendAssign**: `result := append(other, items...)` is flagged — append result must be assigned to the same slice variable, or build with `make` + `append`
+- **filepathJoin**: `filepath.Join("/tmp/project", ...)` — literal paths containing separators are flagged. Use `t.TempDir()` in tests instead.
+- Always check `.golangci.yml` in the project root for enabled linters and tag sets (diagnostic, style, performance)
 
 ## Related Topics
 - [Rust CLI patterns](rust-cli-patterns.md) — similar principles, different ecosystem

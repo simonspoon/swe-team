@@ -42,44 +42,37 @@ If no releases exist AND no Homebrew formula exists for this project, follow the
 
 Ask if not provided. Use semver: patch for fixes, minor for features, major for breaking changes.
 
-### Step 2: Find All Version Files
+### Step 2: Detect Project Type and Find Version Files
 
-Detect and list every file that contains a version string to bump:
+Detect the project language, then find version files:
 
-```bash
-# Always present for Rust projects
-grep -rn 'version = "' Cargo.toml | head -5
+| Indicator | Project type | Version files | Lock file to stage |
+|---|---|---|---|
+| `Cargo.toml` | Rust | `Cargo.toml` (root only if workspace) | `Cargo.lock` |
+| `Cargo.toml` + `tauri.conf.json` | Tauri | `Cargo.toml` + `tauri.conf.json` + `package.json` | `Cargo.lock` |
+| `go.mod` | Go | None (version injected via ldflags at build time) | — |
 
-# Check if workspace members inherit version (only bump the root if they do)
-grep -rn 'version.workspace = true' **/Cargo.toml 2>/dev/null
+**Rust:** Check for workspace: `grep -rn 'version.workspace = true' **/Cargo.toml 2>/dev/null`. If members inherit, only bump root `[workspace.package] version`.
 
-# Tauri projects (wisp)
-find . -name "tauri.conf.json" -maxdepth 4 2>/dev/null
-find . -name "package.json" -maxdepth 3 2>/dev/null | grep -v node_modules
-```
-
-Common version file patterns:
-| Project type | Files to bump |
-|---|---|
-| Single-crate Rust | `Cargo.toml` |
-| Workspace Rust | Root `Cargo.toml` only (if members use `version.workspace = true`) |
-| Tauri app | Root `Cargo.toml` + `tauri.conf.json` + `package.json` |
+**Go:** Check release workflow for `-ldflags` with `-X ...Version=`. If present, no files to bump — the tag IS the version. Skip Step 3.
 
 ### Step 3: Bump Versions
 
 Update ALL version files found in Step 2. Verify each change with a diff.
 
-For Rust projects, run `cargo check` after bumping `Cargo.toml` to regenerate `Cargo.lock`, then stage both files.
+- **Rust:** Run `cargo check` after bumping to regenerate `Cargo.lock`, then stage both files.
+- **Go:** Skip this step (version comes from the git tag via ldflags).
 
 ### Step 4: Run Checks
 
-```bash
-# Rust projects
-cargo fmt --check && cargo clippy --workspace --all-targets -- -D warnings
-cargo test --workspace
-```
+Run language-appropriate checks. If any fail, fix before proceeding.
 
-If checks fail, fix before proceeding.
+| Project type | Commands |
+|---|---|
+| Rust | `cargo fmt --check && cargo clippy --workspace --all-targets -- -D warnings && cargo test --workspace` |
+| Go | `go fmt ./... && go vet ./... && go test ./...` |
+
+**Go note:** If `golangci-lint` is available, also run `golangci-lint run`. If it panics due to toolchain mismatch (not your code), proceed — CI will use the correct toolchain.
 
 ### Step 5: Commit and Tag
 

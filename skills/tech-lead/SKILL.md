@@ -11,10 +11,16 @@ Reference material for the tech-lead agent when executing a single task dispatch
 
 ## Prerequisite Check
 
-Before doing anything else, verify the project builds:
+Before doing anything else:
 
+**1. Check for dirty working tree:**
 ```bash
-# Detect project type and run build
+git status --short
+```
+If files are already modified, note which ones. **Do NOT modify, stage, or incorporate changes from files that are dirty but unrelated to your task.** Only touch files your task requires. If a file you need to edit has pre-existing unrelated changes, edit only the sections relevant to your task — do not add, remove, or reorganize the unrelated changes.
+
+**2. Verify the project builds:**
+```bash
 [ -f "Cargo.toml" ] && cargo check 2>&1 | tail -3
 [ -f "package.json" ] && pnpm build 2>&1 | tail -3
 [ -f "go.mod" ] && go build ./... 2>&1 | tail -3

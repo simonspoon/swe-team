@@ -157,6 +157,8 @@ loki screenshot --window "$WINDOW" --output after-save.png
 
 ### Tauri Apps
 - **Always launch Tauri apps via the .app bundle**, not the bare binary. Running `target/release/<name>` directly may produce a blank webview because the binary lacks the bundle resource context. Use `open target/release/bundle/macos/<Name>.app` or `pnpm tauri dev` for testing.
+- **Webview reload (Cmd+R) cannot be triggered via loki keyboard shortcuts.** Tauri v2 does not expose webview reload via standard keyboard shortcuts by default. If testing reload-resilience behavior, you cannot simulate it with `loki key cmd+r`. Options: (1) test manually and ask the user to confirm, (2) add a Tauri command in the app that forces a webview reload, (3) verify the code path exists (reattach logic compiles and is wired up) without exercising it live.
+- **Devtools steal keyboard shortcuts.** If Cmd+Alt+I or Cmd+Shift+I opens browser devtools in a Tauri app, subsequent keyboard shortcuts (Cmd+D, Cmd+K, etc.) may be captured by devtools instead of the app. Close devtools before testing keyboard interactions, or use `click-element` instead.
 
 ### Empty Results
 - **`loki windows` returns an empty JSON array `[]`** when no windows match the filter -- it does not error. Always check the array length before extracting `.[0].window_id`.

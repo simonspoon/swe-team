@@ -1,5 +1,5 @@
 # Tauri v2 + SolidJS Desktop Apps
-Last updated: 2026-03-21
+Last updated: 2026-04-03
 Last researched: 2026-03-20
 Sources: crates.io, npm, tauri.app docs, GitHub releases
 
@@ -61,6 +61,14 @@ Tauri's scaffold creates `src-tauri/` inside the frontend project. To use a Carg
 - Avoids "no reactor running" panics from mismatched tokio contexts
 - Clone `AppHandle` in `setup()`, move into the spawned task
 - For request/response patterns across tasks: use `tokio::sync::oneshot` channels stored in shared state
+
+## Webview Lifecycle and State Persistence
+
+- **`beforeunload` cannot await async work.** Calling `invoke()` from a `beforeunload` handler is fire-and-forget — the page unloads before the Rust side processes it. Do NOT rely on `beforeunload` as the sole save point.
+- **Use debounced eager saves.** Save state to disk (via `invoke`) on every meaningful mutation (debounced ~2s). This keeps the persisted state fresh so it survives hard reloads, crashes, and `beforeunload` races.
+- **Tauri's Rust process survives webview reloads.** `app.manage()` state is `'static` and app-scoped — it persists across webview destruction/recreation. Use this for data that must outlive the frontend (e.g., PTY sessions, background tasks).
+- **`onCleanup` is not guaranteed on hard crash.** SolidJS `onCleanup` fires on graceful unmount but not on `kill -9` or webview crash. Design Rust-side cleanup (sweeps, TTLs) for resources that JS may fail to release.
+- **tauri-plugin-pty read loop is JS-side.** The `readData()` loop in `tauri-pty`'s JS API is the sole PTY output consumer. If the webview dies, the loop dies. For reload-resilient terminals, move the read pump to a Rust-side thread with a scrollback buffer and use Tauri events for output streaming.
 
 ## DOM Capture (Screenshots)
 
