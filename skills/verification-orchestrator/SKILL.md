@@ -109,6 +109,8 @@ Follow the khora verification workflow:
 1. Determine the local dev server URL (check `package.json` scripts, running processes)
 2. Start a dev server if needed
 3. `khora launch`, navigate, screenshot, inspect, verify per the khora skill
+4. **Always `khora kill "$SESSION"` when done** — orphaned Chrome blocks the user's browser
+5. Verify cleanup: `khora status` should show no active sessions
 
 ## Step 4: Produce Verification Report
 
@@ -163,3 +165,4 @@ Only include sections for platforms that were detected. Do not include sections 
 - When multiple platforms are detected, verify all of them -- do not pick one arbitrarily.
 - Save all screenshots to `/tmp/verify-<platform>-<timestamp>.png` for consistency.
 - If the user specifies a platform explicitly (e.g., "verify the web app"), skip detection and route directly.
+- **Always clean up after QA tools.** After khora: `khora kill` + verify with `khora status`. After qorvex/loki: close any sessions opened. Orphaned processes block user workflows.

@@ -7,6 +7,31 @@ description: Test and verify web applications using the khora CLI automation too
 
 Automate and verify web application UI using the `khora` CLI via Chrome DevTools Protocol.
 
+## CRITICAL: Always Clean Up Chrome Sessions
+
+**Every khora workflow MUST end with session cleanup, whether it succeeds or fails.**
+
+Orphaned headless Chrome processes block the user's normal Chrome browser from opening.
+
+```bash
+# 1. Always kill your session when done
+khora kill "$SESSION"
+
+# 2. If anything fails mid-workflow, kill before returning error
+khora kill "$SESSION" 2>/dev/null; echo "Error: <describe failure>"
+
+# 3. Nuclear cleanup — if sessions are stale or Chrome won't open
+pkill -f chromiumoxide-runner 2>/dev/null
+rm -f /private/var/folders/*/T/chromiumoxide-runner/SingletonLock 2>/dev/null
+```
+
+**Wrap every khora workflow in this pattern:**
+```bash
+SESSION=$(khora --format json launch | jq -r .id)
+# ... do work ...
+khora kill "$SESSION"  # ALWAYS — even if commands above failed
+```
+
 ## Quick Start
 
 ```bash
@@ -128,7 +153,10 @@ khora kill "$SESSION"
 6. **Interact** using `click`, `type`
 7. **Wait** for expected UI changes
 8. **Screenshot** again and compare
-9. **Kill** the session
+9. **Kill** the session — `khora kill "$SESSION"`
+10. **Verify cleanup** — `khora status` should show no active sessions
+
+If ANY step (2-8) fails, skip directly to step 9. Do not leave sessions running.
 
 ## Gotchas
 
