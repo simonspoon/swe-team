@@ -37,7 +37,7 @@ captured --> refined --> planned --> ready --> in-progress --> in-review --> don
                                                   +--------------+
 ```
 
-Each stage has gate validation. Backward transitions require `--reason`.
+Each stage is tracked by limbo. The PM enforces workflow rules; limbo is a pure task store.
 
 **Every task goes through every stage. No skipping. No exceptions.**
 **Every stage transition requires real work. No rubber-stamping. No compression.**
@@ -56,7 +56,7 @@ Any stage can be manually blocked:
 4. **Acquire task**:
    - Task ID provided --> `limbo show <id> --pretty`
    - No ID + user present --> ask what they need (planning mode)
-   - No ID + no user --> `limbo next --leaf --unblocked --pretty`
+   - No ID + no user --> `limbo list --status ready --unblocked --pretty` (pick first unblocked ready task)
    - Nothing available --> exit cleanly
 5. **Check current stage** -- the task's status tells you where to pick up
 
@@ -373,7 +373,7 @@ When a task comes from global limbo (`~/.limbo/`):
 - If a stage's work takes 30 seconds, that's fine. The work still happens.
 
 ### Ownership
-- PM owns: orchestration, synthesis, gate validation, commits
+- PM owns: orchestration, synthesis, workflow validation, commits
 - Researcher owns: investigation, acceptance criteria drafting
 - Test engineer owns: test strategy
 - Code reviewer owns: risk assessment, code review

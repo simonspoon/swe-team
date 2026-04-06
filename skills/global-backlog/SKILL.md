@@ -37,7 +37,7 @@ limbo -g add "Subtask" --parent <id> --approach "..." --verify "..." --result ".
 
 # Manage items
 limbo -g status <id> in-progress    # Start working
-limbo -g status <id> done --outcome "What actually happened"  # Mark complete (--outcome required for structured tasks)
+limbo -g status <id> done --outcome "What actually happened"  # Mark complete (--outcome optional but recommended)
 limbo -g edit <id> --name "New name"
 limbo -g note <id> "Some context"
 limbo -g block <blocker-id> <blocked-id>
@@ -64,8 +64,8 @@ limbo -g search "keyword"
 
 ## Important Behaviors
 
-- **Structured fields are required**: `--approach`, `--verify`, and `--result` are mandatory when adding tasks. You cannot add a task without all three.
-- **`--outcome` required for done**: When marking a structured task as done, you must provide `--outcome "description"` or the command will fail.
-- **Parent completion gating**: A parent task cannot be marked done while it has undone children. Complete all children first.
+- **Structured fields are optional**: `--approach`, `--verify`, and `--result` are recommended but not enforced by limbo.
+- **`--outcome` is optional**: When marking a task as done, `--outcome "description"` is recommended for traceability but not required.
+- **No gate validation**: limbo is a pure task store. Status transitions have no field requirements.
 - **Done tasks are hidden by default**: `list` and `tree` hide completed tasks. Use `--show-all` to include them (e.g., `limbo -g list --show-all --pretty`).
 - **Filtering**: `list` supports `--blocked`, `--unblocked`, `--unclaimed`, `--owner`, and `-s <status>` filters.

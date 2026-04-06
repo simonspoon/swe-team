@@ -4,14 +4,7 @@ For adding a single feature to an existing codebase.
 
 ## Quick Start
 
-```bash
-limbo template apply feature                # Scaffold: Design → Implement → Test → Review
-limbo template apply feature --parent <id>  # Nest under existing task
-```
-
-This creates the standard hierarchy with dependencies pre-wired. Customize by adding tasks or notes after applying. Use the manual approach below for features that need a different structure.
-
-> **Note:** All `limbo add` calls require `--approach`, `--verify`, `--result` flags. All `limbo status <id> done` calls require `--outcome`. Examples below use abbreviated form for readability — fill in the structured fields for each task when creating.
+Create tasks manually using `limbo add` with the hierarchy pattern below. Use `--approach`, `--verify`, `--result` flags for structured tasks and `--outcome` when marking done (both optional but recommended).
 
 ## SWE Team Skills
 

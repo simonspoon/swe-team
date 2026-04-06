@@ -12,13 +12,13 @@ limbo init              # Create .limbo/ in current directory
 
 ## Task Creation
 
-All three structured fields are **required** by the CLI:
+Structured fields (`--approach`, `--verify`, `--result`) are optional but recommended:
 
 ```bash
 limbo add "Task name" \
   --approach "What concrete work to perform" \
   --verify "How to confirm the approach succeeded" \
-  --result "Template for what to report back"              # → outputs task ID
+  --result "Template for what to report back"              # -> outputs task ID
 
 limbo add "Task name" --parent <id> \
   --approach "..." --verify "..." --result "..."             # Create child task
@@ -29,11 +29,18 @@ limbo add "Task name" -d "Detailed description" \
 
 ## Task Status
 
+limbo is a pure task store -- no gate validation. Status changes are unconditional.
+Valid statuses: `captured`, `refined`, `planned`, `ready`, `in-progress`, `in-review`, `done`.
+
 ```bash
-limbo status <id> todo         # Set to todo (no --outcome)
-limbo status <id> in-progress  # Set to in-progress (no --outcome)
-limbo status <id> done --outcome "What was done and verified"  # Set to done (--outcome REQUIRED, only for done)
+limbo status <id> captured        # Any status, no field requirements
+limbo status <id> in-progress     # No claim or field checks
+limbo status <id> done            # No --outcome required by limbo
+limbo status <id> done --outcome "What was done"  # --outcome optional, recommended
+limbo status <id> captured --reason "requirements changed"  # --reason optional, for audit trail
 ```
+
+Workflow rules (field requirements, gate validation) are enforced by the PM agent, not by limbo.
 
 ## Task Ownership
 
@@ -74,30 +81,17 @@ limbo note <id> "Note text"    # Add observation or progress update
 ```bash
 limbo list                          # All tasks (JSON array, hides completed)
 limbo list --show-all               # Include completed tasks
-limbo list --status todo            # Filter by status (todo|in-progress|done)
+limbo list --status captured        # Filter by status
 limbo list --unblocked              # Only unblocked tasks
 limbo list --blocked                # Only blocked tasks
 limbo list --unclaimed              # Only tasks with no owner
 limbo list --owner <agent-name>     # Tasks owned by specific agent
-limbo list --status todo --unblocked  # Combine filters
+limbo list --status ready --unblocked  # Combine filters
 
 limbo show <id>                     # Task details (JSON)
 limbo tree                          # Hierarchical view (pretty by default)
 limbo tree --show-all               # Include completed tasks in tree
-limbo next                          # Next task (depth-first traversal)
-limbo next --unclaimed              # Next unowned task
 ```
-
-## Templates
-
-```bash
-limbo template list                        # List available templates
-limbo template show <name>                 # Show template task hierarchy
-limbo template apply <name>                # Create all tasks from template
-limbo template apply <name> --parent <id>  # Nest template under existing task
-```
-
-See [limbo-templates.md](limbo-templates.md) for template details and task hierarchies.
 
 ## Cleanup
 
@@ -128,7 +122,7 @@ limbo watch --interval 1s         # Custom poll interval (default 500ms)
   "verify": "How to confirm",
   "result": "What to report",
   "outcome": "",
-  "status": "todo",
+  "status": "captured",
   "parent": null,
   "blockedBy": [],
   "created": "2026-02-10T15:45:56.604661-05:00",
@@ -151,23 +145,13 @@ Commands that modify a task (`status`, `claim`, `unclaim`, `parent`, `unparent`,
 {"id": "abcd", "noteCount": 2}
 ```
 
-### `limbo next` Output
-
-```json
-{
-  "candidates": [
-    { "id": "unke", "name": "Task A", ... }
-  ]
-}
-```
-
 ## Common Workflows
 
 ### Create and Start Task
 
 ```bash
 limbo add "New task" \
-  --approach "Do X" --verify "Check Y" --result "Report Z"  # → "abcd"
+  --approach "Do X" --verify "Check Y" --result "Report Z"  # -> "abcd"
 limbo claim abcd my-agent
 limbo status abcd in-progress
 ```
@@ -182,8 +166,8 @@ limbo status <id> done --outcome "Did X, confirmed Y, result: Z"
 ### Find Available Work
 
 ```bash
-limbo next                          # Recommended: depth-first next task
-limbo list --status todo --unblocked  # All available tasks
+limbo list --status ready --unblocked  # All available unblocked tasks
+limbo list --unclaimed                 # Unowned tasks
 ```
 
 Back to [SKILL.md](../SKILL.md)

@@ -53,10 +53,8 @@ Use correct ID from list.
 2. If found, check if the owning process is still running
 3. Only remove the lock if no limbo process is active
 
-## Missing required flags
+## Structured fields
 
-**Symptom**: `limbo add` or `limbo status done` errors about missing fields.
-
-**Fix**: Every `limbo add` requires `--approach`, `--verify`, `--result`. Every `limbo status <id> done` requires `--outcome "..."`. These are not optional.
+limbo does not enforce any field requirements. All structured fields (`--approach`, `--verify`, `--result`, `--outcome`) are optional. Use them for clarity and traceability as recommended by the PM workflow.
 
 Back to [SKILL.md](../SKILL.md)
