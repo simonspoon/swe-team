@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="icon.png" width="128" height="128" alt="swe-team">
+</p>
+
 # swe-team
 
 A Claude Code plugin that provides agents, skills, and commands for autonomous software engineering workflows.
