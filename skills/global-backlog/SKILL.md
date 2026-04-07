@@ -27,10 +27,9 @@ All commands use `limbo -g` (or `limbo --global`) to target `~/.limbo/`:
 # View the backlog
 limbo -g tree --pretty              # Hierarchical view
 limbo -g list --pretty              # Flat list
-limbo -g list -s todo --pretty      # Only todos
-limbo -g next                       # Next task to work on
+limbo -g list -s captured --pretty   # Only captured tasks
 
-# Add items (--approach, --verify, --result are REQUIRED)
+# Add items (--approach, --verify, --result recommended but optional)
 limbo -g add "Task name" --approach "What to do" --verify "How to confirm" --result "Expected outcome"
 limbo -g add "Subtask" --parent <id> --approach "..." --verify "..." --result "..."
 # add returns the new task's short ID (e.g., "jpbc")
@@ -50,7 +49,7 @@ limbo -g search "keyword"
 ## Workflow
 
 1. **When the user asks to see the backlog**: Run `limbo -g tree --pretty` to show the current state. If empty, say so.
-2. **When the user wants to add something**: Use `limbo -g add` with structured fields (action, verify, result). If the task belongs under an existing item, use `--parent`.
+2. **When the user wants to add something**: Use `limbo -g add` with structured fields (approach, verify, result). If the task belongs under an existing item, use `--parent`.
 3. **When triaging**: Show the tree, then ask the user which items to prioritize, break down, or remove.
 4. **When starting work**: Use `limbo -g status <id> in-progress` to claim it, then proceed with the actual work. Mark done when finished.
 

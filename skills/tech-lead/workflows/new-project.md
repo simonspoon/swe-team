@@ -95,7 +95,7 @@ Initial parallel tasks (no dependencies):
 - Design tasks for independent features
 
 ```bash
-limbo list --status todo
+limbo list --status captured --unblocked
 ```
 
 ### 6. Execution Order

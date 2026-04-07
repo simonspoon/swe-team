@@ -19,7 +19,7 @@
 | 3 | Create child task | core | `limbo add --parent` creates hierarchy |
 | 4 | Set blocking dependency | core | `limbo block <blocker> <blocked>` argument order |
 | 5 | View task tree | core | `limbo tree` shows hierarchy |
-| 6 | Find unblocked tasks | core | `limbo list --status todo --unblocked` filters correctly |
+| 6 | Find unblocked tasks | core | `limbo list --status captured --unblocked` filters correctly |
 | 7 | Task lifecycle | workflow | claim -> in-progress -> done (--outcome optional) |
 | 8 | Automatic unblocking | workflow | Completing blocker unblocks dependent |
 | 9 | (removed) | -- | Templates removed from limbo |

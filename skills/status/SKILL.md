@@ -87,8 +87,8 @@ Present results as a structured table:
 | Recent commits | 5 shown | (list below) |
 | Stash | empty | — |
 | Suda project | `project-name` | registered |
-| Limbo backlog | 3 tasks | 1 in-progress, 2 todo |
-| Global backlog | 5 tasks | 2 in-progress, 3 todo |
+| Limbo backlog | 3 tasks | 1 in-progress, 2 captured |
+| Global backlog | 5 tasks | 2 in-progress, 3 captured |
 ```
 
 Below the table, list the 5 recent commits from Step 2.
