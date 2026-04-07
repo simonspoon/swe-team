@@ -11,7 +11,7 @@ description: >
 1. **Survey changes** — run `git status` (never use `-uall`) and `git diff` (staged + unstaged) to understand what changed.
 2. **Language-specific checks** — before staging, detect the project type and run mandatory checks. If any check fails, fix the issue before proceeding. Do NOT skip these checks.
    - **Rust** (Cargo.toml exists): run `cargo fmt --check` and `cargo clippy --workspace --all-targets -- -D warnings`. If fmt fails, run `cargo fmt` to fix, then re-check. If clippy fails, fix all warnings before continuing.
-   - **Go** (go.mod exists): run `go fmt ./...` and `go vet ./...`.
+   - **Go** (go.mod exists): run `go fmt ./...`, `go vet ./...`, and `golangci-lint run` (if available; skip if it panics due to toolchain mismatch).
    - **TypeScript/JavaScript** (package.json exists): run the project's lint command if one exists (e.g., `pnpm lint`).
 3. **Docs check** — two gates:
    - **Existence gate** (early commits only): if the repo has ≤5 commits AND no `docs/` directory AND the project has meaningful source code (not just config/scaffolding), warn: *"This project has no docs/ directory. Run /swe-team:setup-docs to create project documentation?"* Proceed if user declines, but flag it.

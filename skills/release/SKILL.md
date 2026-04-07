@@ -70,9 +70,9 @@ Run language-appropriate checks. If any fail, fix before proceeding.
 | Project type | Commands |
 |---|---|
 | Rust | `cargo fmt --check && cargo clippy --workspace --all-targets -- -D warnings && cargo test --workspace` |
-| Go | `go fmt ./... && go vet ./... && go test ./...` |
+| Go | `go fmt ./... && go vet ./... && golangci-lint run && go test ./...` |
 
-**Go note:** If `golangci-lint` is available, also run `golangci-lint run`. If it panics due to toolchain mismatch (not your code), proceed — CI will use the correct toolchain.
+**Go note:** If `golangci-lint` panics due to toolchain mismatch (not your code), proceed — CI will use the correct toolchain. But if it reports actual lint issues, fix them before tagging.
 
 ### Step 5: Commit and Tag
 

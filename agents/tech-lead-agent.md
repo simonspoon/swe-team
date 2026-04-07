@@ -194,7 +194,7 @@ cargo fmt && cargo build && cargo test && cargo run -- --help
 pnpm format && pnpm build && pnpm test
 
 # Go
-gofmt -w . && go build ./... && go test ./...
+gofmt -w . && go build ./... && golangci-lint run && go test ./...
 
 # Python
 black . && uv run pytest
