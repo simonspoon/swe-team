@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+#
+# pre-commit hook: validate staged skill files via skills-validate --changed
+#
+# Install: git config core.hooksPath hooks
+# Bypass:  git commit --no-verify
+#
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+# Check if any staged files live under skills/
+STAGED_SKILLS="$(git diff --cached --name-only --diff-filter=ACMR | grep '^skills/' || true)"
+
+if [ -z "$STAGED_SKILLS" ]; then
+    exit 0
+fi
+
+VALIDATOR="$REPO_ROOT/scripts/skills-validate"
+
+if [ ! -f "$VALIDATOR" ]; then
+    echo "pre-commit: skills-validate not found at $VALIDATOR" >&2
+    exit 1
+fi
+
+if [ ! -x "$VALIDATOR" ]; then
+    echo "pre-commit: skills-validate is not executable — run: chmod +x $VALIDATOR" >&2
+    exit 1
+fi
+
+echo "pre-commit: validating staged skills..."
+"$VALIDATOR" --changed

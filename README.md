@@ -177,3 +177,7 @@ Headless terminal multiplexer for spawning and controlling terminal sessions, Cl
 ## CLAUDE.md
 
 The included `CLAUDE.md` configures Claude Code with mandatory pre-task steps and routing to the project-manager agent for all code-producing tasks. The `/swe-team:orchestrate` command (or an external orchestrator) watches limbo for unblocked leaf tasks and spawns PM sessions to handle them.
+
+## Git Hooks
+
+A pre-commit hook validates skill files before they reach the index. See [`hooks/README.md`](hooks/README.md) for setup.
