@@ -588,10 +588,13 @@ def filter_by_changed(skills: list[SkillInfo], repo_root: Path) -> list[SkillInf
 # Aggregator + output
 # ---------------------------------------------------------------------------
 
-def run_checkers(skills: list[SkillInfo]) -> bool:
+def run_checkers(skills: list[SkillInfo], *, verbose: bool = False) -> bool:
     """Run all checkers on each skill. Print results. Return True if all pass."""
     checkers = get_checkers()
     any_fail = False
+    total_pass = 0
+    total_fail = 0
+    total_warn = 0
 
     for skill in skills:
         findings: list[Finding] = []
@@ -600,21 +603,30 @@ def run_checkers(skills: list[SkillInfo]) -> bool:
 
         has_fail = any(f.severity == Severity.FAIL for f in findings)
         has_warn = any(f.severity == Severity.WARN for f in findings)
+        warn_count = sum(1 for f in findings if f.severity == Severity.WARN)
+
+        total_warn += warn_count
 
         if has_fail:
             any_fail = True
+            total_fail += 1
             print(f"✗ {skill.name}")
-        elif has_warn:
+        elif has_warn and verbose:
+            total_pass += 1
             print(f"⚠ {skill.name}")
         else:
+            total_pass += 1
             print(f"✓ {skill.name}")
 
-        # Print sub-findings (warn and fail only)
+        # Print sub-findings
         for f in findings:
             if f.severity == Severity.FAIL:
                 print(f"  ✗ {f.message}")
-            elif f.severity == Severity.WARN:
+            elif f.severity == Severity.WARN and verbose:
                 print(f"  ⚠ {f.message}")
+
+    if verbose:
+        print(f"\n{total_pass} passed, {total_fail} failed, {total_warn} warnings")
 
     return not any_fail
 
@@ -642,6 +654,11 @@ def main() -> None:
         "--changed",
         action="store_true",
         help="Only validate skills with git-changed files",
+    )
+    parser.add_argument(
+        "-v", "--verbose",
+        action="store_true",
+        help="Show warnings inline and print a summary line",
     )
     parser.add_argument(
         "--refresh-fixtures",
@@ -679,7 +696,7 @@ def main() -> None:
     else:
         skills = all_skills
 
-    all_pass = run_checkers(skills)
+    all_pass = run_checkers(skills, verbose=args.verbose)
 
     # Persist fixture cache if it was populated
     if _fixture_cache is not None:

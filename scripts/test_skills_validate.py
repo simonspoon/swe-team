@@ -324,6 +324,65 @@ class TestCLI:
                 sv.main()
             assert exc_info.value.code == 0
 
+    def test_default_suppresses_warns(self, tmp_path, capsys):
+        """Default output hides WARN findings — only ✓ shown for warn-only skills."""
+        skills_dir = tmp_path / "skills"
+        skill_dir = skills_dir / "warn-skill"
+        skill_dir.mkdir(parents=True)
+        (skill_dir / "SKILL.md").write_text(
+            "---\nname: WarnSkill\ndescription: A skill with non-kebab name\n---\n# Warn\n"
+        )
+
+        with patch.object(sv, "find_repo_root", return_value=tmp_path), \
+             patch.object(sv, "_fixture_cache", {"WarnSkill": "usage prompt"}), \
+             patch.object(sv, "_save_fixtures"), \
+             patch("sys.argv", ["skills-validate", "warn-skill"]):
+            with pytest.raises(SystemExit) as exc_info:
+                sv.main()
+            assert exc_info.value.code == 0
+        out = capsys.readouterr().out
+        assert "✓ WarnSkill" in out
+        assert "⚠" not in out
+
+    def test_verbose_shows_warns(self, tmp_path, capsys):
+        """Verbose output shows WARN findings inline and prints summary."""
+        skills_dir = tmp_path / "skills"
+        skill_dir = skills_dir / "warn-skill"
+        skill_dir.mkdir(parents=True)
+        (skill_dir / "SKILL.md").write_text(
+            "---\nname: WarnSkill\ndescription: A skill with non-kebab name\n---\n# Warn\n"
+        )
+
+        with patch.object(sv, "find_repo_root", return_value=tmp_path), \
+             patch.object(sv, "_fixture_cache", {"WarnSkill": "usage prompt"}), \
+             patch.object(sv, "_save_fixtures"), \
+             patch("sys.argv", ["skills-validate", "-v", "warn-skill"]):
+            with pytest.raises(SystemExit) as exc_info:
+                sv.main()
+            assert exc_info.value.code == 0
+        out = capsys.readouterr().out
+        assert "⚠ WarnSkill" in out
+        assert "kebab" in out.lower()
+        assert "passed" in out
+        assert "warnings" in out
+
+    def test_verbose_exit_code_unaffected_by_warns(self, tmp_path):
+        """WARNs do not change exit code — still 0 even with verbose."""
+        skills_dir = tmp_path / "skills"
+        skill_dir = skills_dir / "warn-skill"
+        skill_dir.mkdir(parents=True)
+        (skill_dir / "SKILL.md").write_text(
+            "---\nname: WarnSkill\ndescription: A skill with non-kebab name\n---\n# Warn\n"
+        )
+
+        with patch.object(sv, "find_repo_root", return_value=tmp_path), \
+             patch.object(sv, "_fixture_cache", {"WarnSkill": "usage prompt"}), \
+             patch.object(sv, "_save_fixtures"), \
+             patch("sys.argv", ["skills-validate", "--verbose", "warn-skill"]):
+            with pytest.raises(SystemExit) as exc_info:
+                sv.main()
+            assert exc_info.value.code == 0
+
     def test_unknown_skill_exit_2(self, tmp_path):
         """Requesting a nonexistent skill returns exit 2."""
         skills_dir = tmp_path / "skills"
