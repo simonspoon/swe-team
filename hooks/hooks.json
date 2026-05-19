@@ -72,11 +72,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/prompt-reminders.sh",
-            "timeout": 5
-          },
-          {
-            "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/scripts/ivara-capture.sh",
             "timeout": 5
           }
