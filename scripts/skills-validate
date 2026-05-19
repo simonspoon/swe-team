@@ -1,0 +1,250 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.10"
+# ///
+"""Validate swe-team plugin skills.
+
+Usage:
+  skills-validate              # validate all skills
+  skills-validate <name>       # validate one skill
+  skills-validate --changed    # validate only git-changed skills
+"""
+from __future__ import annotations
+
+import argparse
+import re
+import subprocess
+import sys
+from dataclasses import dataclass, field
+from enum import Enum
+from pathlib import Path
+from typing import Callable
+
+
+# ---------------------------------------------------------------------------
+# Data types
+# ---------------------------------------------------------------------------
+
+class Severity(Enum):
+    PASS = "pass"
+    WARN = "warn"
+    FAIL = "fail"
+
+
+@dataclass
+class Finding:
+    severity: Severity
+    message: str
+    context: str | None = None
+
+
+@dataclass
+class SkillInfo:
+    name: str
+    path: Path  # path to SKILL.md
+    frontmatter: dict[str, str] = field(default_factory=dict)
+    body: str = ""
+
+
+# ---------------------------------------------------------------------------
+# Checker registry
+# ---------------------------------------------------------------------------
+
+CheckerFn = Callable[[SkillInfo], list[Finding]]
+
+_checkers: list[tuple[str, CheckerFn]] = []
+
+
+def register_checker(name: str, fn: CheckerFn) -> None:
+    """Register a checker function."""
+    _checkers.append((name, fn))
+
+
+def get_checkers() -> list[tuple[str, CheckerFn]]:
+    """Return all registered checkers."""
+    return list(_checkers)
+
+
+# ---------------------------------------------------------------------------
+# Frontmatter parsing (stdlib only — no pyyaml dep)
+# ---------------------------------------------------------------------------
+
+_FM_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*\n", re.DOTALL)
+_KV_RE = re.compile(r"^(\w[\w-]*):\s*(.+)", re.MULTILINE)
+
+
+def parse_skill_file(path: Path) -> SkillInfo:
+    """Parse a SKILL.md into SkillInfo with frontmatter dict and body."""
+    text = path.read_text(encoding="utf-8")
+    frontmatter: dict[str, str] = {}
+    body = text
+
+    m = _FM_RE.match(text)
+    if m:
+        raw_fm = m.group(1)
+        # Handle simple key: value pairs and multi-line values (>)
+        current_key = None
+        lines = raw_fm.split("\n")
+        for line in lines:
+            kv = _KV_RE.match(line)
+            if kv:
+                current_key = kv.group(1)
+                val = kv.group(2).strip()
+                if val in (">", "|"):
+                    frontmatter[current_key] = ""
+                else:
+                    frontmatter[current_key] = val.strip('"').strip("'")
+            elif current_key and line.startswith("  "):
+                # continuation of multi-line value
+                prev = frontmatter.get(current_key, "")
+                addition = line.strip()
+                if prev:
+                    frontmatter[current_key] = prev + " " + addition
+                else:
+                    frontmatter[current_key] = addition
+        body = text[m.end():]
+
+    name = frontmatter.get("name", path.parent.name)
+    return SkillInfo(name=name, path=path, frontmatter=frontmatter, body=body)
+
+
+# ---------------------------------------------------------------------------
+# Skill discovery
+# ---------------------------------------------------------------------------
+
+def discover_skills(skills_dir: Path) -> list[SkillInfo]:
+    """Walk skills/ and return parsed SkillInfo for each SKILL.md."""
+    results = []
+    for skill_md in sorted(skills_dir.glob("*/SKILL.md")):
+        results.append(parse_skill_file(skill_md))
+    return results
+
+
+def filter_by_name(skills: list[SkillInfo], name: str) -> list[SkillInfo]:
+    """Filter to a single skill by name."""
+    matches = [s for s in skills if s.name == name]
+    if not matches:
+        # try directory name fallback
+        matches = [s for s in skills if s.path.parent.name == name]
+    return matches
+
+
+def filter_by_changed(skills: list[SkillInfo], repo_root: Path) -> list[SkillInfo]:
+    """Filter to skills with files changed in git (staged + unstaged vs HEAD)."""
+    try:
+        result = subprocess.run(
+            ["git", "diff", "--name-only", "HEAD"],
+            capture_output=True, text=True, cwd=repo_root,
+        )
+        changed = set(result.stdout.strip().splitlines())
+        # Also check untracked
+        result2 = subprocess.run(
+            ["git", "ls-files", "--others", "--exclude-standard"],
+            capture_output=True, text=True, cwd=repo_root,
+        )
+        changed.update(result2.stdout.strip().splitlines())
+    except FileNotFoundError:
+        print("error: git not found", file=sys.stderr)
+        sys.exit(2)
+
+    # A skill is "changed" if any file under its directory appears in the diff
+    changed_skills = []
+    for skill in skills:
+        skill_rel = skill.path.parent.relative_to(repo_root)
+        if any(c.startswith(str(skill_rel) + "/") or c == str(skill_rel) for c in changed):
+            changed_skills.append(skill)
+    return changed_skills
+
+
+# ---------------------------------------------------------------------------
+# Aggregator + output
+# ---------------------------------------------------------------------------
+
+def run_checkers(skills: list[SkillInfo]) -> bool:
+    """Run all checkers on each skill. Print results. Return True if all pass."""
+    checkers = get_checkers()
+    any_fail = False
+
+    for skill in skills:
+        findings: list[Finding] = []
+        for _checker_name, checker_fn in checkers:
+            findings.extend(checker_fn(skill))
+
+        has_fail = any(f.severity == Severity.FAIL for f in findings)
+        has_warn = any(f.severity == Severity.WARN for f in findings)
+
+        if has_fail:
+            any_fail = True
+            print(f"✗ {skill.name}")
+        elif has_warn:
+            print(f"⚠ {skill.name}")
+        else:
+            print(f"✓ {skill.name}")
+
+        # Print sub-findings (warn and fail only)
+        for f in findings:
+            if f.severity == Severity.FAIL:
+                print(f"  ✗ {f.message}")
+            elif f.severity == Severity.WARN:
+                print(f"  ⚠ {f.message}")
+
+    return not any_fail
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+
+def find_repo_root() -> Path:
+    """Find the repo root (parent of scripts/)."""
+    return Path(__file__).resolve().parent.parent
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        prog="skills-validate",
+        description="Validate swe-team plugin skills.",
+    )
+    parser.add_argument(
+        "name",
+        nargs="?",
+        help="Skill name to validate (omit for all)",
+    )
+    parser.add_argument(
+        "--changed",
+        action="store_true",
+        help="Only validate skills with git-changed files",
+    )
+    args = parser.parse_args()
+
+    if args.name and args.changed:
+        parser.error("cannot combine skill name with --changed")
+
+    repo_root = find_repo_root()
+    skills_dir = repo_root / "skills"
+
+    if not skills_dir.is_dir():
+        print(f"error: skills directory not found: {skills_dir}", file=sys.stderr)
+        sys.exit(2)
+
+    all_skills = discover_skills(skills_dir)
+
+    if args.name:
+        skills = filter_by_name(all_skills, args.name)
+        if not skills:
+            print(f"error: skill not found: {args.name}", file=sys.stderr)
+            sys.exit(2)
+    elif args.changed:
+        skills = filter_by_changed(all_skills, repo_root)
+        if not skills:
+            # nothing changed — nothing to validate
+            sys.exit(0)
+    else:
+        skills = all_skills
+
+    all_pass = run_checkers(skills)
+    sys.exit(0 if all_pass else 1)
+
+
+if __name__ == "__main__":
+    main()
