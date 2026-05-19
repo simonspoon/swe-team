@@ -1,92 +1,89 @@
 ---
 name: dream
-description: Offline memory consolidation — deduplicates, prunes, and synthesizes suda memories. Produces recommendations for skill/agent improvements. Run manually or on schedule.
+description: Offline knowledge-store hygiene — runs simaris lint/cluster/decay/vacuum, reviews findings, consolidates near-duplicates, and synthesizes patterns into skill/agent improvement recommendations. Run manually or on schedule.
 ---
 
-# Dream — Memory Consolidation
+# Dream — Knowledge-Store Hygiene
 
-Offline memory maintenance. Deduplicates, polishes descriptions for discoverability, prunes stale entries, and synthesizes patterns into actionable recommendations. This is the complement to the append-only suda-observer hook — the observer accumulates freely, this skill cleans up.
+Offline maintenance for the simaris knowledge graph. This skill is a wrapper around simaris's built-in hygiene primitives — it runs them in the right order, interprets findings, acts on safe ones, and reports the rest for review.
 
 ## When to Invoke
 
 - Manually via `/dream`
 - On a scheduled cadence (daily or weekly)
-- When `suda recall` output feels noisy or redundant
+- After a large session that added many units
+- When `simaris search` / `simaris prime` output feels noisy
 
-## Phase 1: Inventory
+## Phase 1: Inventory & Audit
 
-Load everything and get the lay of the land.
+Get the lay of the land and surface rot in one pass.
 
 ```bash
-suda recall --json --limit 200
-suda projects --json
+simaris stats --json
+simaris lint --by-aspect --fix-suggest --json
 ```
 
 Report:
-- Total memory count by type (user, feedback, project, reference)
-- Age distribution (last 7 days, last 30 days, older)
-- Memories per project
+- Total units, by-type breakdown, inbox size, archived count, confidence histogram
+- Lint findings by category: `PROCEDURE_NO_TRIGGER`, `ORPHAN`, `DUPE`, `DUAL_PARENT_DIVERGENCE`, `TAG_VARIANT`
+- Per-aspect rollup (which aspects carry the most rot)
 
-## Phase 2: Consolidate
+Lint is read-only and advisory. Save its `--json` output — later phases act on it.
 
-Group memories by semantic similarity (same topic, same rule, same preference).
+## Phase 2: Near-Duplicate Consolidation
 
-For each group with multiple entries:
-- **True duplicates** (same rule, different wording): Keep the one with the richest content. `suda forget <ID>` the others.
-- **Complementary** (same topic, additive info): Create a merged memory via `suda store`, then `suda forget` the originals.
-- **Contradictory** (same topic, conflicting advice): Keep the newer entry (higher ID = more recent). Forget the older. Note the contradiction in the report.
-
-Log every action: what was merged/removed and why.
-
-## Phase 3: Polish
-
-Improve memory discoverability by enriching descriptions with missing search terms. The FTS5 index only matches literal words — if a memory uses technical terminology but the user searches with natural language, the memory won't surface.
-
-For each memory from the inventory:
-
-1. Read the name, description, and content
-2. Ask: "What natural-language search terms would someone use to find this memory that are NOT already present in the name or description?"
-3. If there are clear vocabulary gaps, update the description to weave in the missing terms naturally
+Detect and resolve near-duplicate clusters.
 
 ```bash
-suda update <ID> --description "enriched description with missing search terms"
+simaris cluster --all --json --threshold 0.3 --max-cluster-size 10
 ```
 
-**Rules:**
-- Only update when there's a clear gap (don't touch well-described memories)
-- Keep descriptions under ~100 characters
-- Don't add terms already present in the name (FTS5 searches both)
-- Don't change the meaning — only improve findability
-- Weave terms into the description naturally, not as an appended keyword list
+For each cluster annotated by simaris with `near-dup` / `temporal-log` / `type-confused`:
 
-**Examples of gaps to fix:**
-- Name: `qorvex-agent-must-build-locally` / Desc: "XCTest agent bundles cannot be pre-built" → missing "iOS testing" context, someone searching "how to test ios" won't find it
-- Name: `no-co-authored-by-in-commits` / Desc: "Do not add Co-Authored-By trailers" → missing "commit message convention" framing
-- Name: `cgevent-requires-app-activation` / Desc about CGEvent posting → missing "mouse click" or "window focus" context
+- **True duplicates** (same rule, different wording): Keep the unit with richest content + highest confidence. `simaris archive <id>` the others (soft-delete, reversible via `simaris unarchive`).
+- **Complementary** (same topic, additive info): `simaris add` a merged unit with combined content and tags, then `simaris archive` the originals. Optionally `simaris link --rel supersedes <new_id> <old_id>`.
+- **Type-confused** (same content stored under conflicting types): Decide the correct type per the type taxonomy (preference / procedure / principle / fact / lesson / idea / aspect), keep that one, archive the others.
+- **Contradictory** (same topic, conflicting advice): Keep the newer / higher-confidence unit. Archive the older. Note the contradiction in the report.
 
-**Examples of memories to skip:**
-- Name: `prefer-simple-solutions` / Desc: "Always start with the simplest viable approach" → already uses natural language, no gap
+Log every archive: ID, headline, reason.
 
-Log every update: memory ID, old description, new description, and the search terms added.
+## Phase 3: Lint Fixes
 
-**Hook conflicts:** Memory content or descriptions may contain keywords that trigger PreToolUse hooks (e.g., "Co-Authored-By" triggers enforce-commit.sh). When a `suda update` command is blocked by a hook, split the batch and rephrase the problematic description to avoid the trigger word while preserving meaning (e.g., "co-author trailers" instead of the literal trailer name).
+Walk the lint findings from Phase 1 and resolve what's safe to automate.
 
-## Phase 4: Prune
+- **`PROCEDURE_NO_TRIGGER`**: Procedure units must have a `trigger` field. For each finding, read the unit (`simaris show <id>`), infer the trigger from content if obvious, then `simaris edit <id> --content "<body with trigger frontmatter>"`. If trigger isn't inferable, flag for user review.
+- **`TAG_VARIANT`**: Near-duplicate tags (e.g. `claude-code` vs `claudecode`). Pick the canonical form, `simaris edit <id> --tags "<normalized list>"` on each affected unit. Report normalizations applied.
+- **`ORPHAN`**: Units with no incoming or outgoing links. Don't auto-act — orphans may be legitimately standalone. List in report.
+- **`DUAL_PARENT_DIVERGENCE`**: Complex case (same logical unit diverged under two aspects). Flag for review; don't auto-act.
 
-Check each memory against reality:
+## Phase 4: Decay & Vacuum
 
-1. **Stale references**: If a memory names a file path, check if the file exists. If not, forget it.
-2. **Outdated project context**: If a project memory references a version, deadline, or status, verify against current state (git log, Cargo.toml, etc.). If outdated, forget it.
-3. **Age without reinforcement**: Memories older than 90 days that haven't been reinforced by a similar newer entry — flag for review (don't auto-delete, just report).
+Run simaris's automated hygiene:
+
+```bash
+# Ebbinghaus decay — drops confidence on cold units, archives below 0.1
+simaris dream decay --json
+
+# Autolink cleanup — removes bad `related_to` edges from tag-overlap noise
+simaris vacuum autolink --json
+```
+
+Both are idempotent. Decay is pinned-aware (slugged units and units linked via `part_of` are protected).
+
+Then verify file-path references manually:
+
+1. For each `fact` / `lesson` / `procedure` referencing a concrete file path: check if the file exists. If not, archive the unit and note "stale path: <path>" in the report.
+2. For `project` tags whose project directory has been removed: archive units tagged with that project.
 
 ## Phase 5: Synthesize
 
-Read across all remaining memories and identify patterns:
+Read across remaining live units to identify patterns:
 
-1. **Recurring feedback themes**: If 3+ feedback entries cluster around the same topic (e.g., "testing practices", "commit conventions"), recommend consolidating into a skill instruction or CLAUDE.md rule.
-2. **Emerging conventions**: If project memories show the same architectural decision repeated across projects, recommend documenting as a convention.
-3. **Skill gaps**: If feedback entries describe problems that a skill should have prevented, recommend a skill improvement.
-4. **Agent behavior gaps**: If user corrections suggest the agent should behave differently by default, recommend an agent definition update.
+1. **Recurring feedback themes**: 3+ `preference` or `lesson` units clustering around the same topic → recommend consolidating into a skill instruction or CLAUDE.md rule.
+2. **Emerging conventions**: Same architectural decision across multiple project tags → recommend documenting as a `principle` unit with a clear `--tension` field.
+3. **Skill gaps**: `lesson` units describing problems a skill should have prevented → recommend a skill improvement.
+4. **Agent behavior gaps**: `preference` or `lesson` units suggesting an agent should behave differently by default → recommend an agent definition update.
+5. **Missing aspects**: If many procedures cluster around an unnamed role, recommend creating an `aspect` unit with `--role` and `--dispatches-to`.
 
 Do NOT auto-apply any recommendations. Output them for user review.
 
@@ -98,34 +95,44 @@ Output a structured report:
 ## Dream Report — <date>
 
 ### Inventory
-- Total: X memories (Y user, Z feedback, ...)
-- Age: X < 7d, Y < 30d, Z older
+- Total: X units (by type: P preferences, Q procedures, R principles, F facts, L lessons, I ideas, A aspects)
+- Inbox: X pending
+- Confidence: low / med / high distribution
+
+### Lint Findings
+- PROCEDURE_NO_TRIGGER: X (Y auto-fixed, Z flagged)
+- TAG_VARIANT: X (Y normalized)
+- ORPHAN: X (flagged)
+- DUAL_PARENT_DIVERGENCE: X (flagged)
 
 ### Consolidation
-- Merged: X groups (Y memories -> Z)
-- Removed duplicates: [list IDs]
+- Clusters resolved: X (Y units archived, Z merged)
+- [list: cluster pattern → action → IDs]
 
-### Polish
-- Descriptions enriched: X memories
-- [list: ID, old desc -> new desc, terms added]
+### Decay & Vacuum
+- Decayed below threshold: X archived
+- Autolink edges removed: X
 
-### Pruning
-- Stale references removed: [list]
-- Outdated project context removed: [list]
-- Flagged for review (old, unreinforced): [list]
+### Stale References
+- Path-not-found archives: [list]
+- Removed-project archives: [list]
 
 ### Recommendations
 1. [Skill/agent recommendation with reasoning]
 2. [...]
 
 ### Summary
-Before: X memories -> After: Y memories (Z removed, W merged)
+Before: X live units → After: Y live units (Z archived, W merged). Snapshot persisted via `simaris lint --snapshot`.
 ```
+
+Optionally persist a lint snapshot at end: `simaris lint --snapshot --note "post-dream <date>"`. This enables future `simaris lint --history` / `--ci` regression checks.
 
 ## Rules
 
-1. **Consolidation, polish, and pruning are executed.** The dream agent acts on memories directly.
-2. **Recommendations are reported only.** Never auto-modify skills or agents.
-3. **Log every destructive action.** Every `suda forget` must be logged with the reason.
-4. **When in doubt, keep.** If you can't tell whether two memories are truly duplicates, leave them both.
-5. **Verify before pruning.** Check file existence and git state before declaring something stale.
+1. **Use archive, not delete.** `simaris archive` is reversible; `simaris delete` is interactive and gated. Dream never calls `delete`.
+2. **Run lint before clustering.** Lint's findings inform Phase 3 fixes; clustering can shift structure underneath if you reorder.
+3. **Recommendations are reported only.** Never auto-modify skills, agents, or CLAUDE.md.
+4. **Log every destructive action.** Every `simaris archive` must be logged with reason. Every `simaris edit` to fix lint must be logged with the lint category.
+5. **When in doubt, keep.** If a cluster's resolution isn't clearly correct, leave both units and flag for user review.
+6. **Verify before pruning.** Check file existence and project state before archiving for "stale reference".
+7. **Hook conflicts:** Some unit content may contain keywords that trigger PreToolUse hooks (e.g., a commit-trailer rule literally quoting the trailer name triggers `enforce-commit.sh`). When `simaris edit` is blocked, rephrase the description to avoid the trigger while preserving meaning.

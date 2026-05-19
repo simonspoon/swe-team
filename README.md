@@ -72,8 +72,7 @@ Skills are specialized capabilities invoked with `/swe-team:skill-name`. They pr
 | **session-wrap** | `/swe-team:session-wrap` | End-of-session cleanup — commits dirty repos and optionally improves skills. |
 | **status** | `/swe-team:status` | Force-refreshes all project state by re-running every command live. Never uses cached data. |
 | **global-backlog** | `/swe-team:global-backlog` | Manages cross-project tasks in the global limbo backlog (`~/.limbo/`). |
-| **suda** | `/swe-team:suda` | Manages structured memories and project registry via the suda CLI. |
-| **dream** | `/swe-team:dream` | Offline memory consolidation — deduplicates, prunes, and synthesizes suda memories. |
+| **dream** | `/swe-team:dream` | Offline knowledge-store hygiene — runs simaris lint/cluster/decay/vacuum and synthesizes recommendations. |
 | **project-docs-explore** | `/swe-team:project-docs-explore` | Discovers and reads a project's documentation structure for quick onboarding. |
 
 ### Verification & Testing
@@ -140,7 +139,7 @@ All tools are available via Homebrew:
 
 ```bash
 brew tap simonspoon/tap
-brew install limbo nyx qorvex loki khora wisp-cli suda xaku
+brew install limbo nyx qorvex loki khora wisp-cli xaku
 ```
 
 Or download pre-built binaries from each tool's GitHub Releases page.
@@ -168,10 +167,6 @@ Cross-platform web app automation via Chrome DevTools Protocol. Launch headless 
 ### [wisp](https://github.com/simonspoon/wisp) — Visual Design Canvas for Agents
 
 A desktop design surface that agents control through a CLI over WebSocket. The Wisp desktop app renders a live canvas; the `wisp` CLI sends JSON-RPC commands to create, edit, and arrange design nodes. Both human and agent share the same real-time view. Available for macOS, Windows, and Linux. Used by the **wisp-design** skill.
-
-### [suda](https://github.com/simonspoon/suda) — Structured Memory for Agents
-
-SQLite-backed memory and knowledge management CLI. Stores typed memories (user, feedback, project, reference) and maintains a project registry. Context is loaded automatically by the `suda-context.sh` UserPromptSubmit hook.
 
 ### [xaku](https://github.com/simonspoon/xaku) — Headless Terminal Multiplexer
 

@@ -1,11 +1,11 @@
 ---
 name: session-wrap
-description: End-of-session skill that commits dirty repos and optionally improves skills. Memory capture is handled automatically by hooks — this skill focuses on clean handoff.
+description: End-of-session skill that commits dirty repos, opportunistically captures memorable learnings into simaris, and optionally improves skills.
 ---
 
 # Session Wrap
 
-End-of-session cleanup. Commits outstanding work and optionally improves skills if requested. Memory capture (reflection, learnings, feedback) is handled automatically by the suda-observer hook — this skill does not duplicate that work.
+End-of-session cleanup. Commits outstanding work, captures anything worth remembering into simaris, and optionally improves skills if requested. Session *events* are logged by the ivara-capture hook (`hooks/hooks.json`), but ivara is session telemetry — it does NOT write knowledge units to simaris. Capture into simaris is explicit.
 
 ## When to Invoke
 
@@ -26,7 +26,20 @@ done
 
 For each dirty repo: commit and push using `/swe-team:git-commit`.
 
-## Phase 2: Skill Improvements (only if requested)
+## Phase 2: Opportunistic Memory Capture
+
+Scan the session for anything worth keeping. Capture only the non-obvious:
+
+- **User correction or confirmed non-obvious choice** → `simaris add --type preference --tags <project>,<topic> "<one-line rule>"`
+- **Reusable rule / how-to with a clear trigger** → `simaris add --type procedure --trigger "<when it fires>" --check "<verification>" "<body>"`
+- **Surprising fact about the system** → `simaris add --type fact --tags <topic> --evidence "<source>" "<claim>"`
+- **Hard-won insight worth a name** → `simaris add --type lesson --context "<situation>" "<body>"`
+
+Skip if nothing surprising came up. Don't capture restatements of CLAUDE.md, code that's already in the repo, or session-local task state.
+
+Before adding, search for duplicates: `simaris search "<keywords>" --type <type> --json`. If a similar unit exists, prefer `simaris edit <id>` or skip.
+
+## Phase 3: Skill Improvements (only if requested)
 
 Only run this phase if the user explicitly asks for skill improvements. For each issue:
 
@@ -37,15 +50,17 @@ Only run this phase if the user explicitly asks for skill improvements. For each
 
 Skip this phase entirely if no skill issues were found. Don't force it.
 
-## Phase 3: Confirm
+## Phase 4: Confirm
 
 Tell the user:
 - Repos committed/pushed (if any)
+- Memories captured (list slugs/headlines, if any)
 - Skill improvements applied (if any)
 
 Keep it brief.
 
 ## Rules
 
-1. **Don't store memories.** The suda-observer hook handles memory capture automatically.
-2. **Skill improvements are opt-in.** Only run Phase 2 if the user explicitly requests it.
+1. **Capture only the non-obvious.** Restating CLAUDE.md or code already in the repo is noise. If a senior engineer reading the unit would think "I already knew that," don't store it.
+2. **Search before adding.** Run `simaris search` first to avoid duplicates.
+3. **Skill improvements are opt-in.** Only run Phase 3 if the user explicitly requests it.

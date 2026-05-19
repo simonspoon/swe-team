@@ -34,8 +34,8 @@ pwd
 # Is this a git repo?
 git rev-parse --is-inside-work-tree 2>/dev/null
 
-# Is suda available?
-which suda 2>/dev/null
+# Is simaris available?
+which simaris 2>/dev/null
 
 # Is limbo available?
 which limbo 2>/dev/null
@@ -54,14 +54,14 @@ git log --oneline -5
 git stash list
 ```
 
-### Step 3: Suda Project Check (if suda is available)
+### Step 3: Simaris Knowledge Store (if simaris is available)
 
 ```bash
-# Is this directory a registered project?
-suda projects --json 2>/dev/null
+# Store health and counts
+simaris stats --json 2>/dev/null
 ```
 
-Match the current working directory against the project registry. If it matches, note the project name.
+Note `total`, `inbox_size`, and any project-name tags from `by_tag.top` that match the current directory's project (e.g. banshee, mirage, khora). Simaris has no project registry — association is via tags.
 
 ### Step 4: Limbo Backlog (if limbo is available)
 
@@ -86,7 +86,7 @@ Present results as a structured table:
 | HEAD | `abc1234` | last commit message here |
 | Recent commits | 5 shown | (list below) |
 | Stash | empty | — |
-| Suda project | `project-name` | registered |
+| Simaris store | 3207 units | 12 inbox, project tag present |
 | Limbo backlog | 3 tasks | 1 in-progress, 2 captured |
 | Global backlog | 5 tasks | 2 in-progress, 3 captured |
 ```

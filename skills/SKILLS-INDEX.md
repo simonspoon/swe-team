@@ -30,8 +30,8 @@ Quick reference for all active skills — when to use each and how they compose.
 | **wisp-design** | Design and build visual UI layouts using the Wisp desktop canvas and CLI | Designing UI, building layouts, creating mockups, visual design, placing components, arranging elements, iterating on designs | tech-lead (design tasks), loki-test-desktop (verify desktop app showing design) |
 | **release** | Cut a versioned release with CI builds and Homebrew distribution | Releasing a tool, cutting a release, bumping version, tagging, publishing to Homebrew | devops (CI pipeline), git-commit (version bump commit) |
 | **global-backlog** | Cross-project task management via `limbo -g` | Global backlog, cross-project tasks, "add to backlog", "what's on the backlog", triage work across projects | tech-lead (can pick up backlog items) |
-| **status** | Force-refresh all project state — live git, suda, limbo data | "status", "where are we", "catch me up", start of session, verifying state | global-backlog (reads backlog) |
-| **dream** | Offline memory consolidation — deduplicates, prunes, and synthesizes suda memories | Manually via `/dream`, on schedule, when suda recall output is noisy or redundant | suda (operates on suda memories), skill-reflection (produces skill improvement recommendations) |
+| **status** | Force-refresh all project state — live git, simaris, limbo data | "status", "where are we", "catch me up", start of session, verifying state | global-backlog (reads backlog) |
+| **dream** | Offline knowledge-store hygiene — runs simaris lint/cluster/decay/vacuum, consolidates near-duplicates, synthesizes recommendations | Manually via `/dream`, on schedule, when simaris search/prime output is noisy | simaris (operates on knowledge units), skill-reflection (acts on improvement recommendations) |
 
 ## Composition Patterns
 
@@ -94,7 +94,7 @@ The orchestrator drives the outer loop. Each PM session handles one task end-to-
 2. Combine findings to inform current task
 
 ### End of session
-1. `/swe-team:session-wrap` → reflects on session, captures learnings to suda, improves skills if needed, persists state
+1. `/swe-team:session-wrap` → commits dirty repos, opportunistically captures learnings into simaris, improves skills if requested
 
 ### UI design workflow
 1. `/swe-team:wisp-design` → build the visual layout on the Wisp canvas using CLI commands

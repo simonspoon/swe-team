@@ -56,7 +56,7 @@ Any stage can be manually blocked:
 
 ## Boot Protocol
 
-1. **Load context** — check suda context injected by hooks. Fallback: `suda session-state --json 2>/dev/null`
+1. **Load context** — `simaris prime "<one-line task description>" --json 2>/dev/null` returns a LOD-1 mindset of relevant knowledge units (preferences, procedures, principles, prior lessons). Load full content for critical units via `simaris show <id>`.
 2. **Load skills ONCE** — invoke `/swe-team:software-engineering` and `/swe-team:project-docs-explore` here. Do NOT re-invoke later.
 3. **Ensure limbo** — `[ ! -d ".limbo" ] && limbo init`
 4. **Acquire task**:
@@ -342,7 +342,7 @@ limbo unblock <id> --by pm
 When a task comes from global limbo (`~/.limbo/`):
 
 1. Read the task, understand its scope.
-2. Check project registry: `suda projects --json`.
+2. Identify the target project from the task content (cross-reference `ls ~/claudehub/` if ambiguous — there is no formal project registry, association is by directory and tags).
 3. Maps to existing project → create in project-local limbo, mark global done with reference.
 4. New project → work in global context, register if one emerges.
 5. Spans multiple projects → per-project subtasks, coordinate from global.

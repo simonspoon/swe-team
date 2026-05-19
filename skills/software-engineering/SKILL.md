@@ -10,7 +10,7 @@ description: >
 
 # Software Engineering Knowledge Base
 
-A self-evolving knowledge base that starts minimal and grows by researching topics, capturing preferences, and consolidating learnings. The knowledge/ directory in the skill's own directory is the living knowledge base; user preferences are stored via suda.
+A self-evolving knowledge base that starts minimal and grows by researching topics, capturing preferences, and consolidating learnings. The knowledge/ directory in the skill's own directory is the living *general* knowledge base (curated by this skill). User-specific preferences, procedures, and lessons are stored in simaris as typed knowledge units.
 
 ## Critical Requirements
 
@@ -29,13 +29,14 @@ A self-evolving knowledge base that starts minimal and grows by researching topi
 
 On every activation:
 
-1. Load user preferences from suda (if available): `suda recall --type user --json 2>/dev/null` and `suda recall --type feedback --json 2>/dev/null`. These contain engineering preferences and past corrections.
+1. **Prime the mindset**: `simaris prime "<one-line task description>" --json 2>/dev/null`. This returns a LOD-1 directory of relevant knowledge units across all types (preference, procedure, principle, fact, lesson, idea, aspect) via hybrid vec+FTS retrieval. For any unit that looks critical, load full content via `simaris show <id>`. If a task-aspect is involved (e.g. code-review, testing), pass it via `--primary <slug>` to expand that aspect inline.
 2. Determine the SE domain(s) of the current task: architecture, debugging, patterns, testing, performance, security, code-review, tooling, or other.
 3. Read `knowledge/INDEX.md` from the skill's own directory. If a relevant entry exists, read the knowledge file(s). If the index is empty, skip to step 5.
-4. Apply combined knowledge to the task. **User preferences (from suda) override general knowledge when they conflict.**
+4. Apply combined knowledge to the task. **User-specific units in simaris (preference / lesson / procedure with explicit user source) override general knowledge in `knowledge/` when they conflict.**
 5. **Staleness check**: If any read knowledge file has a `Last researched` date older than 3 months, flag it as potentially stale. If the task depends on version-specific info (e.g., library versions, framework features), re-research before relying on that data.
 6. **Knowledge gap check**: If the task involves a language, framework, or pattern with no entry in knowledge/INDEX.md, follow the Research Protocol. This applies to implementation work too, not just design decisions.
 7. If the user expresses a preference or lesson, follow the Preference Capture Protocol.
+8. After consuming a unit's guidance and acting on it, record usage via `simaris mark <id> --kind used` (or `wrong`/`outdated`/`helpful` as appropriate). This feedback shapes future retrieval and decay.
 
 Now do the task. **When the task is complete, execute the Post-Task Protocol below.**
 
@@ -73,18 +74,18 @@ Process:
 
 **Always confirm before saving.** Say: "I'd like to remember that [preference]. Should I save this?"
 
-Process (suda — preferred):
-1. Check for duplicates: `suda recall --json "<keywords>"`
-2. Store as appropriate type:
-   - Corrections/approach feedback → `suda store --type feedback --name "<kebab-name>" --description "<one-line>" "<content>"`
-   - User preferences/conventions → `suda store --type user --name "<kebab-name>" --description "<one-line>" "<content>"`
-3. If a similar memory exists, update it: `suda update <ID> --content "<updated>"`
+Process:
+1. **Dedup check**: `simaris search "<keywords>" --type <type> --json`. If a near-duplicate exists, prefer updating it.
+2. **Pick the right type** (simaris is typed — don't store everything as `preference`):
+   - **preference** — "always use X", "prefer Y", style/tooling conventions → `simaris add --type preference --tags <topic> "<rule>"`
+   - **procedure** — "when X happens, do Y" with a clear trigger → `simaris add --type procedure --trigger "<when it fires>" --check "<how to verify>" [--caveat "<edge>"] [--prereq "<dep>"] "<body>"`
+   - **principle** — "X over Y because Z" architectural tradeoff → `simaris add --type principle --tension "<the tradeoff>" --tags <topic> "<body>"`
+   - **lesson** — "we got burned by X" past incident → `simaris add --type lesson --context "<situation>" --tags <topic> "<body>"`
+   - **fact** — observed claim about the system → `simaris add --type fact --evidence "<source>" --tags <topic> "<claim>"`
+3. **Update existing**: if step 1 surfaced a similar unit and the new content is a refinement, `simaris edit <id> --content "<merged>"` instead of adding.
+4. Tag with the relevant project name (banshee, mirage, khora, etc.) when project-specific. Tags drive retrieval.
 
-Process (fallback — no suda):
-1. Write to `preferences/` directory: `style.md`, `tooling.md`, or `lessons.md`.
-2. Update `preferences/INDEX.md`.
-
-**Rule**: Never capture one-off situational choices. Only capture things the user indicates are general rules or recurring lessons.
+**Rule**: Never capture one-off situational choices. Only capture things the user indicates are general rules or recurring lessons. Avoid restating CLAUDE.md or code that's already in the repo — both are loaded by other paths.
 
 ## Knowledge File Format
 
@@ -131,14 +132,9 @@ The Post-Task Protocol checks the evolution log entry count after every task. **
 | Domain | Topic | File | Added |
 |--------|-------|------|-------|
 
-**preferences/INDEX.md**:
-
-| Category | File | Entries |
-|----------|------|---------|
-
 ## Rules
 
-1. **Only modify SKILL.md via /swe-team:skill-reflection or explicit user request.** During normal activation, only knowledge/, preferences/, and meta/ evolve.
+1. **Only modify SKILL.md via /swe-team:skill-reflection or explicit user request.** During normal activation, only knowledge/ and meta/ evolve. User preferences go to simaris, not to files in this skill.
 2. **Read before write.** Always check existing knowledge before creating new files.
 3. **Preferences win.** When general knowledge and a user preference conflict, follow the preference.
 4. **Skip research during urgent debugging** unless asked. Apply best available knowledge; note the gap for later.
