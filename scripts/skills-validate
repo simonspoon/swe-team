@@ -109,6 +109,56 @@ def parse_skill_file(path: Path) -> SkillInfo:
 
 
 # ---------------------------------------------------------------------------
+# Checkers: frontmatter
+# ---------------------------------------------------------------------------
+
+_KEBAB_RE = re.compile(r"^[a-z][a-z0-9]*(-[a-z0-9]+)*$")
+
+
+def check_frontmatter(skill: SkillInfo) -> list[Finding]:
+    """Validate frontmatter presence and required fields."""
+    findings: list[Finding] = []
+
+    # 1. Frontmatter block must exist (empty dict means nothing was parsed)
+    if not skill.frontmatter:
+        findings.append(Finding(
+            severity=Severity.FAIL,
+            message="No frontmatter block found",
+            context=str(skill.path),
+        ))
+        return findings  # no point checking fields
+
+    # 2. 'name' field — required, non-empty
+    name_val = skill.frontmatter.get("name", "").strip()
+    if not name_val:
+        findings.append(Finding(
+            severity=Severity.FAIL,
+            message="Missing or empty 'name' field in frontmatter",
+            context=str(skill.path),
+        ))
+    elif not _KEBAB_RE.match(name_val):
+        findings.append(Finding(
+            severity=Severity.WARN,
+            message=f"Name '{name_val}' is not kebab-case",
+            context=str(skill.path),
+        ))
+
+    # 3. 'description' field — required, non-empty
+    desc_val = skill.frontmatter.get("description", "").strip()
+    if not desc_val:
+        findings.append(Finding(
+            severity=Severity.FAIL,
+            message="Missing or empty 'description' field in frontmatter",
+            context=str(skill.path),
+        ))
+
+    return findings
+
+
+register_checker("frontmatter", check_frontmatter)
+
+
+# ---------------------------------------------------------------------------
 # Skill discovery
 # ---------------------------------------------------------------------------
 
