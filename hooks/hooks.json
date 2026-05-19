@@ -77,11 +77,6 @@
           },
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/suda-context.sh",
-            "timeout": 10
-          },
-          {
-            "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/scripts/ivara-capture.sh",
             "timeout": 5
           }
@@ -92,11 +87,6 @@
       {
         "matcher": "",
         "hooks": [
-          {
-            "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/suda-observer.sh",
-            "timeout": 30
-          },
           {
             "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/scripts/ivara-capture.sh",
