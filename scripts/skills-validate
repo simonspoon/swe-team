@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -156,6 +157,66 @@ def check_frontmatter(skill: SkillInfo) -> list[Finding]:
 
 
 register_checker("frontmatter", check_frontmatter)
+
+
+# ---------------------------------------------------------------------------
+# Checkers: binary existence
+# ---------------------------------------------------------------------------
+
+# Tools the swe-team ecosystem may reference — warframe-themed + common CLIs.
+# Only these are checked; generic commands (cd, ls, cat) are ignored.
+KNOWN_BINARIES: set[str] = {
+    "banshee", "dante", "helios", "ivara", "khora", "limbo", "loki",
+    "mirage", "nova", "nyx", "qorvex", "simaris", "vauban", "vox",
+    "wisp", "xaku",
+    # common CLIs that skills may depend on
+    "cargo", "docker", "gh", "pnpm", "terraform", "uv",
+}
+
+# Matches content inside inline backticks: `some command`
+_INLINE_BACKTICK_RE = re.compile(r"`([^`]+)`")
+# Matches content inside fenced code blocks: ```...```
+_FENCED_BLOCK_RE = re.compile(r"```[^\n]*\n(.*?)```", re.DOTALL)
+
+
+def _extract_referenced_binaries(body: str) -> set[str]:
+    """Extract known binary names from backtick-wrapped content in a skill body."""
+    candidates: set[str] = set()
+
+    # Collect all text inside backticks and fenced blocks
+    regions: list[str] = []
+    for m in _FENCED_BLOCK_RE.finditer(body):
+        regions.append(m.group(1))
+    for m in _INLINE_BACKTICK_RE.finditer(body):
+        regions.append(m.group(1))
+
+    # Extract words and intersect with known set
+    word_re = re.compile(r"[a-z][a-z0-9-]*")
+    for region in regions:
+        for token in word_re.findall(region):
+            if token in KNOWN_BINARIES:
+                candidates.add(token)
+
+    return candidates
+
+
+def check_binaries(skill: SkillInfo) -> list[Finding]:
+    """Check that CLI tools referenced in the skill body exist on PATH."""
+    findings: list[Finding] = []
+
+    referenced = _extract_referenced_binaries(skill.body)
+    for binary in sorted(referenced):
+        if shutil.which(binary) is None:
+            findings.append(Finding(
+                severity=Severity.FAIL,
+                message=f"Binary not found on PATH: {binary}",
+                context=str(skill.path),
+            ))
+
+    return findings
+
+
+register_checker("binaries", check_binaries)
 
 
 # ---------------------------------------------------------------------------
