@@ -12,6 +12,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import shutil
 import subprocess
@@ -329,6 +330,213 @@ register_checker("paths", check_paths)
 
 
 # ---------------------------------------------------------------------------
+# Checkers: trigger string-match (nyx fixture sourcing)
+# ---------------------------------------------------------------------------
+
+_FIXTURES_FILE = Path(__file__).resolve().parent / "skills-validate-fixtures.json"
+_refresh_fixtures: bool = False
+
+
+def _load_fixtures() -> dict[str, str]:
+    """Load or build the nyx fixture cache.
+
+    Returns a dict mapping skill name → canonical user prompt snippet.
+    When _refresh_fixtures is True (or cache doesn't exist), queries nyx
+    for each skill discovered so far and writes the cache.
+    """
+    if not _refresh_fixtures and _FIXTURES_FILE.exists():
+        try:
+            return json.loads(_FIXTURES_FILE.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            pass  # corrupt cache — rebuild
+
+    return {}  # built lazily per-skill via _get_fixture
+
+
+def _nyx_search(query: str) -> str | None:
+    """Run a single nyx search and return the most recent user prompt snippet."""
+    try:
+        result = subprocess.run(
+            ["nyx", "search", query, "--json"],
+            capture_output=True, text=True, timeout=15,
+        )
+        if result.returncode != 0 or not result.stdout.strip():
+            return None
+        hits = json.loads(result.stdout)
+        user_hits = [h for h in hits if h.get("role") == "user" and h.get("snippet")]
+        if not user_hits:
+            return None
+        user_hits.sort(key=lambda h: h.get("timestamp", ""), reverse=True)
+        return user_hits[0]["snippet"]
+    except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError, KeyError):
+        return None
+
+
+def _query_nyx(skill_name: str) -> str | None:
+    """Query nyx for the most recent user prompt mentioning a skill.
+
+    Tries the full skill name first, then falls back to the longest
+    dash-separated component (e.g. 'khora-test-web' → 'khora').
+    """
+    if shutil.which("nyx") is None:
+        return None
+
+    # Try full name first
+    result = _nyx_search(skill_name)
+    if result:
+        return result
+
+    # Fallback: longest component of the skill name (most distinctive)
+    parts = skill_name.split("-")
+    if len(parts) > 1:
+        longest = max(parts, key=len)
+        if len(longest) > 2:
+            return _nyx_search(longest)
+
+    return None
+
+
+def _get_fixture(skill_name: str, cache: dict[str, str]) -> str | None:
+    """Get a fixture for a skill, querying nyx if refreshing or not cached."""
+    if not _refresh_fixtures and skill_name in cache:
+        return cache[skill_name]
+    if _refresh_fixtures or skill_name not in cache:
+        prompt = _query_nyx(skill_name)
+        if prompt is not None:
+            cache[skill_name] = prompt
+        return prompt
+    return cache.get(skill_name)
+
+
+def _save_fixtures(cache: dict[str, str]) -> None:
+    """Write the fixture cache to disk."""
+    try:
+        _FIXTURES_FILE.write_text(
+            json.dumps(cache, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+    except OSError:
+        pass  # non-fatal — cache is convenience, not critical
+
+
+# Phrases stripped from the description before extracting trigger keywords
+_TRIGGER_STRIP_PHRASES = [
+    "use when the user",
+    "use when user",
+    "use when",
+    "user mentions",
+    "user asks to",
+    "user asks for",
+    "user wants to",
+    "triggers on",
+    "triggers:",
+    "trigger when",
+    "trigger:",
+    "also use when",
+    "also use for",
+]
+
+_TRIGGER_STOP_WORDS = frozenset({
+    "a", "an", "the", "and", "or", "of", "for", "in", "on", "to", "is",
+    "are", "with", "by", "from", "at", "as", "any", "that", "this",
+    "e.g.", "eg", "etc", "when", "also", "not", "do", "use",
+})
+
+
+def _extract_trigger_keywords(description: str, skill_name: str) -> set[str]:
+    """Extract trigger keywords from a skill's description field.
+
+    Heuristic: find text after trigger phrases ('Use when', 'Triggers on', etc.),
+    split on commas, strip noise words, lowercase, dedupe. Also includes the
+    skill name and its dash-separated parts.
+    """
+    keywords: set[str] = set()
+
+    # Add skill name and its parts
+    keywords.add(skill_name.lower())
+    for part in skill_name.lower().split("-"):
+        if part and part not in _TRIGGER_STOP_WORDS and len(part) > 2:
+            keywords.add(part)
+
+    desc_lower = description.lower()
+
+    # Try to find trigger-phrase regions and extract keywords from them
+    for phrase in _TRIGGER_STRIP_PHRASES:
+        idx = desc_lower.find(phrase)
+        if idx == -1:
+            continue
+        # Text after the trigger phrase
+        after = desc_lower[idx + len(phrase):]
+        # Split on commas and periods (sentence boundaries)
+        segments = re.split(r"[,.]", after)
+        for seg in segments:
+            seg = seg.strip()
+            if not seg:
+                continue
+            # Each segment is a trigger like "testing web apps" or "browser testing"
+            words = seg.split()
+            # Add multi-word phrase (joined) and individual meaningful words
+            phrase_clean = " ".join(w for w in words if w not in _TRIGGER_STOP_WORDS)
+            if phrase_clean and len(phrase_clean) > 2:
+                keywords.add(phrase_clean)
+            for w in words:
+                if w not in _TRIGGER_STOP_WORDS and len(w) > 2:
+                    keywords.add(w)
+
+    return keywords
+
+
+# Module-level cache shared across checker invocations
+_fixture_cache: dict[str, str] | None = None
+
+
+def check_triggers(skill: SkillInfo) -> list[Finding]:
+    """Check that trigger keywords from the description appear in real user prompts."""
+    global _fixture_cache
+    findings: list[Finding] = []
+
+    description = skill.frontmatter.get("description", "").strip()
+    if not description:
+        return findings  # frontmatter checker already flags this
+
+    # Lazy-load fixture cache
+    if _fixture_cache is None:
+        _fixture_cache = _load_fixtures()
+
+    keywords = _extract_trigger_keywords(description, skill.name)
+    if not keywords:
+        findings.append(Finding(
+            severity=Severity.WARN,
+            message="No trigger keywords extracted from description",
+            context=str(skill.path),
+        ))
+        return findings
+
+    prompt = _get_fixture(skill.name, _fixture_cache)
+    if prompt is None:
+        findings.append(Finding(
+            severity=Severity.WARN,
+            message="No nyx fixture — no conversation history found for this skill",
+            context=str(skill.path),
+        ))
+        return findings
+
+    prompt_lower = prompt.lower()
+    matched = any(kw in prompt_lower for kw in keywords)
+    if not matched:
+        findings.append(Finding(
+            severity=Severity.WARN,
+            message="Trigger keyword mismatch — no extracted keywords found in canonical prompt",
+            context=f"keywords: {sorted(keywords)[:10]}",
+        ))
+
+    return findings
+
+
+register_checker("triggers", check_triggers)
+
+
+# ---------------------------------------------------------------------------
 # Skill discovery
 # ---------------------------------------------------------------------------
 
@@ -435,10 +643,19 @@ def main() -> None:
         action="store_true",
         help="Only validate skills with git-changed files",
     )
+    parser.add_argument(
+        "--refresh-fixtures",
+        action="store_true",
+        help="Re-fetch trigger fixtures from nyx (rewrites cache)",
+    )
     args = parser.parse_args()
 
     if args.name and args.changed:
         parser.error("cannot combine skill name with --changed")
+
+    # Set module-level refresh flag for the trigger checker
+    global _refresh_fixtures
+    _refresh_fixtures = args.refresh_fixtures
 
     repo_root = find_repo_root()
     skills_dir = repo_root / "skills"
@@ -463,6 +680,11 @@ def main() -> None:
         skills = all_skills
 
     all_pass = run_checkers(skills)
+
+    # Persist fixture cache if it was populated
+    if _fixture_cache is not None:
+        _save_fixtures(_fixture_cache)
+
     sys.exit(0 if all_pass else 1)
 
 
