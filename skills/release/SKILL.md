@@ -141,6 +141,7 @@ git add -A && git commit -m "add/update <FORMULA_NAME> to <VERSION>" && git push
 
 ## Gotchas
 
+- **Docs drift in batch releases.** When cutting multiple releases in one session, the per-commit docs freshness gate (in git-commit) fires once and can be dismissed, letting README/docs drift accumulate silently. After finishing a batch of releases, explicitly check: "Have docs been updated to reflect all the changes across these releases?" If not, run `/swe-team:update-docs` before ending the session.
 - **Formula name may differ from tool name.** wisp uses `wisp-cli` as the formula name. Check the tap repo's `Formula/` directory for the actual filename.
 - **Workspace versions.** If `Cargo.toml` uses `[workspace.package] version = "X"`, member crates may use `version.workspace = true`. Only bump the workspace root.
 - **Tag format.** Always `vX.Y.Z` with the `v` prefix. Release workflows trigger on `v*` tags.

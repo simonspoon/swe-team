@@ -127,6 +127,24 @@ If the research produced reusable knowledge:
 - **Conflicting information** -- Present both sides with source citations. Recommend which to trust and explain why.
 - **Research question is too broad** -- Break it into sub-questions. If the task is interactive (user is present), ask them to prioritize. If running autonomously, research breadth-first at shallow depth and flag sub-questions that need deeper investigation.
 
+## Deep Research Mode (industry / system survey)
+
+When the research question is "survey approaches to X", "what do existing systems do for Y", or any cross-system comparison, switch into deep-research mode.
+
+### Constraints
+- **Max 6 systems** — pick the most relevant. Sample widely, then prune. More is noise.
+- **Max 1 page per system** — terse summaries, not exhaustive deep-dives.
+- **Comparison matrix required** — side-by-side table across all systems on the dimensions that matter (architecture, scale, license, trade-offs).
+
+### Additional outputs (on top of the standard report)
+- **Comparison matrix** — systems as rows, dimensions as columns
+- **Candidate options** — 2-3 distinct approaches you'd consider for the user's case, with the trade-offs called out
+- **Open questions** — explicitly what couldn't be answered from public sources (signal these as gaps, not failures)
+
+### When NOT to use
+- Codebase exploration (stay in standard mode — comparison matrix doesn't fit single-codebase research)
+- Single-system deep dive (use standard mode, just go deep)
+
 ## Output Format
 
 Structure every research report as:

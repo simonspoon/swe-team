@@ -136,6 +136,26 @@ If a required tool is missing, note it in the evidence and skip that platform. I
 4. **Always `khora kill "$SESSION"` when done** — orphaned Chrome blocks the user's browser
 5. Verify cleanup: `khora status` should show no active sessions
 
+### 4.5 Change Completeness Check (mandatory before any PASS verdict)
+
+Before issuing PASS, enumerate the artifacts that **mirror or depend on** the changed code. The task is NOT done if any of these were not touched:
+
+- **Sibling views/components** — if a view/component changed, list other surfaces that render the same data
+- **Lockfiles alongside manifests** — `package.json` ↔ lockfile, `Cargo.toml` ↔ `Cargo.lock`, `pyproject.toml` ↔ `uv.lock`
+- **Docs alongside code** — README, inline docs, generated API docs that describe the changed behavior
+- **Update paths alongside creation paths** — if a create flow changed, the corresponding edit/update flow likely needs the same change
+- **Binaries after asset rebuilds** — if assets changed, did the bundled binary get regenerated?
+
+Produce the enumeration as part of evidence:
+
+```bash
+limbo note <id> "COMPLETENESS CHECK:
+  Mirrors enumerated: [list each one]
+  All touched: YES / NO ([if NO: specific gap])"
+```
+
+If any mirror is untouched → **VERDICT:verify:FAIL** with the specific gap. Do not issue PASS with known divergence.
+
 ### 5. Write Verdict and Evidence
 
 ```bash

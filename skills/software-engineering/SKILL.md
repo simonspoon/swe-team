@@ -16,6 +16,15 @@ A self-evolving knowledge base that starts minimal and grows by researching topi
 
 - **Never upgrade project dependencies, toolchains, frameworks, or libraries without explicitly asking the user first.** Even if versions are outdated, present findings and ask for confirmation before making any changes.
 
+- **Change completeness: enumerate dependents before declaring done.** Work is not done until all artifacts that mirror or depend on the changed thing have been updated. Before declaring a task complete, produce an explicit enumeration:
+  - Sibling views/components that render the same data
+  - Lockfiles alongside manifests (`package.json` ↔ lockfile, `Cargo.toml` ↔ `Cargo.lock`, `pyproject.toml` ↔ `uv.lock`)
+  - Docs alongside code (README, inline docs, generated API docs)
+  - Update paths alongside creation paths (if create flow changed, edit flow likely needs the same change)
+  - Binaries after asset rebuilds
+
+  Partial completion is a latent divergence bug, not acceptable progress. The enumeration must be produced explicitly — implicit "I checked" is not sufficient.
+
 ## Activation Protocol
 
 On every activation:

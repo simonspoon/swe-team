@@ -43,10 +43,11 @@ Agents are autonomous subprocesses that handle complex, multi-step tasks. They a
 
 | Agent | Description |
 |-------|-------------|
-| **project-manager** | Stateless per-task evaluator. Receives a single task, evaluates it, and either decomposes into subtasks or executes via tech-lead + verifies + commits. Only agent that commits code. |
+| **project-manager** | Stateless per-task evaluator. Receives a single task, then clarifies (vague ask), decomposes (too big), or executes the work itself end-to-end through limbo's lifecycle stages. Dispatches only `researcher` (targeted scout) and `committer` (final commit). Only agent that commits code. |
 | **tech-lead** | Single-task code executor. Receives one task from the PM, implements the change, verifies it works, and returns. Never commits — the PM handles that. |
 | **code-review-agent** | Performs thorough, convention-aware code reviews combining security analysis, bug detection, performance checks, and style enforcement. |
-| **researcher-agent** | Conducts deep research across codebases, documentation, and the web. Produces structured, actionable reports. |
+| **researcher-agent** | Conducts deep research across codebases, documentation, and the web. Produces structured, actionable reports. Supports a deep-research mode for cross-system surveys with comparison matrices. |
+| **red-team** | Adversarial critic. Stress-tests specs, designs, and code for failure modes, hidden assumptions, and rollback gaps. Never approves — surfaces what others miss. |
 | **skill-trainer** | Tests, validates, and hardens skills through structured multi-phase training and weak-model (Haiku) calibration. |
 
 ## Skills
@@ -127,6 +128,7 @@ Skills are specialized capabilities invoked with `/swe-team:skill-name`. They pr
 | Command | Description |
 |---------|-------------|
 | **git-commit** | `/swe-team:git-commit` — Stages and commits changes with a clear, concise commit message. |
+| **orchestrate** | `/swe-team:orchestrate` — Drains the limbo task queue. Pulls the next ready/unblocked leaf task and dispatches the project-manager to execute it. One task per invocation. |
 
 ---
 
@@ -179,4 +181,4 @@ Headless terminal multiplexer for spawning and controlling terminal sessions, Cl
 
 ## CLAUDE.md
 
-The included `CLAUDE.md` configures Claude Code with mandatory pre-task steps and routing to the project-manager agent for all code-producing tasks. An external orchestrator watches limbo for unblocked leaf tasks and spawns PM sessions to handle them.
+The included `CLAUDE.md` configures Claude Code with mandatory pre-task steps and routing to the project-manager agent for all code-producing tasks. The `/swe-team:orchestrate` command (or an external orchestrator) watches limbo for unblocked leaf tasks and spawns PM sessions to handle them.
