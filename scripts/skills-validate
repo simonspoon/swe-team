@@ -220,6 +220,115 @@ register_checker("binaries", check_binaries)
 
 
 # ---------------------------------------------------------------------------
+# Checkers: file-path resolution
+# ---------------------------------------------------------------------------
+
+# Cache repo root across checker invocations
+_repo_root: Path | None = None
+
+
+def _get_repo_root() -> Path:
+    """Return the git repo root, cached after first call."""
+    global _repo_root
+    if _repo_root is None:
+        result = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            capture_output=True, text=True,
+        )
+        _repo_root = Path(result.stdout.strip()) if result.returncode == 0 else Path(".")
+    return _repo_root
+
+
+# Skill-local resource directories whose file references should be validated.
+# Paths starting with these prefixes (with a file extension) are real references
+# to files that the skill depends on. Bare directory references (no extension)
+# are structural and may not exist yet — skip those.
+_SKILL_RESOURCE_PREFIXES = ("reference/", "knowledge/", "templates/")
+
+# Matches a relative path token inside backtick content
+_RELATIVE_PATH_RE = re.compile(r"[a-zA-Z0-9_.][a-zA-Z0-9_./\-]*")
+
+# Disqualifying patterns (template placeholders, env vars, globs)
+_PATH_SKIP_RE = re.compile(
+    r"<[a-zA-Z_-]+>"      # angle-bracket placeholders: <name>
+    r"|\{[a-zA-Z_]"        # brace placeholders: {var}
+    r"|\$\{?\w"            # env vars: $VAR, ${VAR}
+    r"|[*?]"               # glob wildcards
+)
+
+
+def _extract_skill_resource_paths(body: str) -> list[str]:
+    """Extract skill-local resource paths from inline backtick spans.
+
+    Only paths starting with known resource prefixes (reference/, knowledge/,
+    templates/) that have a file extension are checked. This avoids false
+    positives on example paths, CLI commands, and documentation references
+    to other projects.
+    """
+    paths: list[str] = []
+
+    for m in _INLINE_BACKTICK_RE.finditer(body):
+        content = m.group(1).strip()
+
+        # Must contain / to be path-shaped
+        if "/" not in content:
+            continue
+
+        # Extract the path-shaped portion
+        pm = _RELATIVE_PATH_RE.search(content)
+        if not pm:
+            continue
+
+        candidate = pm.group(0).rstrip(".,;:)")
+
+        # Must start with a known resource prefix
+        if not any(candidate.startswith(p) for p in _SKILL_RESOURCE_PREFIXES):
+            continue
+
+        # Must have a file extension (skip bare directory references)
+        if "." not in candidate.split("/")[-1]:
+            continue
+
+        # Skip template placeholders and globs
+        if _PATH_SKIP_RE.search(candidate):
+            continue
+
+        paths.append(candidate)
+
+    return list(dict.fromkeys(paths))  # dedupe, preserve order
+
+
+def _resolve_path(path_str: str, skill_dir: Path) -> bool:
+    """Check whether a relative path resolves from skill dir or repo root."""
+    p = Path(path_str)
+    if (skill_dir / p).exists():
+        return True
+    if (_get_repo_root() / p).exists():
+        return True
+    return False
+
+
+def check_paths(skill: SkillInfo) -> list[Finding]:
+    """Check that file paths referenced in the skill body actually exist."""
+    findings: list[Finding] = []
+    skill_dir = skill.path.parent
+
+    referenced = _extract_skill_resource_paths(skill.body)
+    for path_str in referenced:
+        if not _resolve_path(path_str, skill_dir):
+            findings.append(Finding(
+                severity=Severity.FAIL,
+                message=f"Referenced path not found: {path_str}",
+                context=str(skill.path),
+            ))
+
+    return findings
+
+
+register_checker("paths", check_paths)
+
+
+# ---------------------------------------------------------------------------
 # Skill discovery
 # ---------------------------------------------------------------------------
 
