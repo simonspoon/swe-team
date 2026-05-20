@@ -300,3 +300,111 @@ Key recommendation: Add rollback documentation to devops deploy template per ski
 - **CD-1 pnpm bug confirmed fixed** — lockfile detection now works correctly (+1 vs previous).
 - All 18 benchmarks PASS. All categories GREEN. Zero CRITICAL or FAIL verdicts.
 - Correctness is 54/54 (100%) across all benchmarks — every solution solves the stated problem.
+
+## 2026-05-20 — Full Team Evaluation (v1.27.0, first run with AP pipeline benchmarks)
+Overall: 11.96/12 (287/288, 99.65%)
+Strengths: Bug Fix, Feature Implementation, Code Review, Test Generation, Refactoring, Agent/Pipeline — all perfect on score
+Gaps: CI/CD (35/36 — CD-2 missing HEALTHCHECK); AP suite coverage holes — verifier, in-review gate, and researcher were not actually exercised
+Key recommendation: Harden the new AP benchmark scaffolds. AP-4 and AP-6 did not trigger their target mechanism (in-review gate / researcher dispatch); verifier remains unbenchmarked. The 72/72 AP score reflects team execution quality, not coverage of those three agents.
+
+### Per-Benchmark Scores
+| Benchmark | Score | Verdict |
+|-----------|-------|---------|
+| BF-1: Null Reference in API Handler | 12/12 | PASS |
+| BF-2: Off-by-One in Pagination | 12/12 | PASS |
+| BF-3: Race Condition in Cache | 12/12 | PASS |
+| FI-1: Add Search Endpoint | 12/12 | PASS |
+| FI-2: Add Rate Limiting Middleware | 12/12 | PASS |
+| FI-3: Add Webhook System | 12/12 | PASS |
+| CR-1: Security Vulnerabilities | 12/12 | PASS |
+| CR-2: Performance Anti-Patterns | 12/12 | PASS |
+| CR-3: Mixed Quality PR | 12/12 | PASS |
+| TG-1: Unit Tests for Utility Module | 12/12 | PASS |
+| TG-2: Integration Tests for API | 12/12 | PASS |
+| TG-3: Test Coverage Gap Analysis | 12/12 | PASS |
+| CD-1: GitHub Actions for Node.js | 12/12 | PASS |
+| CD-2: Docker Multi-Stage Build | 11/12 | PASS |
+| CD-3: Deployment Pipeline | 12/12 | PASS |
+| RF-1: Extract Module from God Object | 12/12 | PASS |
+| RF-2: Replace Callback Hell with Async/Await | 12/12 | PASS |
+| RF-3: Dependency Injection Refactor | 12/12 | PASS |
+| AP-1: Decompose a Multi-Part Feature | 12/12 | PASS |
+| AP-2: End-to-End Bug Fix Through the Pipeline | 12/12 | PASS |
+| AP-3: Risk Assessment Catches a Bad Approach | 12/12 | PASS |
+| AP-4: In-Review Gate Catches a Planted Defect | 12/12 | PASS* |
+| AP-5: Test Strategy Quality at the Planned Gate | 12/12 | PASS |
+| AP-6: Targeted Investigation via Researcher | 12/12 | PASS* |
+
+(*) Team executed well but the benchmark's target mechanism was not exercised — see Gaps.
+
+### Detailed Scores
+| Benchmark | Correctness | Completeness | Quality | Conventions | Total |
+|-----------|-------------|--------------|---------|-------------|-------|
+| BF-1 | 3 | 3 | 3 | 3 | 12 |
+| BF-2 | 3 | 3 | 3 | 3 | 12 |
+| BF-3 | 3 | 3 | 3 | 3 | 12 |
+| FI-1 | 3 | 3 | 3 | 3 | 12 |
+| FI-2 | 3 | 3 | 3 | 3 | 12 |
+| FI-3 | 3 | 3 | 3 | 3 | 12 |
+| CR-1 | 3 | 3 | 3 | 3 | 12 |
+| CR-2 | 3 | 3 | 3 | 3 | 12 |
+| CR-3 | 3 | 3 | 3 | 3 | 12 |
+| TG-1 | 3 | 3 | 3 | 3 | 12 |
+| TG-2 | 3 | 3 | 3 | 3 | 12 |
+| TG-3 | 3 | 3 | 3 | 3 | 12 |
+| CD-1 | 3 | 3 | 3 | 3 | 12 |
+| CD-2 | 3 | 2 | 3 | 3 | 11 |
+| CD-3 | 3 | 3 | 3 | 3 | 12 |
+| RF-1 | 3 | 3 | 3 | 3 | 12 |
+| RF-2 | 3 | 3 | 3 | 3 | 12 |
+| RF-3 | 3 | 3 | 3 | 3 | 12 |
+| AP-1 | 3 | 3 | 3 | 3 | 12 |
+| AP-2 | 3 | 3 | 3 | 3 | 12 |
+| AP-3 | 3 | 3 | 3 | 3 | 12 |
+| AP-4 | 3 | 3 | 3 | 3 | 12 |
+| AP-5 | 3 | 3 | 3 | 3 | 12 |
+| AP-6 | 3 | 3 | 3 | 3 | 12 |
+
+### Category Averages
+| Category | Total Score | Avg (per dimension) | Rating |
+|----------|-----------|---------------------|--------|
+| Bug Fix | 36/36 | 3.00 | GREEN |
+| Feature Implementation | 36/36 | 3.00 | GREEN |
+| Code Review | 36/36 | 3.00 | GREEN |
+| Test Generation | 36/36 | 3.00 | GREEN |
+| CI/CD Setup | 35/36 | 2.92 | GREEN |
+| Refactoring | 36/36 | 3.00 | GREEN |
+| Agent / Pipeline | 72/72 | 3.00 | GREEN |
+
+### Comparison with Previous Evaluation (Mar 24, v1.9.0)
+| Category | Previous | Current | Change |
+|----------|----------|---------|--------|
+| Bug Fix | 36/36 | 36/36 | Stable |
+| Feature Implementation | 35/36 | 36/36 | +1 (FI-3 Python convention fixed) |
+| Code Review | 36/36 | 36/36 | Stable |
+| Test Generation | 36/36 | 36/36 | Stable |
+| CI/CD Setup | 33/36 | 35/36 | +2 (CD-3 rollback docs added — prior key recommendation resolved) |
+| Refactoring | 35/36 | 36/36 | +1 (RF-2 error format preserved) |
+| Agent / Pipeline | N/A | 72/72 | New category (pipeline-level, 6 benchmarks) |
+| **Skill-level overall** | **211/216 (97.7%)** | **215/216 (99.5%)** | **+1.8%** |
+
+### Gaps Identified
+| Gap | Severity | Root Cause | Affected Workflows |
+|-----|----------|------------|-------------------|
+| AP-4 did not exercise the in-review gate | YELLOW | The planted defect was pre-stated in APPROACH.md, so the pipeline caught it at refinement/planning before implementation. A defect visible in the spec cannot test the *in-review* gate. | team-evaluator AP suite |
+| AP-6 did not exercise the researcher agent | YELLOW | The scaffold is only 3 files / ~85 lines — too small to compel scout-mode dispatch. The PM correctly investigated directly. | team-evaluator AP suite |
+| verifier agent unbenchmarked | YELLOW | Known/documented limitation — verifier needs a live app (khora/loki/qorvex); a /tmp scaffold has none. | team-evaluator AP suite |
+| CD-2 Dockerfile omits HEALTHCHECK | LOW | devops skill produced a multi-stage build but did not add a HEALTHCHECK despite the app exposing /health. | CI/CD, Docker workflows |
+
+### Recommendations
+1. **[MEDIUM] Re-scaffold AP-4** so the defect is introduced *during implementation*, not pre-stated in APPROACH.md — e.g. an approach that is correct in prose but where a naive implementation produces an off-by-one. Only then does the in-review gate become the thing under test.
+2. **[MEDIUM] Re-scaffold AP-6** with a genuinely large/unfamiliar codebase (many modules, indirection) so direct PM investigation is impractical and scout-mode researcher dispatch is the correct call.
+3. **[LOW] devops skill** — add a HEALTHCHECK instruction to generated Dockerfiles when the app exposes a health endpoint.
+4. **[LOW] verifier coverage** — to evaluate the verifier end-to-end, run a one-off pipeline benchmark against a real launchable project rather than a synthetic scaffold.
+
+### Notes
+- First evaluation on plugin v1.27.0 and the first to run the AP (Agent/Pipeline) benchmarks added in commit 43e6f94.
+- Skill-level benchmarks (18) are self-run and self-scored by the runner, consistent with the skill design and all prior evals. The 6 AP benchmarks were independently verified by the orchestrator (git logs, limbo task state, live `pytest` runs in each scratch repo).
+- All 24 benchmarks PASS. Zero MARGINAL/FAIL/CRITICAL. Correctness 72/72 (100%).
+- The team's *execution* is excellent end-to-end: AP-2 ran a full bug-fix lifecycle with a regression test verified failing pre-fix; AP-3's risk-assessor caught a cross-user cache leak and drove a structurally-safe design; AP-4 caught a planted defect upstream so it never reached `done`.
+- The real finding is in the *evaluation harness*, not the team: 3 of the AP category's target agents/gates (in-review gate, researcher, verifier) were not exercised. The AP suite is new and needs scaffold hardening before its scores can be read as agent coverage.
