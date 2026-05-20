@@ -39,6 +39,16 @@ if echo "$DIRPATH" | grep -qi "/tests\b\|/test\b\|/__tests__"; then
   IS_TEST=true
 fi
 
+# --- Source code file detection ---
+# Real programming-language source. Excludes config/markup (.json .toml .yaml
+# .md .css .html) and shell scripts, so editing hooks/config is never gated.
+IS_CODE=false
+case "$BASENAME" in
+  *.rs|*.ts|*.tsx|*.js|*.jsx|*.mjs|*.cjs|*.go|*.py|*.c|*.cc|*.cpp|*.h|*.hpp|*.java|*.kt|*.rb|*.swift|*.cs|*.scala)
+    IS_CODE=true
+    ;;
+esac
+
 # --- Check skill flags ---
 check_skill_flag() {
   local skill_name="$1"
@@ -58,6 +68,15 @@ fi
 if [ "$IS_TEST" = true ]; then
   if ! check_skill_flag "test-engineer"; then
     echo "BLOCKED: You are editing a test file without having invoked /swe-team:test-engineer first. Call the Skill tool with skill=\"swe-team:test-engineer\" BEFORE writing or editing tests." >&2
+    exit 2
+  fi
+fi
+
+# Plain source files (not tests, not docs) require the software-engineering skill —
+# it loads project conventions and user preferences before any code is written.
+if [ "$IS_CODE" = true ] && [ "$IS_TEST" = false ] && [ "$IS_DOC" = false ]; then
+  if ! check_skill_flag "software-engineering"; then
+    echo "BLOCKED: You are editing a source file without having invoked /swe-team:software-engineering first. Call the Skill tool with skill=\"swe-team:software-engineering\" BEFORE writing or modifying code — it loads project conventions and user preferences that must inform the change." >&2
     exit 2
   fi
 fi

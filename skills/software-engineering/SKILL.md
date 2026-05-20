@@ -25,6 +25,8 @@ A self-evolving knowledge base that starts minimal and grows by researching topi
 
   Partial completion is a latent divergence bug, not acceptable progress. The enumeration must be produced explicitly — implicit "I checked" is not sufficient.
 
+- **Deliver in verified, committed increments — not one big-bang.** For work spanning more than a few files: land a thin working slice, verify it (build + tests; for UI or behavior changes, actually run and exercise it — not just compile it), then commit that verified state before extending. Never build on a layer you have not verified — if a layer cannot be verified in the current environment (e.g. a GUI change with no display), stop and hand it back for verification rather than stacking more changes on top. A large feature delivered as one uncommitted, unverified diff is a liability, not progress; if it is too large to slice yourself, route it to `/swe-team:project-manager` for decomposition.
+
 ## Activation Protocol
 
 On every activation:
