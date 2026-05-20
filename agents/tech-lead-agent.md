@@ -14,7 +14,7 @@ description: >
 
   Triggers: (dispatched by project-manager for single-task execution)
 tools: [Read, Write, Edit, Bash, Glob, Grep]
-model: claude-opus-4-6[1m]
+model: claude-opus-4-7[1m]
 maxTurns: 200
 ---
 

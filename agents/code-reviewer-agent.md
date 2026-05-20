@@ -1,7 +1,7 @@
 ---
 name: code-reviewer
 description: "Post-implementation code review with structured verdict. Runs during in-review stage."
-model: claude-sonnet-4-20250514
+model: sonnet
 tools: [Read, Bash, Glob, Grep]
 ---
 

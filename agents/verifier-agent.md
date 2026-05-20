@@ -1,7 +1,7 @@
 ---
 name: verifier
 description: "Live verification via QA tools (khora/loki/qorvex). Runs during in-review stage."
-model: claude-sonnet-4-20250514
+model: sonnet
 tools: [Read, Bash, Glob, Grep]
 ---
 

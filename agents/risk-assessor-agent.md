@@ -1,7 +1,7 @@
 ---
 name: risk-assessor
 description: "Pre-implementation risk assessment and approach validation. Runs during refined→planned stage."
-model: claude-sonnet-4-20250514
+model: sonnet
 tools: [Read, Bash, Glob, Grep]
 ---
 

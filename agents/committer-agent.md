@@ -1,7 +1,7 @@
 ---
 name: committer
 description: "Git staging and commit. Final pipeline step — git operations only, no file modifications."
-model: claude-haiku-3-5-20241022
+model: haiku
 tools: [Read, Bash]
 ---
 

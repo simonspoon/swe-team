@@ -1,7 +1,7 @@
 ---
 name: test-engineer
 description: "Designs test strategies with concrete tools and commands. Runs during refined→planned stage."
-model: claude-sonnet-4-20250514
+model: sonnet
 tools: [Read, Bash, Glob, Grep]
 ---
 

@@ -18,7 +18,7 @@ description: >
 
   Triggers: new task, handle task, plan work, manage project, triage, clarify feature, decompose
 tools: Bash, Read, Write, Edit, Glob, Grep, Skill, Agent
-model: claude-opus-4-6[1m]
+model: claude-opus-4-7[1m]
 maxTurns: 500
 ---
 
