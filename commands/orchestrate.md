@@ -12,13 +12,29 @@ Drain limbo via the orchestrator pattern.
 # Procedure
 
 1. **Pick the next leaf task** — any stage, not just `ready`:
-   ```bash
-   # subtree scope
-   limbo tree <task-id> --unblocked --pretty | head -n 1
 
-   # full drain
-   limbo list --unblocked --pretty | head -n 1
+   **Full drain** (`/orchestrate`, no args):
+   ```bash
+   limbo list --unblocked --pretty
    ```
+   **Subtree scope** (`/orchestrate <task-id>`):
+   ```bash
+   limbo tree <task-id> --unblocked --pretty
+   ```
+
+   Read the output and pick the **first unblocked leaf task**, then take its
+   short ID — the first token of that task's line (e.g. `rgta`).
+
+   ⚠️ Do NOT pipe these commands through `head -n 1`. The `--pretty` format
+   never puts a task on line 1:
+   - `limbo list --pretty` groups tasks under `status (N)` header lines, so
+     line 1 is a status header (e.g. `captured (1)`) — not a task, no ID.
+   - `limbo tree --pretty` puts the subtree *root* on line 1 — you want a
+     leaf descendant, not the root.
+
+   If the output is `No tasks found.`, the scope is drained → stop (see
+   Stop conditions).
+
    Pick the next unblocked leaf **regardless of its status** (`captured`,
    `refined`, `planned`, or `ready`). `done` tasks are excluded by default.
    Do NOT filter to `--status ready` — a freshly captured-only queue must still
