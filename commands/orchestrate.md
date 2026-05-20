@@ -1,5 +1,5 @@
 ---
-description: Drain limbo task queue. Pull next ready+unblocked task, dispatch project-manager to execute it. One task per invocation; exit when scope is drained.
+description: Drain limbo task queue. Pull next unblocked leaf task, dispatch project-manager to execute it. One task per invocation; exit when scope is drained.
 ---
 
 Drain limbo via the orchestrator pattern.
@@ -7,29 +7,36 @@ Drain limbo via the orchestrator pattern.
 # Scope
 
 - `/orchestrate <task-id>` → drain just that subtree (root + descendants).
-- `/orchestrate` (no args) → drain all ready/unblocked tasks in the current project's limbo.
+- `/orchestrate` (no args) → drain all unblocked leaf tasks in the current project's limbo.
 
 # Procedure
 
-1. **Pick the next leaf task**:
+1. **Pick the next leaf task** — any stage, not just `ready`:
    ```bash
    # subtree scope
-   limbo tree <task-id> --status ready --unblocked --pretty | head -n 1
+   limbo tree <task-id> --unblocked --pretty | head -n 1
 
    # full drain
-   limbo list --status ready --unblocked --pretty | head -n 1
+   limbo list --unblocked --pretty | head -n 1
    ```
+   Pick the next unblocked leaf **regardless of its status** (`captured`,
+   `refined`, `planned`, or `ready`). `done` tasks are excluded by default.
+   Do NOT filter to `--status ready` — a freshly captured-only queue must still
+   drain. The PM advances whatever it receives from its current stage.
 
 2. **Dispatch project-manager** via the Agent tool:
    - `subagent_type: swe-team:project-manager`
    - Prompt includes: task ID, working directory, any constraints from CLAUDE.md.
-   - The PM advances the task through stages (refined → planned → ready → in-progress → in-review → done).
+   - The PM advances the task from its current stage through to done
+     (captured → refined → planned → ready → in-progress → in-review → done).
    - The PM does the work itself; it dispatches only `researcher` (scout) and `committer`.
 
 3. **Wait for PM to return**, then check task status:
    - `done` → continue to next leaf
    - `blocked` → surface the blocker to the user, do not auto-resolve
-   - Still in earlier stage → PM didn't complete the loop; surface and stop
+   - PM decomposed the task into subtrees → continue to step 1 (the new leaves are now pickable)
+   - PM needs clarification (a `captured` task too vague to execute) → surface to the user and stop
+   - Still in earlier stage with no explanation → PM didn't complete the loop; surface and stop
 
 4. **Repeat step 1** until scope is drained → exit.
 
@@ -42,7 +49,7 @@ Drain limbo via the orchestrator pattern.
 
 # Stop conditions
 
-- No more ready/unblocked tasks in scope.
+- No more unblocked leaf tasks in scope (all remaining are `done` or `blocked`).
 - PM returned a blocker that needs user input.
 - User interrupted.
 - A PM dispatch failed (e.g., context exhausted) — surface and stop, do not retry blindly.
