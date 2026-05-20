@@ -68,10 +68,9 @@ Note `total`, `inbox_size`, and any project-name tags from `by_tag.top` that mat
 ```bash
 # Project-local backlog (if .limbo/ exists in current dir)
 limbo list --json 2>/dev/null
-
-# Global backlog
-limbo -g list --json 2>/dev/null
 ```
+
+Note: limbo no longer supports a global backlog — `-g` / `--global` flags were removed. Do not call them; they will error out. Only the project-local `.limbo/` store exists.
 
 ## Output Format
 
@@ -88,7 +87,6 @@ Present results as a structured table:
 | Stash | empty | — |
 | Simaris store | 3207 units | 12 inbox, project tag present |
 | Limbo backlog | 3 tasks | 1 in-progress, 2 captured |
-| Global backlog | 5 tasks | 2 in-progress, 3 captured |
 ```
 
 Below the table, list the 5 recent commits from Step 2.

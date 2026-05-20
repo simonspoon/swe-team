@@ -1,70 +1,24 @@
 ---
 name: global-backlog
-description: View, add, and manage items in the global backlog using limbo --global. Use when the user mentions global backlog, cross-project tasks, backlog items, or wants to add/view/triage tasks that aren't scoped to the current project.
+description: DEPRECATED — limbo no longer supports a global backlog. The `-g` / `--global` flags have been removed from the limbo CLI. Do not invoke this skill; if the user asks about a "global backlog", tell them the feature was removed and ask where they want cross-project tasks tracked instead.
 ---
 
-# global-backlog — Cross-Project Task Management
+# global-backlog — DEPRECATED
 
-Manage a global backlog of tasks across all projects using `limbo -g`. The global backlog lives at `~/.limbo/` and is independent of any project-level limbo instance.
+**This skill is non-functional.** As of the current limbo CLI, there is no `-g` or `--global` flag on any subcommand. Running `limbo -g …` or `limbo --global …` will fail with:
 
-## Prerequisites
-
-- `limbo` must be installed and on PATH
-- Global backlog must be initialized: `limbo -g init`
-
-## When to Use
-
-- User asks about the "global backlog" or "cross-project tasks"
-- User wants to add a task that isn't specific to the current project
-- User wants to review, triage, or prioritize work across projects
-- User says "add to backlog", "what's on the backlog", "show me the backlog"
-
-## Quick Reference
-
-All commands use `limbo -g` (or `limbo --global`) to target `~/.limbo/`:
-
-```bash
-# View the backlog
-limbo -g tree --pretty              # Hierarchical view
-limbo -g list --pretty              # Flat list
-limbo -g list -s captured --pretty   # Only captured tasks
-
-# Add items (--approach, --verify, --result recommended but optional)
-limbo -g add "Task name" --approach "What to do" --verify "How to confirm" --result "Expected outcome"
-limbo -g add "Subtask" --parent <id> --approach "..." --verify "..." --result "..."
-# add returns the new task's short ID (e.g., "jpbc")
-
-# Manage items
-limbo -g status <id> in-progress    # Start working
-limbo -g status <id> done --outcome "What actually happened"  # Mark complete (--outcome optional but recommended)
-limbo -g edit <id> --name "New name"
-limbo -g note <id> "Some context"
-limbo -g block <blocker-id> <blocked-id>
-limbo -g delete <id>
-
-# Search
-limbo -g search "keyword"
+```
+Error: unknown shorthand flag: 'g' in -g
 ```
 
-## Workflow
+There is no global `~/.limbo/` store managed by the limbo binary anymore — only project-local `.limbo/` directories work.
 
-1. **When the user asks to see the backlog**: Run `limbo -g tree --pretty` to show the current state. If empty, say so.
-2. **When the user wants to add something**: Use `limbo -g add` with structured fields (approach, verify, result). If the task belongs under an existing item, use `--parent`.
-3. **When triaging**: Show the tree, then ask the user which items to prioritize, break down, or remove.
-4. **When starting work**: Use `limbo -g status <id> in-progress` to claim it, then proceed with the actual work. Mark done when finished.
+## What to do instead
 
-## Rules
+If the user asks about a "global backlog" or "cross-project tasks":
 
-- Always use `-g` flag — never accidentally write to a project-local limbo
-- Use `--pretty` for human-readable output when displaying to the user
-- Use JSON output (no `--pretty`) when parsing programmatically (`list` and `next` support this; `tree` always outputs pretty format)
-- Keep task names concise but descriptive
-- Use parent/child relationships to break large initiatives into actionable items
+1. Tell them the global-backlog feature was removed from limbo.
+2. Ask where they want cross-project work tracked now (e.g., a dedicated project-local limbo in some shared repo, a notes file, or another tool).
+3. Do **not** attempt to call `limbo -g …` — every command will error.
 
-## Important Behaviors
-
-- **Structured fields are optional**: `--approach`, `--verify`, and `--result` are recommended but not enforced by limbo.
-- **`--outcome` is optional**: When marking a task as done, `--outcome "description"` is recommended for traceability but not required.
-- **No gate validation**: limbo is a pure task store. Status transitions have no field requirements.
-- **Done tasks are hidden by default**: `list` and `tree` hide completed tasks. Use `--show-all` to include them (e.g., `limbo -g list --show-all --pretty`).
-- **Filtering**: `list` supports `--blocked`, `--unblocked`, `--unclaimed`, `--owner`, and `-s <status>` filters.
+If the user wants to manage tasks for the *current* project, use plain `limbo` commands (no `-g`) against the local `.limbo/` directory.
