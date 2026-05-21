@@ -11,12 +11,12 @@
 <title>swe-team — Documentation Charts</title>
 <style>
   :root {
-    --bg: #f4f5f7;
-    --fg: #1c2330;
-    --muted: #5a6473;
-    --card-bg: #ffffff;
-    --border: #d4d9e0;
-    --accent: #2f6fd6;
+    --bg: #0a0e14;
+    --fg: #cdd9e5;
+    --muted: #8497ad;
+    --card-bg: #121821;
+    --border: #1f2d3d;
+    --accent: #38e5ff;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -61,11 +61,11 @@
     padding: 20px;
     text-decoration: none;
     color: inherit;
-    transition: border-color 0.12s ease, transform 0.12s ease;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
   }
-  a.card:hover {
+  a.card:hover, a.card:focus {
     border-color: var(--accent);
-    transform: translateY(-2px);
+    box-shadow: 0 0 8px rgba(56,229,255,0.25);
   }
   a.card .tag {
     display: inline-block;

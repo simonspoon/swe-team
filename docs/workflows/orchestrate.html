@@ -14,30 +14,30 @@
   html, body {
     margin: 0;
     padding: 0;
-    background: #f4f5f7;
-    color: #1c2330;
+    background: #0a0e14;
+    color: #cdd9e5;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.5;
   }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 24px 64px; }
-  .back { font-size: 0.85rem; color: #2f6fd6; text-decoration: none; }
+  .back { font-size: 0.85rem; color: #38e5ff; text-decoration: none; }
   .back:hover { text-decoration: underline; }
   h1 { font-size: 1.7rem; margin: 12px 0 6px; }
-  .intro { color: #5a6473; max-width: 780px; margin: 0 0 18px; }
+  .intro { color: #8497ad; max-width: 780px; margin: 0 0 18px; }
   .legend {
     display: flex; flex-wrap: wrap; gap: 16px;
-    background: #ffffff; border: 1px solid #d4d9e0; border-radius: 8px;
+    background: #121821; border: 1px solid #1f2d3d; border-radius: 8px;
     padding: 12px 16px; margin-bottom: 20px; font-size: 0.84rem;
   }
   .legend .key { display: flex; align-items: center; gap: 7px; }
-  .legend .swatch { width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2); }
-  .diagram { background: #ffffff; border: 1px solid #d4d9e0; border-radius: 8px; padding: 8px; }
-  svg { width: 100%; height: auto; display: block; }
-  .step-label { font-size: 13px; font-weight: 600; fill: #ffffff; }
-  .decision-label { font-size: 13px; font-weight: 700; fill: #1c2330; }
-  .stop-label { font-size: 12.5px; font-weight: 700; fill: #ffffff; }
-  .edge-label { font-size: 11px; fill: #3a4252; font-weight: 600; }
-  .sub-label { font-size: 10.5px; fill: #5a6473; }
+  .legend .swatch { width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.15); }
+  .diagram { background: #121821; border: 1px solid #1f2d3d; border-radius: 8px; padding: 8px; }
+  svg { width: 100%; height: auto; display: block; background: #0e131b; border-radius: 4px; }
+  .step-label { font-size: 13px; font-weight: 600; fill: #d4f6ff; }
+  .decision-label { font-size: 13px; font-weight: 700; fill: #ffce5c; }
+  .stop-label { font-size: 12.5px; font-weight: 700; fill: #ffce5c; }
+  .edge-label { font-size: 11px; fill: #8497ad; font-weight: 600; }
+  .sub-label { font-size: 10.5px; fill: #8497ad; }
 </style>
 </head>
 <body>
@@ -49,107 +49,114 @@
     loop never runs PMs in parallel and stops on any of four conditions.</p>
 
   <div class="legend">
-    <div class="key"><span class="swatch" style="background:#2f6fd6"></span> loop step</div>
-    <div class="key"><span class="swatch" style="background:#f2c14e"></span> decision / branch</div>
-    <div class="key"><span class="swatch" style="background:#b23b3b"></span> stop condition</div>
-    <div class="key"><span class="swatch" style="background:#1f9d6b"></span> loop-back edge</div>
+    <div class="key"><span class="swatch" style="background:#38e5ff"></span> loop step</div>
+    <div class="key"><span class="swatch" style="background:#ffce5c"></span> decision / branch</div>
+    <div class="key"><span class="swatch" style="background:#ff5c6c"></span> stop condition</div>
+    <div class="key"><span class="swatch" style="background:#46e8a0"></span> loop-back edge</div>
   </div>
 
   <div class="diagram">
     <svg viewBox="0 0 1080 760" role="img" aria-label="Orchestrate drain loop with stop conditions">
       <defs>
         <marker id="flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
-          <path d="M0,0 L10,5 L0,10 z" fill="#3a4252"></path>
+          <path d="M0,0 L10,5 L0,10 z" fill="#8497ad"></path>
         </marker>
         <marker id="loop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
-          <path d="M0,0 L10,5 L0,10 z" fill="#1f9d6b"></path>
+          <path d="M0,0 L10,5 L0,10 z" fill="#46e8a0"></path>
         </marker>
         <marker id="stopm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
-          <path d="M0,0 L10,5 L0,10 z" fill="#b23b3b"></path>
+          <path d="M0,0 L10,5 L0,10 z" fill="#ff5c6c"></path>
         </marker>
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.5" result="blur"></feGaussianBlur>
+          <feMerge>
+            <feMergeNode in="blur"></feMergeNode>
+            <feMergeNode in="SourceGraphic"></feMergeNode>
+          </feMerge>
+        </filter>
       </defs>
 
       <!-- ===== FLOW EDGES ===== -->
       <!-- start -> step 1 -->
-      <line x1="270" y1="86" x2="270" y2="118" stroke="#3a4252" stroke-width="2.2" marker-end="url(#flow)"></line>
+      <line x1="270" y1="86" x2="270" y2="118" stroke="#8497ad" stroke-width="2.2" marker-end="url(#flow)"></line>
       <!-- step 1 -> decision A (any leaves?) -->
-      <line x1="270" y1="190" x2="270" y2="222" stroke="#3a4252" stroke-width="2.2" marker-end="url(#flow)"></line>
+      <line x1="270" y1="190" x2="270" y2="222" stroke="#8497ad" stroke-width="2.2" marker-end="url(#flow)"></line>
       <!-- decision A "yes" -> step 2 -->
-      <line x1="270" y1="312" x2="270" y2="344" stroke="#3a4252" stroke-width="2.2" marker-end="url(#flow)"></line>
+      <line x1="270" y1="312" x2="270" y2="344" stroke="#8497ad" stroke-width="2.2" marker-end="url(#flow)"></line>
       <text class="edge-label" x="284" y="332">yes — leaves exist</text>
       <!-- decision A "no" -> STOP scope drained -->
-      <line x1="370" y1="267" x2="612" y2="267" stroke="#b23b3b" stroke-width="2.2" marker-end="url(#stopm)"></line>
+      <line x1="370" y1="267" x2="612" y2="267" stroke="#ff5c6c" stroke-width="1.8" marker-end="url(#stopm)"></line>
       <text class="edge-label" x="490" y="256" text-anchor="middle">no leaves</text>
       <!-- step 2 -> step 3 -->
-      <line x1="270" y1="416" x2="270" y2="448" stroke="#3a4252" stroke-width="2.2" marker-end="url(#flow)"></line>
+      <line x1="270" y1="416" x2="270" y2="448" stroke="#8497ad" stroke-width="2.2" marker-end="url(#flow)"></line>
       <!-- step 3 -> decision B (result?) -->
-      <line x1="270" y1="520" x2="270" y2="552" stroke="#3a4252" stroke-width="2.2" marker-end="url(#flow)"></line>
+      <line x1="270" y1="520" x2="270" y2="552" stroke="#8497ad" stroke-width="2.2" marker-end="url(#flow)"></line>
 
       <!-- decision B: done -> loop back -->
-      <path d="M 170,597 C 70,597 70,154 140,154" fill="none" stroke="#1f9d6b" stroke-width="2.2" marker-end="url(#loop)"></path>
-      <text class="edge-label" x="60" y="380" text-anchor="middle" fill="#1f9d6b">done</text>
+      <path d="M 170,597 C 70,597 70,154 140,154" fill="none" stroke="#46e8a0" stroke-width="1.8" marker-end="url(#loop)"></path>
+      <text class="edge-label" x="60" y="380" text-anchor="middle" fill="#46e8a0">done</text>
       <text class="sub-label" x="60" y="396" text-anchor="middle">&rarr; next leaf</text>
       <!-- decision B: decomposed -> loop back (new leaves pickable) -->
-      <path d="M 270,642 C 270,690 110,690 110,168" fill="none" stroke="#1f9d6b" stroke-width="2.2" marker-end="url(#loop)"></path>
-      <text class="edge-label" x="190" y="684" text-anchor="middle" fill="#1f9d6b">decomposed &rarr; new leaves pickable</text>
+      <path d="M 270,642 C 270,690 110,690 110,168" fill="none" stroke="#46e8a0" stroke-width="1.8" marker-end="url(#loop)"></path>
+      <text class="edge-label" x="190" y="684" text-anchor="middle" fill="#46e8a0">decomposed &rarr; new leaves pickable</text>
       <!-- decision B: blocked -> STOP -->
-      <line x1="370" y1="597" x2="612" y2="597" stroke="#b23b3b" stroke-width="2.2" marker-end="url(#stopm)"></line>
+      <line x1="370" y1="597" x2="612" y2="597" stroke="#ff5c6c" stroke-width="1.8" marker-end="url(#stopm)"></line>
       <text class="edge-label" x="490" y="586" text-anchor="middle">blocked / earlier-stage</text>
 
       <!-- ===== START ===== -->
-      <rect x="170" y="46" width="200" height="40" rx="20" fill="#1c2330"></rect>
+      <rect x="170" y="46" width="200" height="40" rx="20" fill="#0a0e14" stroke="#1f2d3d" stroke-width="1" filter="url(#glow)"></rect>
       <text class="step-label" x="270" y="71" text-anchor="middle">START orchestrate</text>
 
       <!-- ===== STEP 1: list unblocked leaves ===== -->
-      <rect x="120" y="118" width="300" height="72" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <rect x="120" y="118" width="300" height="72" rx="9" fill="#102a33" stroke="#38e5ff" stroke-width="1.6"></rect>
       <text class="step-label" x="270" y="146" text-anchor="middle">1. List unblocked leaf tasks</text>
-      <text class="sub-label" x="270" y="164" text-anchor="middle" fill="#dce8fb">limbo list --unblocked --pretty</text>
-      <text class="sub-label" x="270" y="180" text-anchor="middle" fill="#dce8fb">(or limbo tree &lt;id&gt; --unblocked for subtree)</text>
+      <text class="sub-label" x="270" y="164" text-anchor="middle" fill="#8497ad">limbo list --unblocked --pretty</text>
+      <text class="sub-label" x="270" y="180" text-anchor="middle" fill="#8497ad">(or limbo tree &lt;id&gt; --unblocked for subtree)</text>
 
       <!-- ===== DECISION A: any unblocked leaves? ===== -->
-      <polygon points="270,222 370,267 270,312 170,267" fill="#f2c14e" stroke="#c8941f" stroke-width="1.6"></polygon>
+      <polygon points="270,222 370,267 270,312 170,267" fill="#1f1600" stroke="#ffce5c" stroke-width="2"></polygon>
       <text class="decision-label" x="270" y="263" text-anchor="middle">Any unblocked</text>
       <text class="decision-label" x="270" y="280" text-anchor="middle">leaf left?</text>
 
       <!-- ===== STEP 2: pick first leaf — any status except done ===== -->
-      <rect x="110" y="344" width="320" height="72" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <rect x="110" y="344" width="320" height="72" rx="9" fill="#102a33" stroke="#38e5ff" stroke-width="1.6"></rect>
       <text class="step-label" x="270" y="372" text-anchor="middle">2. Pick the FIRST unblocked leaf</text>
-      <text class="sub-label" x="270" y="390" text-anchor="middle" fill="#ffe7a0">pick any status except done</text>
-      <text class="sub-label" x="270" y="406" text-anchor="middle" fill="#dce8fb">do NOT filter to ready-only</text>
+      <text class="sub-label" x="270" y="390" text-anchor="middle" fill="#ffce5c">pick any status except done</text>
+      <text class="sub-label" x="270" y="406" text-anchor="middle" fill="#8497ad">do NOT filter to ready-only</text>
 
       <!-- ===== STEP 3: dispatch project-manager ===== -->
-      <rect x="120" y="448" width="300" height="72" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <rect x="120" y="448" width="300" height="72" rx="9" fill="#102a33" stroke="#38e5ff" stroke-width="1.6"></rect>
       <text class="step-label" x="270" y="476" text-anchor="middle">3. Dispatch project-manager</text>
-      <text class="sub-label" x="270" y="494" text-anchor="middle" fill="#dce8fb">task ID + cwd + CLAUDE.md constraints</text>
-      <text class="sub-label" x="270" y="510" text-anchor="middle" fill="#dce8fb">sequential only — never parallel</text>
+      <text class="sub-label" x="270" y="494" text-anchor="middle" fill="#8497ad">task ID + cwd + CLAUDE.md constraints</text>
+      <text class="sub-label" x="270" y="510" text-anchor="middle" fill="#8497ad">sequential only — never parallel</text>
 
       <!-- ===== DECISION B: PM result? ===== -->
-      <polygon points="270,552 370,597 270,642 170,597" fill="#f2c14e" stroke="#c8941f" stroke-width="1.6"></polygon>
+      <polygon points="270,552 370,597 270,642 170,597" fill="#1f1600" stroke="#ffce5c" stroke-width="2"></polygon>
       <text class="decision-label" x="270" y="593" text-anchor="middle">PM result?</text>
       <text class="sub-label" x="270" y="610" text-anchor="middle">done / blocked / decomposed</text>
 
       <!-- ===== STOP CONDITIONS PANEL (4) ===== -->
-      <text class="edge-label" x="845" y="120" text-anchor="middle" fill="#b23b3b" font-size="13">STOP CONDITIONS</text>
+      <text class="edge-label" x="845" y="120" text-anchor="middle" fill="#ff5c6c" font-size="13">STOP CONDITIONS</text>
 
       <!-- stop 1: scope drained -->
-      <rect x="620" y="240" width="450" height="54" rx="9" fill="#b23b3b" stroke="#8a2a2a" stroke-width="1.6"></rect>
+      <rect x="620" y="240" width="450" height="54" rx="9" fill="#2a1205" stroke="#ff5c6c" stroke-width="1.6"></rect>
       <text class="stop-label" x="845" y="263" text-anchor="middle">1. Scope drained</text>
-      <text class="sub-label" x="845" y="281" text-anchor="middle" fill="#f3d2d2">no unblocked leaves remain</text>
+      <text class="sub-label" x="845" y="281" text-anchor="middle" fill="#ffce5c">no unblocked leaves remain</text>
 
       <!-- stop 2: blocker needs user -->
-      <rect x="620" y="306" width="450" height="54" rx="9" fill="#b23b3b" stroke="#8a2a2a" stroke-width="1.6"></rect>
+      <rect x="620" y="306" width="450" height="54" rx="9" fill="#2a1205" stroke="#ff5c6c" stroke-width="1.6"></rect>
       <text class="stop-label" x="845" y="329" text-anchor="middle">2. Blocker needs user</text>
-      <text class="sub-label" x="845" y="347" text-anchor="middle" fill="#f3d2d2">PM returned blocked / stuck in earlier stage</text>
+      <text class="sub-label" x="845" y="347" text-anchor="middle" fill="#ffce5c">PM returned blocked / stuck in earlier stage</text>
 
       <!-- stop 3: user interrupted -->
-      <rect x="620" y="372" width="450" height="54" rx="9" fill="#b23b3b" stroke="#8a2a2a" stroke-width="1.6"></rect>
+      <rect x="620" y="372" width="450" height="54" rx="9" fill="#2a1205" stroke="#ff5c6c" stroke-width="1.6"></rect>
       <text class="stop-label" x="845" y="395" text-anchor="middle">3. User interrupted</text>
-      <text class="sub-label" x="845" y="413" text-anchor="middle" fill="#f3d2d2">operator halts the drain loop</text>
+      <text class="sub-label" x="845" y="413" text-anchor="middle" fill="#ffce5c">operator halts the drain loop</text>
 
       <!-- stop 4: PM dispatch failed -->
-      <rect x="620" y="438" width="450" height="54" rx="9" fill="#b23b3b" stroke="#8a2a2a" stroke-width="1.6"></rect>
+      <rect x="620" y="438" width="450" height="54" rx="9" fill="#2a1205" stroke="#ff5c6c" stroke-width="1.6"></rect>
       <text class="stop-label" x="845" y="461" text-anchor="middle">4. PM dispatch failed</text>
-      <text class="sub-label" x="845" y="479" text-anchor="middle" fill="#f3d2d2">Agent tool could not start the PM</text>
+      <text class="sub-label" x="845" y="479" text-anchor="middle" fill="#ffce5c">Agent tool could not start the PM</text>
 
       <!-- connect blocked edge target into stop panel region -->
       <text class="sub-label" x="845" y="560" text-anchor="middle">Any stop condition &rarr; surface to user, halt the loop.</text>
