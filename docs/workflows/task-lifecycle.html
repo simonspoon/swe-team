@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<!-- KNOWN LIMITATIONS:
+  - Skill-group taxonomy is researcher-derived (not canonical from a formal source).
+  - Charts are a point-in-time snapshot generated on 2026-05-21; no auto-update path exists.
+  - Content sourced from CLAUDE.md and agent .md files as of build date; may drift as those files evolve.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>swe-team — Task Lifecycle</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #f4f5f7;
+    color: #1c2330;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 40px 24px 64px; }
+  .back { font-size: 0.85rem; color: #2f6fd6; text-decoration: none; }
+  .back:hover { text-decoration: underline; }
+  h1 { font-size: 1.7rem; margin: 12px 0 6px; }
+  .intro { color: #5a6473; max-width: 800px; margin: 0 0 18px; }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 16px;
+    background: #ffffff; border: 1px solid #d4d9e0; border-radius: 8px;
+    padding: 12px 16px; margin-bottom: 20px; font-size: 0.84rem;
+  }
+  .legend .key { display: flex; align-items: center; gap: 7px; }
+  .legend .swatch { width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2); }
+  .legend .line { width: 34px; height: 0; flex: 0 0 34px; }
+  .legend .line.forward { border-top: 2.2px solid #3a4252; }
+  .legend .line.rollback { border-top: 2px dashed #b23b3b; }
+  .legend .line.fast {
+    height: 4px; border: 0;
+    background-image: linear-gradient(to right, #1f9d6b 0 16px, transparent 16px 22px, #1f9d6b 22px 26px, transparent 26px 34px);
+  }
+  .diagram { background: #ffffff; border: 1px solid #d4d9e0; border-radius: 8px; padding: 8px; }
+  svg { width: 100%; height: auto; display: block; }
+  .stage-label { font-size: 14px; font-weight: 700; fill: #ffffff; }
+  .term-label { font-size: 14px; font-weight: 700; fill: #1c2330; }
+  .transition-label { font-size: 10.5px; fill: #3a4252; font-weight: 600; }
+  .rollback-label { font-size: 10.5px; fill: #b23b3b; font-weight: 600; }
+  .note-label { font-size: 11px; fill: #5a6473; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../index.html">&larr; All charts</a>
+  <h1>Workflow 1 — Task Lifecycle</h1>
+  <p class="intro">A limbo task moves through 7 stages from captured to done. The project-manager dispatches a
+    specialist subagent at each forward transition. Five rollback paths return a failing task to an earlier
+    stage. A trivial task can take the fast-path bypass, skipping researcher and red-team.</p>
+
+  <div class="legend">
+    <div class="key"><span class="swatch" style="background:#2f6fd6"></span> active stage</div>
+    <div class="key"><span class="swatch" style="background:#6fbf73"></span> entry stage (captured)</div>
+    <div class="key"><span class="swatch" style="background:#dce8fb"></span> terminal stage (done)</div>
+    <div class="key"><span class="line forward"></span> forward transition (solid)</div>
+    <div class="key"><span class="line rollback"></span> rollback path (short dashes)</div>
+    <div class="key"><span class="line fast"></span> trivial fast-path bypass (dash-dot)</div>
+  </div>
+
+  <div class="diagram">
+    <svg viewBox="0 0 1200 720" role="img" aria-label="Task lifecycle from captured to done with rollback paths">
+      <defs>
+        <marker id="fwd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#3a4252"></path>
+        </marker>
+        <marker id="rb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#b23b3b"></path>
+        </marker>
+        <marker id="fast" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#1f9d6b"></path>
+        </marker>
+      </defs>
+
+      <!-- ===== FORWARD TRANSITIONS (stage centers at y=150, x = 100,260,420,580,740,900,1060) ===== -->
+      <line x1="190" y1="150" x2="230" y2="150" stroke="#3a4252" stroke-width="2.2" marker-end="url(#fwd)"></line>
+      <text class="transition-label" x="210" y="124" text-anchor="middle">researcher</text>
+      <text class="transition-label" x="210" y="138" text-anchor="middle">(scout)</text>
+
+      <line x1="350" y1="150" x2="390" y2="150" stroke="#3a4252" stroke-width="2.2" marker-end="url(#fwd)"></line>
+      <text class="transition-label" x="370" y="124" text-anchor="middle">test-engineer</text>
+      <text class="transition-label" x="370" y="138" text-anchor="middle">+ risk-assessor</text>
+
+      <line x1="510" y1="150" x2="550" y2="150" stroke="#3a4252" stroke-width="2.2" marker-end="url(#fwd)"></line>
+      <text class="transition-label" x="530" y="124" text-anchor="middle">red-team</text>
+      <text class="transition-label" x="530" y="138" text-anchor="middle">(pre-build)</text>
+
+      <line x1="670" y1="150" x2="710" y2="150" stroke="#3a4252" stroke-width="2.2" marker-end="url(#fwd)"></line>
+      <text class="transition-label" x="690" y="124" text-anchor="middle">PM claims</text>
+      <text class="transition-label" x="690" y="138" text-anchor="middle">task</text>
+
+      <line x1="830" y1="150" x2="870" y2="150" stroke="#3a4252" stroke-width="2.2" marker-end="url(#fwd)"></line>
+      <text class="transition-label" x="850" y="124" text-anchor="middle">tech-lead</text>
+      <text class="transition-label" x="850" y="138" text-anchor="middle">(implement)</text>
+
+      <line x1="990" y1="150" x2="1030" y2="150" stroke="#3a4252" stroke-width="2.2" marker-end="url(#fwd)"></line>
+      <text class="transition-label" x="1010" y="120" text-anchor="middle">reviewer +</text>
+      <text class="transition-label" x="1010" y="133" text-anchor="middle">verifier + red-team</text>
+      <text class="transition-label" x="1010" y="146" text-anchor="middle">&rarr; committer</text>
+
+      <!-- ===== TRIVIAL FAST-PATH BYPASS (captured -> ready, skips researcher/red-team) ===== -->
+      <path d="M 100,114 C 100,52 580,52 580,112" fill="none" stroke="#1f9d6b" stroke-width="2.2" stroke-dasharray="16 6 4 6" marker-end="url(#fast)"></path>
+      <text class="fast-label" x="340" y="44" text-anchor="middle" font-size="11" font-weight="700" fill="#1f9d6b">trivial fast-path bypass — skip researcher &amp; red-team</text>
+
+      <!-- ===== ROLLBACK CONNECTORS (5) — each rollback element on its OWN line; carries the rollback data attribute ===== -->
+      <!-- rollback 1: in-review -> in-progress  (code fix; re-dispatch tech-lead) -->
+      <path d="M 900,188 C 900,300 740,300 740,190" fill="none" stroke="#b23b3b" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#rb)" data-type="rollback"></path>
+      <text class="rollback-label" x="820" y="316" text-anchor="middle">in-review &rarr; in-progress (code fix)</text>
+
+      <!-- rollback 2: in-review -> planned  (wrong approach) -->
+      <path d="M 900,188 C 900,400 420,400 420,190" fill="none" stroke="#b23b3b" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#rb)" data-type="rollback"></path>
+      <text class="rollback-label" x="660" y="416" text-anchor="middle">in-review &rarr; planned (wrong approach)</text>
+
+      <!-- rollback 3: in-review -> refined  (wrong requirements) -->
+      <path d="M 900,188 C 900,500 260,500 260,190" fill="none" stroke="#b23b3b" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#rb)" data-type="rollback"></path>
+      <text class="rollback-label" x="580" y="516" text-anchor="middle">in-review &rarr; refined (wrong requirements)</text>
+
+      <!-- rollback 4: in-progress -> planned  (tech-lead: wrong approach) -->
+      <path d="M 740,188 C 740,560 420,560 420,190" fill="none" stroke="#b23b3b" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#rb)" data-type="rollback"></path>
+      <text class="rollback-label" x="580" y="576" text-anchor="middle">in-progress &rarr; planned (wrong approach)</text>
+
+      <!-- rollback 5: in-progress -> refined  (tech-lead: wrong requirements) -->
+      <path d="M 740,188 C 740,640 260,640 260,190" fill="none" stroke="#b23b3b" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#rb)" data-type="rollback"></path>
+      <text class="rollback-label" x="500" y="656" text-anchor="middle">in-progress &rarr; refined (wrong requirements)</text>
+
+      <!-- ===== STAGE NODES (7) ===== -->
+      <!-- stage 1: captured (entry stage — distinct green, not the terminal color) -->
+      <rect x="10" y="124" width="180" height="52" rx="9" fill="#6fbf73" stroke="#3f8a47" stroke-width="1.6"></rect>
+      <text class="stage-label" x="100" y="156" text-anchor="middle">captured</text>
+      <!-- stage 2: refined -->
+      <rect x="170" y="124" width="180" height="52" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <text class="stage-label" x="260" y="156" text-anchor="middle">refined</text>
+      <!-- stage 3: planned -->
+      <rect x="330" y="124" width="180" height="52" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <text class="stage-label" x="420" y="156" text-anchor="middle">planned</text>
+      <!-- stage 4: ready -->
+      <rect x="490" y="124" width="180" height="52" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <text class="stage-label" x="580" y="156" text-anchor="middle">ready</text>
+      <!-- stage 5: in-progress -->
+      <rect x="650" y="124" width="180" height="52" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <text class="stage-label" x="740" y="156" text-anchor="middle">in-progress</text>
+      <!-- stage 6: in-review -->
+      <rect x="810" y="124" width="180" height="52" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <text class="stage-label" x="900" y="156" text-anchor="middle">in-review</text>
+      <!-- stage 7: done -->
+      <rect x="970" y="124" width="180" height="52" rx="9" fill="#dce8fb" stroke="#2f6fd6" stroke-width="1.6"></rect>
+      <text class="term-label" x="1060" y="156" text-anchor="middle">done</text>
+
+      <!-- footnote -->
+      <text class="note-label" x="600" y="700" text-anchor="middle">Forward transitions show the PM-dispatched subagent. Rollback paths re-enter at in-progress, planned, or refined. Parent task is marked done when all siblings are done.</text>
+    </svg>
+  </div>
+</div>
+</body>
+</html>

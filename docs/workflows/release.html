@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<!-- KNOWN LIMITATIONS:
+  - Skill-group taxonomy is researcher-derived (not canonical from a formal source).
+  - Charts are a point-in-time snapshot generated on 2026-05-21; no auto-update path exists.
+  - Content sourced from CLAUDE.md and agent .md files as of build date; may drift as those files evolve.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>swe-team — Release Flow</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #f4f5f7;
+    color: #1c2330;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 24px 64px; }
+  .back { font-size: 0.85rem; color: #2f6fd6; text-decoration: none; }
+  .back:hover { text-decoration: underline; }
+  h1 { font-size: 1.7rem; margin: 12px 0 6px; }
+  .intro { color: #5a6473; max-width: 800px; margin: 0 0 18px; }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 16px;
+    background: #ffffff; border: 1px solid #d4d9e0; border-radius: 8px;
+    padding: 12px 16px; margin-bottom: 20px; font-size: 0.84rem;
+  }
+  .legend .key { display: flex; align-items: center; gap: 7px; }
+  .legend .swatch { width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2); }
+  .note {
+    background: #fff6e0; border: 1px solid #e6c75a; border-radius: 8px;
+    padding: 10px 14px; margin-bottom: 20px; font-size: 0.84rem; color: #6a5316;
+  }
+  .diagram { background: #ffffff; border: 1px solid #d4d9e0; border-radius: 8px; padding: 8px; }
+  svg { width: 100%; height: auto; display: block; }
+  .step-num { font-size: 11px; font-weight: 700; fill: #cfe0fb; }
+  .step-title { font-size: 14px; font-weight: 700; fill: #ffffff; }
+  .sub-label { font-size: 10.5px; fill: #dce8fb; }
+  .preflight-num { font-size: 11px; font-weight: 700; fill: #f3d2d2; }
+  .stop-label { font-size: 11px; font-weight: 700; fill: #b23b3b; }
+  .edge-label { font-size: 10.5px; fill: #5a6473; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../index.html">&larr; All charts</a>
+  <h1>Workflow 4 — Release Flow</h1>
+  <p class="intro">The release skill takes a project from a clean checkout to a verified published release.
+    It starts at Step 0 (mandatory pre-flight gates) and runs through Step 9 (Homebrew tap verification).
+    The commit and tag in Step 6 go through the git-commit skill.</p>
+
+  <div class="note">
+    <strong>Step numbering:</strong> the acceptance prose refers to &ldquo;9 steps&rdquo;, but the release
+    skill itself spans <strong>Step 0 through Step 9</strong> &mdash; 10 headers. This chart reflects the
+    actual skill structure (0&ndash;9).
+  </div>
+
+  <div class="legend">
+    <div class="key"><span class="swatch" style="background:#b23b3b"></span> Step 0 — pre-flight (mandatory gates)</div>
+    <div class="key"><span class="swatch" style="background:#2f6fd6"></span> release step</div>
+    <div class="key"><span class="swatch" style="background:#1f9d6b"></span> verification step</div>
+    <div class="key"><span class="swatch" style="background:#f2c14e"></span> STOP gate</div>
+  </div>
+
+  <div class="diagram">
+    <svg viewBox="0 0 1080 1180" role="img" aria-label="Release flow Step 0 through Step 9">
+      <defs>
+        <marker id="flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#3a4252"></path>
+        </marker>
+        <marker id="stopm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#b23b3b"></path>
+        </marker>
+      </defs>
+
+      <!-- ===== STEP 0: PRE-FLIGHT (mandatory) ===== -->
+      <rect x="60" y="44" width="620" height="190" rx="11" fill="#b23b3b" stroke="#8a2a2a" stroke-width="2"></rect>
+      <text class="step-num" x="370" y="70" text-anchor="middle" fill="#f3d2d2">STEP 0</text>
+      <text class="step-title" x="370" y="92" text-anchor="middle">Pre-flight checks (MANDATORY)</text>
+
+      <!-- sub-check 0.1 -->
+      <rect x="84" y="106" width="572" height="36" rx="6" fill="#8a2a2a"></rect>
+      <text class="preflight-num" x="104" y="129">0.1</text>
+      <text x="138" y="129" font-size="11.5" fill="#ffffff">On the default branch — gh repo view + git branch --show-current</text>
+      <!-- sub-check 0.2 -->
+      <rect x="84" y="148" width="572" height="36" rx="6" fill="#8a2a2a"></rect>
+      <text class="preflight-num" x="104" y="171">0.2</text>
+      <text x="138" y="171" font-size="11.5" fill="#ffffff">Clean working tree — git status --porcelain returns nothing</text>
+      <!-- sub-check 0.3 -->
+      <rect x="84" y="190" width="572" height="36" rx="6" fill="#8a2a2a"></rect>
+      <text class="preflight-num" x="104" y="213">0.3</text>
+      <text x="138" y="213" font-size="11.5" fill="#ffffff">In sync with origin, not in a linked worktree — git fetch + status -sb</text>
+
+      <!-- STOP gate panel -->
+      <rect x="710" y="84" width="310" height="110" rx="10" fill="#f2c14e" stroke="#c8941f" stroke-width="2"></rect>
+      <text x="865" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#6a4d0a">STOP GATE</text>
+      <text class="stop-label" x="865" y="138" text-anchor="middle">Any 0.1 / 0.2 / 0.3 failure</text>
+      <text x="865" y="158" text-anchor="middle" font-size="11" fill="#6a4d0a">&rarr; STOP the release</text>
+      <text x="865" y="176" text-anchor="middle" font-size="11" fill="#6a4d0a">&rarr; ask the user, do not proceed</text>
+      <line x1="680" y1="139" x2="708" y2="139" stroke="#b23b3b" stroke-width="2.2" marker-end="url(#stopm)"></line>
+
+      <!-- 0 -> 1 -->
+      <line x1="370" y1="234" x2="370" y2="262" stroke="#3a4252" stroke-width="2.2" marker-end="url(#flow)"></line>
+      <text class="edge-label" x="386" y="252">all gates pass</text>
+
+      <!-- ===== STEP 1 ===== -->
+      <rect x="160" y="264" width="420" height="64" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <text class="step-num" x="370" y="287" text-anchor="middle">STEP 1</text>
+      <text class="step-title" x="370" y="307" text-anchor="middle">Detect first release</text>
+      <text class="sub-label" x="370" y="322" text-anchor="middle">gh release list --limit 1</text>
+      <line x1="370" y1="328" x2="370" y2="354" stroke="#3a4252" stroke-width="2.2" marker-end="url(#flow)"></line>
+
+      <!-- ===== STEP 2 ===== -->
+      <rect x="160" y="356" width="420" height="64" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <text class="step-num" x="370" y="379" text-anchor="middle">STEP 2</text>
+      <text class="step-title" x="370" y="399" text-anchor="middle">Determine version</text>
+      <text class="sub-label" x="370" y="414" text-anchor="middle">semver — ask the user if not provided</text>
+      <line x1="370" y1="420" x2="370" y2="446" stroke="#3a4252" stroke-width="2.2" marker-end="url(#flow)"></line>
+
+      <!-- ===== STEP 3 ===== -->
+      <rect x="160" y="448" width="420" height="70" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <text class="step-num" x="370" y="471" text-anchor="middle">STEP 3</text>
+      <text class="step-title" x="370" y="491" text-anchor="middle">Detect project type + find version files</text>
+      <text class="sub-label" x="370" y="507" text-anchor="middle">Rust: Cargo.toml+lock &middot; Tauri: +tauri.conf.json+package.json &middot; Go: tag only</text>
+      <line x1="370" y1="518" x2="370" y2="544" stroke="#3a4252" stroke-width="2.2" marker-end="url(#flow)"></line>
+
+      <!-- ===== STEP 4 ===== -->
+      <rect x="160" y="546" width="420" height="64" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <text class="step-num" x="370" y="569" text-anchor="middle">STEP 4</text>
+      <text class="step-title" x="370" y="589" text-anchor="middle">Bump version files</text>
+      <text class="sub-label" x="370" y="604" text-anchor="middle">Rust: cargo check regenerates Cargo.lock, stage both</text>
+      <line x1="370" y1="610" x2="370" y2="636" stroke="#3a4252" stroke-width="2.2" marker-end="url(#flow)"></line>
+
+      <!-- ===== STEP 5 ===== -->
+      <rect x="160" y="638" width="420" height="64" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <text class="step-num" x="370" y="661" text-anchor="middle">STEP 5</text>
+      <text class="step-title" x="370" y="681" text-anchor="middle">Run checks</text>
+      <text class="sub-label" x="370" y="696" text-anchor="middle">Rust: fmt --check + clippy + test &middot; Go: fmt + vet + golangci-lint + test</text>
+      <line x1="370" y1="702" x2="370" y2="728" stroke="#3a4252" stroke-width="2.2" marker-end="url(#flow)"></line>
+
+      <!-- ===== STEP 6 ===== -->
+      <rect x="160" y="730" width="420" height="70" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <text class="step-num" x="370" y="753" text-anchor="middle">STEP 6</text>
+      <text class="step-title" x="370" y="773" text-anchor="middle">Commit + tag via git-commit skill</text>
+      <text class="sub-label" x="370" y="789" text-anchor="middle">message "bump version to X.Y.Z for release", then git tag vX.Y.Z</text>
+      <line x1="370" y1="800" x2="370" y2="826" stroke="#3a4252" stroke-width="2.2" marker-end="url(#flow)"></line>
+
+      <!-- ===== STEP 7 ===== -->
+      <rect x="160" y="828" width="420" height="64" rx="9" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="1.6"></rect>
+      <text class="step-num" x="370" y="851" text-anchor="middle">STEP 7</text>
+      <text class="step-title" x="370" y="871" text-anchor="middle">Push</text>
+      <text class="sub-label" x="370" y="886" text-anchor="middle">git push &amp;&amp; git push --tags &mdash; triggers the release workflow</text>
+      <line x1="370" y1="892" x2="370" y2="918" stroke="#3a4252" stroke-width="2.2" marker-end="url(#flow)"></line>
+
+      <!-- ===== STEP 8 ===== -->
+      <rect x="160" y="920" width="420" height="64" rx="9" fill="#1f9d6b" stroke="#147a51" stroke-width="1.6"></rect>
+      <text class="step-num" x="370" y="943" text-anchor="middle" fill="#d4f3e6">STEP 8</text>
+      <text class="step-title" x="370" y="963" text-anchor="middle">Verify CI</text>
+      <text class="sub-label" x="370" y="978" text-anchor="middle" fill="#d4f3e6">gh run list / gh run view / gh release view assets</text>
+      <line x1="370" y1="984" x2="370" y2="1010" stroke="#3a4252" stroke-width="2.2" marker-end="url(#flow)"></line>
+
+      <!-- ===== STEP 9 ===== -->
+      <rect x="160" y="1012" width="420" height="78" rx="9" fill="#1f9d6b" stroke="#147a51" stroke-width="1.6"></rect>
+      <text class="step-num" x="370" y="1035" text-anchor="middle" fill="#d4f3e6">STEP 9</text>
+      <text class="step-title" x="370" y="1055" text-anchor="middle">Verify Homebrew tap update</text>
+      <text class="sub-label" x="370" y="1071" text-anchor="middle" fill="#d4f3e6">detect tap from release.yml; if auto-update failed,</text>
+      <text class="sub-label" x="370" y="1084" text-anchor="middle" fill="#d4f3e6">run scripts/update-formula.sh, commit + push</text>
+
+      <text class="edge-label" x="370" y="1130" text-anchor="middle">Steps 8&ndash;9 confirm the published artifacts: CI run, release assets, and the Homebrew formula.</text>
+    </svg>
+  </div>
+</div>
+</body>
+</html>

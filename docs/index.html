@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!-- KNOWN LIMITATIONS:
+  - Skill-group taxonomy is researcher-derived (not canonical from a formal source).
+  - Charts are a point-in-time snapshot generated on 2026-05-21; no auto-update path exists.
+  - Content sourced from CLAUDE.md and agent .md files as of build date; may drift as those files evolve.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>swe-team — Documentation Charts</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --fg: #1c2330;
+    --muted: #5a6473;
+    --card-bg: #ffffff;
+    --border: #d4d9e0;
+    --accent: #2f6fd6;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+  header h1 {
+    font-size: 2rem;
+    margin: 0 0 8px;
+  }
+  header .intro {
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin: 0 0 6px;
+    max-width: 680px;
+  }
+  .counts {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0 0 32px;
+  }
+  .counts strong { color: var(--fg); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
+  }
+  a.card {
+    display: block;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.12s ease, transform 0.12s ease;
+  }
+  a.card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  a.card .tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  a.card h2 {
+    font-size: 1.15rem;
+    margin: 0 0 6px;
+  }
+  a.card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  footer {
+    margin-top: 48px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>swe-team — Documentation Charts</h1>
+    <p class="intro">Static flowchart reference for the swe-team Claude Code plugin: a stateless project-manager
+      orchestrates ten specialist agents through a seven-stage task lifecycle.</p>
+    <p class="counts"><strong>10</strong> agents &middot; <strong>4</strong> documented workflows &middot;
+      self-contained HTML (no build step, no server).</p>
+  </header>
+
+  <nav class="grid">
+    <a class="card" href="overview.html">
+      <span class="tag">Reference Map</span>
+      <h2>Agents &amp; Skills Overview</h2>
+      <p>All 10 agents around the project-manager hub, wired to 8 skill groups with labeled invocation edges.</p>
+    </a>
+    <a class="card" href="workflows/task-lifecycle.html">
+      <span class="tag">Workflow 1</span>
+      <h2>Task Lifecycle</h2>
+      <p>The 7-stage flow from captured to done, the subagent dispatched at each transition, and 5 rollback paths.</p>
+    </a>
+    <a class="card" href="workflows/orchestrate.html">
+      <span class="tag">Workflow 2</span>
+      <h2>Orchestrate Drain Loop</h2>
+      <p>The limbo queue drain loop: list unblocked leaves, dispatch the PM, branch on result, repeat or stop.</p>
+    </a>
+    <a class="card" href="workflows/verification.html">
+      <span class="tag">Workflow 3</span>
+      <h2>Verification Pipeline</h2>
+      <p>The verification-orchestrator skill: detect platform, check tools, route to QA skill, produce report.</p>
+    </a>
+    <a class="card" href="workflows/release.html">
+      <span class="tag">Workflow 4</span>
+      <h2>Release Flow</h2>
+      <p>The release skill end to end: Step 0 pre-flight gates through Step 9 Homebrew tap verification.</p>
+    </a>
+  </nav>
+
+  <footer>
+    Point-in-time snapshot generated 2026-05-21 from CLAUDE.md and agent documentation.
+    Open any chart directly via <code>file://</code> — no server required.
+  </footer>
+</div>
+</body>
+</html>

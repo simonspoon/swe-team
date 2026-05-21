@@ -174,6 +174,10 @@ Headless terminal multiplexer for spawning and controlling terminal sessions, Cl
 
 ---
 
+## Documentation
+
+The [`docs/`](docs/index.html) folder contains self-contained HTML flowcharts of the agents, skills, and workflows — open `docs/index.html` in any browser (no build step or server required). It links to an agents/skills reference map and diagrams for the task lifecycle, orchestrate drain loop, verification pipeline, and release flow.
+
 ## CLAUDE.md
 
 The included `CLAUDE.md` configures Claude Code with mandatory pre-task steps and routing to the project-manager agent for all code-producing tasks. The `/swe-team:orchestrate` command (or an external orchestrator) watches limbo for unblocked leaf tasks and spawns PM sessions to handle them.

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<!-- KNOWN LIMITATIONS:
+  - Skill-group taxonomy is researcher-derived (not canonical from a formal source).
+  - Charts are a point-in-time snapshot generated on 2026-05-21; no auto-update path exists.
+  - Content sourced from CLAUDE.md and agent .md files as of build date; may drift as those files evolve.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>swe-team — Agents &amp; Skills Overview</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #f4f5f7;
+    color: #1c2330;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 64px; }
+  .back { font-size: 0.85rem; color: #2f6fd6; text-decoration: none; }
+  .back:hover { text-decoration: underline; }
+  h1 { font-size: 1.7rem; margin: 12px 0 6px; }
+  .intro { color: #5a6473; max-width: 760px; margin: 0 0 18px; }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 16px;
+    background: #ffffff; border: 1px solid #d4d9e0; border-radius: 8px;
+    padding: 12px 16px; margin-bottom: 20px; font-size: 0.84rem;
+  }
+  .legend .key { display: flex; align-items: center; gap: 7px; }
+  .legend .swatch { width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2); }
+  .diagram { background: #ffffff; border: 1px solid #d4d9e0; border-radius: 8px; padding: 8px; }
+  svg { width: 100%; height: auto; display: block; }
+  .node-label { font-size: 13px; font-weight: 600; fill: #1c2330; }
+  .hub-label { font-size: 15px; font-weight: 700; fill: #ffffff; }
+  .edge-label { font-size: 10.5px; fill: #5a6473; }
+  .col-head { font-size: 14px; font-weight: 700; fill: #3a4252; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">&larr; All charts</a>
+  <h1>Agents &amp; Skills Overview</h1>
+  <p class="intro">The 10 swe-team agents and the 8 skill groups they invoke. The project-manager is the
+    central orchestration hub: it dispatches every specialist agent and is the only agent that commits.
+    Labeled edges show which agents invoke which skill groups.</p>
+
+  <div class="legend">
+    <div class="key"><span class="swatch" style="background:#2f6fd6"></span> project-manager (hub)</div>
+    <div class="key"><span class="swatch" style="background:#dce8fb"></span> specialist agent</div>
+    <div class="key"><span class="swatch" style="background:#e9e1f7"></span> skill group</div>
+    <div class="key"><span class="swatch" style="background:#cfd6e0"></span> agent dispatch edge</div>
+    <div class="key"><span class="swatch" style="background:#9b7fc9"></span> agent &rarr; skill edge</div>
+  </div>
+
+  <div class="diagram">
+    <svg viewBox="0 0 1240 920" role="img" aria-label="Agents and skills reference map">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#8893a4"></path>
+        </marker>
+        <marker id="arrow-skill" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#9b7fc9"></path>
+        </marker>
+      </defs>
+
+      <!-- column headings -->
+      <text class="col-head" x="170" y="34" text-anchor="middle">AGENTS</text>
+      <text class="col-head" x="590" y="34" text-anchor="middle">ORCHESTRATION HUB</text>
+      <text class="col-head" x="1010" y="34" text-anchor="middle">SKILL GROUPS</text>
+
+      <!-- ===== agent dispatch edges (PM hub -> specialist agents) ===== -->
+      <line x1="490" y1="460" x2="282" y2="84"  stroke="#cfd6e0" stroke-width="2" marker-end="url(#arrow)"></line>
+      <line x1="490" y1="460" x2="282" y2="168" stroke="#cfd6e0" stroke-width="2" marker-end="url(#arrow)"></line>
+      <line x1="490" y1="460" x2="282" y2="251" stroke="#cfd6e0" stroke-width="2" marker-end="url(#arrow)"></line>
+      <line x1="490" y1="460" x2="282" y2="335" stroke="#cfd6e0" stroke-width="2" marker-end="url(#arrow)"></line>
+      <line x1="490" y1="460" x2="282" y2="418" stroke="#cfd6e0" stroke-width="2" marker-end="url(#arrow)"></line>
+      <line x1="490" y1="460" x2="282" y2="502" stroke="#cfd6e0" stroke-width="2" marker-end="url(#arrow)"></line>
+      <line x1="490" y1="460" x2="282" y2="585" stroke="#cfd6e0" stroke-width="2" marker-end="url(#arrow)"></line>
+      <line x1="490" y1="460" x2="282" y2="669" stroke="#cfd6e0" stroke-width="2" marker-end="url(#arrow)"></line>
+      <!-- skill-trainer: dispatched by user/orchestrator, not the PM -> dashed, no arrow from hub -->
+
+      <!-- ===== agent -> skill-group edges ===== -->
+      <!-- PM hub -> Project management (boot/orchestration) -->
+      <path d="M 690,442 C 800,420 850,386 890,376" fill="none" stroke="#9b7fc9" stroke-width="1.6" marker-end="url(#arrow-skill)"></path>
+      <text class="edge-label" x="792" y="400">dispatch / status</text>
+      <!-- PM hub -> Testing/Code quality (software-engineering boot) -->
+      <path d="M 690,470 C 800,490 850,510 890,520" fill="none" stroke="#9b7fc9" stroke-width="1.6" marker-end="url(#arrow-skill)"></path>
+      <text class="edge-label" x="788" y="514">software-engineering (boot)</text>
+      <!-- PM hub -> Docs (project-docs-explore boot) -->
+      <path d="M 690,486 C 770,560 800,610 890,624" fill="none" stroke="#9b7fc9" stroke-width="1.6" marker-end="url(#arrow-skill)"></path>
+      <text class="edge-label" x="724" y="582">project-docs-explore</text>
+
+      <!-- tech-lead -> Testing/Code quality (software-engineering, simplify) -->
+      <path d="M 270,168 C 560,210 760,420 890,512" fill="none" stroke="#9b7fc9" stroke-width="1.6" marker-end="url(#arrow-skill)"></path>
+      <text class="edge-label" x="470" y="244">software-engineering</text>
+
+      <!-- verifier -> Verification (verification-orchestrator) -->
+      <path d="M 270,418 C 540,360 740,200 890,140" fill="none" stroke="#9b7fc9" stroke-width="1.6" marker-end="url(#arrow-skill)"></path>
+      <text class="edge-label" x="486" y="296">verification-orchestrator</text>
+
+      <!-- code-reviewer -> Testing/Code quality (code-reviewer skill) -->
+      <path d="M 270,335 C 560,400 740,470 890,524" fill="none" stroke="#9b7fc9" stroke-width="1.6" marker-end="url(#arrow-skill)"></path>
+      <text class="edge-label" x="476" y="380">code-reviewer skill</text>
+
+      <!-- committer -> Git/Release (git-commit) -->
+      <path d="M 270,585 C 540,560 740,310 890,244" fill="none" stroke="#9b7fc9" stroke-width="1.6" marker-end="url(#arrow-skill)"></path>
+      <text class="edge-label" x="470" y="470">git-commit</text>
+
+      <!-- test-engineer -> Testing/Code quality (test-engineer skill) -->
+      <path d="M 270,502 C 560,540 740,528 890,532" fill="none" stroke="#9b7fc9" stroke-width="1.6" marker-end="url(#arrow-skill)"></path>
+      <text class="edge-label" x="476" y="556">test-engineer skill</text>
+
+      <!-- skill-trainer -> Knowledge/Meta (skill-trainer skill, agent-composer) -->
+      <path d="M 270,669 C 540,690 740,720 890,728" fill="none" stroke="#9b7fc9" stroke-width="1.6" marker-end="url(#arrow-skill)"></path>
+      <text class="edge-label" x="476" y="714">skill-trainer skill</text>
+
+      <!-- release skill -> Git/Release self-reference + Infrastructure (devops) -->
+      <path d="M 1130,204 C 1200,260 1200,790 1130,818" fill="none" stroke="#9b7fc9" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#arrow-skill)"></path>
+      <text class="edge-label" x="1180" y="520" text-anchor="middle">release</text>
+      <text class="edge-label" x="1180" y="534" text-anchor="middle">&rarr; git-commit</text>
+      <text class="edge-label" x="1180" y="548" text-anchor="middle">&amp; devops</text>
+
+      <!-- verification-orchestrator -> Verification self (qorvex/loki/khora) -->
+      <path d="M 1010,150 C 1075,168 1075,180 1010,198" fill="none" stroke="#9b7fc9" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#arrow-skill)"></path>
+
+      <!-- ===== AGENT NODES (left column) ===== -->
+      <!-- pitch = 920 / (10 + 1) = 83.6 ; agent[i] center-y = pitch * (i + 1) -->
+      <!-- agent 1: tech-lead  y=84 -->
+      <rect x="70" y="64" width="200" height="40" rx="7" fill="#dce8fb" stroke="#2f6fd6" stroke-width="1.3"></rect>
+      <text class="node-label" x="170" y="89" text-anchor="middle">tech-lead</text>
+      <!-- agent 2: researcher  y=168 -->
+      <rect x="70" y="148" width="200" height="40" rx="7" fill="#dce8fb" stroke="#2f6fd6" stroke-width="1.3"></rect>
+      <text class="node-label" x="170" y="173" text-anchor="middle">researcher</text>
+      <!-- agent 3: code-reviewer  y=251 -->
+      <rect x="70" y="231" width="200" height="40" rx="7" fill="#dce8fb" stroke="#2f6fd6" stroke-width="1.3"></rect>
+      <text class="node-label" x="170" y="256" text-anchor="middle">code-reviewer</text>
+      <!-- agent 4: verifier  y=335 -->
+      <rect x="70" y="315" width="200" height="40" rx="7" fill="#dce8fb" stroke="#2f6fd6" stroke-width="1.3"></rect>
+      <text class="node-label" x="170" y="340" text-anchor="middle">verifier</text>
+      <!-- agent 5: red-team  y=418 -->
+      <rect x="70" y="398" width="200" height="40" rx="7" fill="#dce8fb" stroke="#2f6fd6" stroke-width="1.3"></rect>
+      <text class="node-label" x="170" y="423" text-anchor="middle">red-team</text>
+      <!-- agent 6: risk-assessor  y=502 -->
+      <rect x="70" y="482" width="200" height="40" rx="7" fill="#dce8fb" stroke="#2f6fd6" stroke-width="1.3"></rect>
+      <text class="node-label" x="170" y="507" text-anchor="middle">risk-assessor</text>
+      <!-- agent 7: test-engineer  y=585 -->
+      <rect x="70" y="565" width="200" height="40" rx="7" fill="#dce8fb" stroke="#2f6fd6" stroke-width="1.3"></rect>
+      <text class="node-label" x="170" y="590" text-anchor="middle">test-engineer</text>
+      <!-- agent 8: committer  y=669 -->
+      <rect x="70" y="649" width="200" height="40" rx="7" fill="#dce8fb" stroke="#2f6fd6" stroke-width="1.3"></rect>
+      <text class="node-label" x="170" y="674" text-anchor="middle">committer</text>
+      <!-- agent 9: skill-trainer  y=753 (dispatched by user/orchestrator) -->
+      <rect x="70" y="733" width="200" height="40" rx="7" fill="#eef2f7" stroke="#8893a4" stroke-width="1.3" stroke-dasharray="5 4"></rect>
+      <text class="node-label" x="170" y="758" text-anchor="middle">skill-trainer</text>
+      <!-- agent 10: project-manager (the hub, also counted as an agent) y=836 ref label -->
+      <text class="edge-label" x="170" y="828" text-anchor="middle">+ project-manager (the hub, right) = 10 agents total</text>
+
+      <!-- ===== PROJECT-MANAGER HUB (center) ===== -->
+      <rect x="490" y="416" width="200" height="88" rx="12" fill="#2f6fd6" stroke="#1c4f9e" stroke-width="2"></rect>
+      <text class="hub-label" x="590" y="452" text-anchor="middle">project-manager</text>
+      <text x="590" y="473" text-anchor="middle" font-size="11" fill="#dce8fb">stateless orchestrator</text>
+      <text x="590" y="490" text-anchor="middle" font-size="11" fill="#dce8fb">only agent that commits</text>
+
+      <!-- ===== SKILL-GROUP NODES (right column) ===== -->
+      <!-- 8 skill groups, evenly spaced: group[j] center-y = 920/9 * (j+1) -->
+      <!-- group 1: Verification  y=102 -->
+      <rect x="890" y="78" width="240" height="48" rx="7" fill="#e9e1f7" stroke="#9b7fc9" stroke-width="1.3"></rect>
+      <text class="node-label" x="1010" y="100" text-anchor="middle">Verification</text>
+      <text class="edge-label" x="1010" y="116" text-anchor="middle">qorvex / loki / khora QA</text>
+      <!-- group 2: Git / Release  y=204 -->
+      <rect x="890" y="180" width="240" height="48" rx="7" fill="#e9e1f7" stroke="#9b7fc9" stroke-width="1.3"></rect>
+      <text class="node-label" x="1010" y="202" text-anchor="middle">Git / Release</text>
+      <text class="edge-label" x="1010" y="218" text-anchor="middle">git-commit, release</text>
+      <!-- group 3: Docs  y=307 -->
+      <rect x="890" y="283" width="240" height="48" rx="7" fill="#e9e1f7" stroke="#9b7fc9" stroke-width="1.3"></rect>
+      <text class="node-label" x="1010" y="305" text-anchor="middle">Docs</text>
+      <text class="edge-label" x="1010" y="321" text-anchor="middle">update-docs, setup-docs, explore</text>
+      <!-- group 4: Testing / Code quality  y=409 -->
+      <rect x="890" y="385" width="240" height="48" rx="7" fill="#e9e1f7" stroke="#9b7fc9" stroke-width="1.3"></rect>
+      <text class="node-label" x="1010" y="407" text-anchor="middle">Testing / Code quality</text>
+      <text class="edge-label" x="1010" y="423" text-anchor="middle">software-engineering, simplify</text>
+      <!-- group 5: Knowledge / Meta  y=511 -->
+      <rect x="890" y="487" width="240" height="48" rx="7" fill="#e9e1f7" stroke="#9b7fc9" stroke-width="1.3"></rect>
+      <text class="node-label" x="1010" y="509" text-anchor="middle">Knowledge / Meta</text>
+      <text class="edge-label" x="1010" y="525" text-anchor="middle">skill-creator, agent-composer</text>
+      <!-- group 6: Project management  y=614 -->
+      <rect x="890" y="590" width="240" height="48" rx="7" fill="#e9e1f7" stroke="#9b7fc9" stroke-width="1.3"></rect>
+      <text class="node-label" x="1010" y="612" text-anchor="middle">Project management</text>
+      <text class="edge-label" x="1010" y="628" text-anchor="middle">status, global-backlog, tech-lead</text>
+      <!-- group 7: Design  y=716 -->
+      <rect x="890" y="692" width="240" height="48" rx="7" fill="#e9e1f7" stroke="#9b7fc9" stroke-width="1.3"></rect>
+      <text class="node-label" x="1010" y="714" text-anchor="middle">Design</text>
+      <text class="edge-label" x="1010" y="730" text-anchor="middle">wisp-design</text>
+      <!-- group 8: Infrastructure  y=818 -->
+      <rect x="890" y="794" width="240" height="48" rx="7" fill="#e9e1f7" stroke="#9b7fc9" stroke-width="1.3"></rect>
+      <text class="node-label" x="1010" y="816" text-anchor="middle">Infrastructure</text>
+      <text class="edge-label" x="1010" y="832" text-anchor="middle">devops, xaku-control</text>
+    </svg>
+  </div>
+</div>
+</body>
+</html>
