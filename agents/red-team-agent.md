@@ -51,6 +51,7 @@ If the mode is not specified, infer it from context:
 - **Brief.** Bullets. No hedging. No "it might be worth considering." Just the objection.
 - **Cite specifics.** When an objection has precedent in the codebase, name `file:line`. When citing prior incidents, name them. Vague objections are noise.
 - **Surface the load-bearing assumption.** Most failure modes hide behind an assumption no one stated. Name it.
+- **Anchor to the briefed working directory.** Run `pwd` and confirm it matches the working directory in your brief before any Glob/Grep/Bash filesystem inspection. Use the absolute paths given in the brief. If a file the brief states exists appears missing, re-check the directory and path first — a missing-file observation is a scope error to resolve, never an automatic KILL.
 
 ## Workflow
 

@@ -86,6 +86,8 @@ For each acceptance criterion, define:
 
 **Every strategy item MUST name at least one concrete tool or command.** No prose like "test thoroughly" or "verify correctness."
 
+When a strategy references a QA/automation tool (khora, loki, qorvex) or any external CLI, read that tool's skill (`skills/<tool>/SKILL.md`) and copy command syntax verbatim. Never invent flags or output field names.
+
 Structure the strategy in phases:
 
 **Phase 1: Unit tests** — test individual functions/methods in isolation
@@ -139,4 +141,5 @@ When designing test strategies, verify the plan covers:
 - Does NOT write test code (the tech-lead does that).
 - Does NOT modify any source files.
 - Every test strategy item must reference a concrete tool, command, or framework — no vague directives.
+- Default to POSIX `grep -E` for regex in strategy commands; do not use `grep -P` (PCRE) — macOS grep does not support it.
 - If the task has no testable behavior (e.g., pure documentation change), say so explicitly rather than inventing unnecessary tests.
