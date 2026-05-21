@@ -43,7 +43,7 @@ Agents are autonomous subprocesses that handle complex, multi-step tasks. They a
 
 | Agent | Description |
 |-------|-------------|
-| **project-manager** | Stateless per-task evaluator. Receives a single task, then clarifies (vague ask), decomposes (too big), or executes the work itself end-to-end through limbo's lifecycle stages. Dispatches only `researcher` (targeted scout) and `committer` (final commit). Only agent that commits code. |
+| **project-manager** | Stateless per-task orchestrator. Receives a single task, then clarifies (vague ask), decomposes (too big), or advances it through limbo's lifecycle by dispatching specialist subagents — researcher, test-engineer, risk-assessor, red-team, tech-lead, code-reviewer, verifier, committer — and synthesizing their output at each stage gate. Does no investigation, implementation, review, or verification itself. Only agent that commits code. |
 | **tech-lead** | Single-task code executor. Receives one task from the PM, implements the change, verifies it works, and returns. Never commits — the PM handles that. |
 | **code-review-agent** | Performs thorough, convention-aware code reviews combining security analysis, bug detection, performance checks, and style enforcement. |
 | **researcher-agent** | Conducts deep research across codebases, documentation, and the web. Produces structured, actionable reports. Supports a deep-research mode for cross-system surveys with comparison matrices. |

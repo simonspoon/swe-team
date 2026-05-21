@@ -45,7 +45,9 @@ Drain limbo via the orchestrator pattern.
    - Prompt includes: task ID, working directory, any constraints from CLAUDE.md.
    - The PM advances the task from its current stage through to done
      (captured → refined → planned → ready → in-progress → in-review → done).
-   - The PM does the work itself; it dispatches only `researcher` (scout) and `committer`.
+   - The PM orchestrates each stage via specialist subagents (researcher,
+     test-engineer, risk-assessor, red-team, tech-lead, code-reviewer, verifier,
+     committer) — it synthesizes their output but never implements code itself.
 
 3. **Wait for PM to return**, then check task status:
    - `done` → continue to next leaf
