@@ -1,5 +1,5 @@
 ---
-name: project-docs-explore
+name: project-orientation
 description: >
   Project documentation explorer. ALWAYS invoke this skill when starting work on any
   project or subsystem. Do NOT skip this step — it discovers what docs exist so you

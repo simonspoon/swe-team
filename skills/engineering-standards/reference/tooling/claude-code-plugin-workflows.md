@@ -35,8 +35,8 @@ Forgetting step 2 is the most common mistake — the update command silently doe
 When converting standalone skills to a plugin:
 
 - Update every cross-reference between skills to use `plugin-name:skill-name` format
-- The `name:` field in each skill's YAML frontmatter stays as the short name (e.g., `name: software-engineering`)
-- Only invocation references — in SKILL.md prose, CLAUDE.md instructions, or other skills calling this one — get the prefix (e.g., `swe-team:software-engineering`)
+- The `name:` field in each skill's YAML frontmatter stays as the short name (e.g., `name: engineering-standards`)
+- Only invocation references — in SKILL.md prose, CLAUDE.md instructions, or other skills calling this one — get the prefix (e.g., `swe-team:engineering-standards`)
 - Missing a single cross-reference causes silent failures where the skill can't be found at runtime
 
 ## Related Topics

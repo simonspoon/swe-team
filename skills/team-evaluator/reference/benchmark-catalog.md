@@ -15,21 +15,21 @@ Categories BF / FI / CR / TG / CD / RF are skill-level. Category AP is pipeline-
 **Task:** "This API endpoint crashes when the `email` field is omitted. Find and fix the bug."
 **Expected:** Null check added, graceful error response returned, test added for missing field.
 **Level:** Skill
-**Exercises:** software-engineering, code-reviewer
+**Exercises:** engineering-standards, code-review
 
 ### BF-2: Off-by-One in Pagination
 **Setup:** Create a list endpoint with pagination that skips the last item when results are exactly page-sized.
 **Task:** "Users report the last item on each page is sometimes missing. Investigate and fix."
 **Expected:** Pagination boundary condition fixed, edge case tests added.
 **Level:** Skill
-**Exercises:** software-engineering, test-engineer
+**Exercises:** engineering-standards, test-engineer
 
 ### BF-3: Race Condition in Cache
 **Setup:** Create a cache module where concurrent reads and writes can return stale data.
 **Task:** "Cache sometimes returns stale data under load. Diagnose and fix."
 **Expected:** Thread-safe access pattern implemented, concurrent access test added.
 **Level:** Skill
-**Exercises:** software-engineering, code-reviewer
+**Exercises:** engineering-standards, code-review
 
 ## Feature Implementation Benchmarks
 
@@ -38,21 +38,21 @@ Categories BF / FI / CR / TG / CD / RF are skill-level. Category AP is pipeline-
 **Task:** "Add a search endpoint that supports filtering by name and email, with pagination."
 **Expected:** New endpoint with filtering, pagination, input validation, tests, docs.
 **Level:** Skill
-**Exercises:** software-engineering, tech-lead, test-engineer
+**Exercises:** engineering-standards, tech-lead, test-engineer
 
 ### FI-2: Add Rate Limiting Middleware
 **Setup:** Provide an Express/Actix/Flask app with no rate limiting.
 **Task:** "Add rate limiting: 100 requests per minute per IP, with configurable limits."
 **Expected:** Middleware implemented, configurable, tests for limit enforcement and reset.
 **Level:** Skill
-**Exercises:** software-engineering, test-engineer
+**Exercises:** engineering-standards, test-engineer
 
 ### FI-3: Add Webhook System
 **Setup:** Provide an app that processes events internally.
 **Task:** "Add webhook support: register URLs, retry on failure, log delivery attempts."
 **Expected:** Registration API, delivery with retries, logging, tests.
 **Level:** Skill
-**Exercises:** software-engineering, tech-lead, devops
+**Exercises:** engineering-standards, tech-lead, devops
 
 ## Code Review Benchmarks
 
@@ -61,21 +61,21 @@ Categories BF / FI / CR / TG / CD / RF are skill-level. Category AP is pipeline-
 **Task:** "Review this code for security issues."
 **Expected:** All 3 issues identified with severity ratings and fix suggestions.
 **Level:** Skill
-**Exercises:** code-reviewer, software-engineering
+**Exercises:** code-review, engineering-standards
 
 ### CR-2: Performance Anti-Patterns
 **Setup:** Create a file with N+1 query, unbounded loop, and missing index hint.
 **Task:** "Review this code for performance issues."
 **Expected:** All 3 patterns identified with improvement suggestions.
 **Level:** Skill
-**Exercises:** code-reviewer, software-engineering
+**Exercises:** code-review, engineering-standards
 
 ### CR-3: Mixed Quality PR
 **Setup:** Create a diff with good changes mixed with subtle bugs and style violations.
 **Task:** "Review this PR."
 **Expected:** Bugs caught, style issues noted, good changes acknowledged. Correct verdict.
 **Level:** Skill
-**Exercises:** code-reviewer
+**Exercises:** code-review
 
 ## Test Generation Benchmarks
 
@@ -84,14 +84,14 @@ Categories BF / FI / CR / TG / CD / RF are skill-level. Category AP is pipeline-
 **Task:** "Generate comprehensive unit tests for this module."
 **Expected:** Tests for all functions, edge cases covered, tests actually pass.
 **Level:** Skill
-**Exercises:** test-engineer, software-engineering
+**Exercises:** test-engineer, engineering-standards
 
 ### TG-2: Integration Tests for API
 **Setup:** Provide an API with 3 endpoints, no integration tests.
 **Task:** "Generate integration tests for these API endpoints."
 **Expected:** Tests cover success paths, error paths, validation, auth. Tests actually run.
 **Level:** Skill
-**Exercises:** test-engineer, software-engineering
+**Exercises:** test-engineer, engineering-standards
 
 ### TG-3: Test Coverage Gap Analysis
 **Setup:** Provide a module with existing tests that miss 3 critical paths.
@@ -130,21 +130,21 @@ Categories BF / FI / CR / TG / CD / RF are skill-level. Category AP is pipeline-
 **Task:** "Refactor this into focused modules with clear responsibilities."
 **Expected:** Clean separation, all existing tests still pass, no behavior change.
 **Level:** Skill
-**Exercises:** software-engineering, code-reviewer, test-engineer
+**Exercises:** engineering-standards, code-review, test-engineer
 
 ### RF-2: Replace Callback Hell with Async/Await
 **Setup:** Provide deeply nested callback-based code.
 **Task:** "Refactor to use async/await while preserving behavior."
 **Expected:** Clean async code, all existing tests pass, error handling preserved.
 **Level:** Skill
-**Exercises:** software-engineering
+**Exercises:** engineering-standards
 
 ### RF-3: Dependency Injection Refactor
 **Setup:** Provide code with hardcoded dependencies.
 **Task:** "Refactor to use dependency injection for testability."
 **Expected:** DI pattern applied, existing tests updated, new tests use mocks.
 **Level:** Skill
-**Exercises:** software-engineering, test-engineer
+**Exercises:** engineering-standards, test-engineer
 
 ## Agent / Pipeline Benchmarks
 

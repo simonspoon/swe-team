@@ -20,7 +20,7 @@ claude plugin marketplace add simonspoon/swe-team
 claude plugin install swe-team
 ```
 
-Skills are namespaced: `/swe-team:software-engineering`, `/swe-team:code-reviewer`, etc.
+Skills are namespaced: `/swe-team:engineering-standards`, `/swe-team:code-review`, etc.
 
 ### From Local Marketplace (for development)
 
@@ -58,8 +58,10 @@ Skills are specialized capabilities invoked with `/swe-team:skill-name`. They pr
 
 | Skill | Command | Description |
 |-------|---------|-------------|
-| **software-engineering** | `/swe-team:software-engineering` | Self-evolving knowledge base for architecture, debugging, design patterns, testing, performance, and security. |
-| **code-reviewer** | `/swe-team:code-reviewer` | Reviews diffs, PRs, and files for quality, bugs, security issues, and project conventions. |
+| **engineering-standards** | `/swe-team:engineering-standards` | Self-evolving engineering conventions KB for architecture, debugging, design patterns, testing, performance, and security; reads the project CLAUDE.md at load time. |
+| **risk-analysis** | `/swe-team:risk-analysis` | Enumerates and weights the risks of a planned change before code is written; runs a security review against the shared checklist. |
+| **codebase-research** | `/swe-team:codebase-research` | Investigates an unfamiliar codebase to ground a task, producing a structured research report with cited findings. |
+| **code-review** | `/swe-team:code-review` | Reviews diffs, PRs, and files for quality, bugs, security issues, and project conventions. |
 | **test-engineer** | `/swe-team:test-engineer` | Generates tests, runs suites, analyzes coverage, and reports results across languages. |
 | **simplify** | `/swe-team:simplify` | Analyzes code for unnecessary complexity using 7 refactoring patterns and applies focused fixes. |
 | **code-index** | `/swe-team:code-index` | Generates a structural index of a codebase showing files and their exported symbols. |
@@ -73,7 +75,7 @@ Skills are specialized capabilities invoked with `/swe-team:skill-name`. They pr
 | **status** | `/swe-team:status` | Force-refreshes all project state by re-running every command live. Never uses cached data. |
 | **global-backlog** | `/swe-team:global-backlog` | Manages cross-project tasks in the global limbo backlog (`~/.limbo/`). |
 | **dream** | `/swe-team:dream` | Offline knowledge-store hygiene — runs simaris lint/cluster/decay/vacuum and synthesizes recommendations. |
-| **project-docs-explore** | `/swe-team:project-docs-explore` | Discovers and reads a project's documentation structure for quick onboarding. |
+| **project-orientation** | `/swe-team:project-orientation` | Discovers and reads a project's documentation structure for quick onboarding. |
 
 ### Verification & Testing
 

@@ -59,12 +59,12 @@ Key recommendation: Improve devops skill to detect actual project package manage
 |-----|----------|------------|-------------------|
 | DevOps skill defaults to pnpm regardless of actual project setup | YELLOW | Skill follows user preference (pnpm) without detecting project reality (npm) | CI/CD Setup, SWE Full Cycle |
 | Python 3.8 compat not proactively detected | YELLOW | Scaffolded code uses 3.10+ syntax (list[dict]) without __future__ import; skills fix it reactively but don't catch it upfront | All Python benchmarks |
-| Refactoring doesn't add module-level tests | YELLOW | software-engineering focuses on preserving existing tests, doesn't proactively generate tests for new modules | Refactoring workflows |
+| Refactoring doesn't add module-level tests | YELLOW | engineering-standards focuses on preserving existing tests, doesn't proactively generate tests for new modules | Refactoring workflows |
 | Completeness gaps on documentation | YELLOW | Feature implementations include docstrings but not standalone docs when specs request them | Feature Implementation |
 
 ### Recommendations
 1. **[HIGH] Enhance devops skill**: Add package manager detection logic (check for lockfiles: pnpm-lock.yaml, package-lock.json, yarn.lock) before defaulting to user preference. When detected PM differs from preference, use detected PM and note the divergence.
-2. **[MEDIUM] Add Python version awareness**: software-engineering and test-engineer skills should detect the runtime Python version and proactively add `from __future__ import annotations` when using 3.10+ type syntax on 3.8/3.9.
+2. **[MEDIUM] Add Python version awareness**: engineering-standards and test-engineer skills should detect the runtime Python version and proactively add `from __future__ import annotations` when using 3.10+ type syntax on 3.8/3.9.
 3. **[MEDIUM] Refactoring workflow improvement**: After extracting modules, the workflow should generate basic unit tests for each new module, not just verify existing tests pass.
 4. **[LOW] Feature implementation completeness**: When the spec mentions "docs", generate a brief usage section or update project README, not just docstrings.
 

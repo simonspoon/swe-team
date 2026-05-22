@@ -22,7 +22,7 @@ Evaluate the SWE agent team by running structured benchmarks, scoring results, a
 The team is exercised at two distinct levels. Every benchmark declares which level it runs at (see the `Level` field in the benchmark catalog).
 
 **Skill-level:**
-Invoke a single skill directly in the current session via its documented activation (e.g. `/swe-team:code-reviewer`). Scores that one skill in isolation. Best for single-skill regression checks — fast, cheap, narrow.
+Invoke a single skill directly in the current session via its documented activation (e.g. `/swe-team:code-review`). Scores that one skill in isolation. Best for single-skill regression checks — fast, cheap, narrow.
 
 **Pipeline-level:**
 Dispatch the `swe-team:project-manager` agent with the benchmark task and score the end-to-end result. This exercises the *actual* team workflow — the PM decomposes the task into limbo tasks, dispatches the tech-lead per leaf, runs the stage-gate agents (risk-assessor, test-engineer at refined→planned; code-reviewer, verifier at in-review), and commits via the committer. Scores decomposition quality, implementation, and verification together. Best for evaluating the team as a system, not its parts.
@@ -49,12 +49,12 @@ Read `reference/benchmark-catalog.md` for the full catalog. Summary:
 
 | Category | Level | Tests | Skills/Agents Exercised |
 |----------|-------|-------|------------------------|
-| Bug Fix | Skill | Diagnose and fix a known bug | software-engineering, code-reviewer |
-| Feature Implementation | Skill | Build a small feature from spec | software-engineering, tech-lead |
-| Code Review | Skill | Review code with planted issues | code-reviewer, software-engineering |
-| Test Generation | Skill | Generate tests for existing code | test-engineer, software-engineering |
+| Bug Fix | Skill | Diagnose and fix a known bug | engineering-standards, code-review |
+| Feature Implementation | Skill | Build a small feature from spec | engineering-standards, tech-lead |
+| Code Review | Skill | Review code with planted issues | code-review, engineering-standards |
+| Test Generation | Skill | Generate tests for existing code | test-engineer, engineering-standards |
 | CI/CD Setup | Skill | Create pipeline for a project | devops, test-engineer |
-| Refactoring | Skill | Improve code without changing behavior | software-engineering, code-reviewer |
+| Refactoring | Skill | Improve code without changing behavior | engineering-standards, code-review |
 | Agent / Pipeline | Pipeline | Dispatch the PM and score end-to-end team behavior | project-manager, tech-lead, risk-assessor, test-engineer, code-reviewer, verifier, committer, researcher |
 
 The first six categories are **skill-level** — they invoke a skill directly. The **Agent / Pipeline** category is **pipeline-level** — each benchmark dispatches `swe-team:project-manager` and scores the workflow that runs underneath it.
@@ -83,7 +83,7 @@ For each benchmark, run it according to its `Level` field:
 
 **Skill-level benchmarks:**
 1. Record the start state.
-2. Invoke the target skill via its documented activation (e.g., `/swe-team:software-engineering` or `/swe-team:code-reviewer`) directly in the current session. For benchmarks requiring composition of multiple skills, invoke them in sequence as the workflow dictates.
+2. Invoke the target skill via its documented activation (e.g., `/swe-team:engineering-standards` or `/swe-team:code-review`) directly in the current session. For benchmarks requiring composition of multiple skills, invoke them in sequence as the workflow dictates.
 3. Capture all output and artifacts.
 4. Record the end state and elapsed time.
 
@@ -187,7 +187,7 @@ Compare with previous entries to track improvement trends. The per-benchmark sco
 
 **Benchmark:** Review a Python file with 3 planted bugs (SQL injection, unclosed file handle, off-by-one error).
 
-**Run:** Invoke `/swe-team:code-reviewer` on the file.
+**Run:** Invoke `/swe-team:code-review` on the file.
 
 **Score:**
 - Correctness: 3 (found all 3 bugs)

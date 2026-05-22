@@ -26,7 +26,7 @@ When the Skill tool is invoked, the skill's SKILL.md is loaded into the agent's 
 ## Common Composition Patterns
 
 ### Orchestrator Agent
-Loads: tech-lead skill, project-docs-explore, software-engineering
+Loads: tech-lead skill, project-orientation, engineering-standards
 Uses: Agent tool to dispatch subagents
 Example: tech-lead agent
 
@@ -49,7 +49,7 @@ Orchestrator body pattern — dispatch subagents with the Agent tool:
 ```
 
 ### Focused Worker Agent
-Loads: 1-2 domain skills (e.g., test-engineer, code-reviewer)
+Loads: 1-2 domain skills (e.g., test-engineer, code-review)
 Uses: Direct tool calls, no Agent tool
 Example: A dedicated test-writing agent
 
@@ -75,7 +75,7 @@ To find available skills, read `~/.claude/skills/SKILLS-INDEX.md`. It lists:
 
 ### Duplicating skill logic
 Bad: Agent body contains the full code review checklist.
-Good: Agent loads `/swe-team:code-reviewer` and says "Run the code review process."
+Good: Agent loads `/swe-team:code-review` and says "Run the code review process."
 
 ### Loading unnecessary skills
 Bad: Agent loads every available skill "just in case."

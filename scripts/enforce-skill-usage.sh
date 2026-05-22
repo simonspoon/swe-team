@@ -72,11 +72,11 @@ if [ "$IS_TEST" = true ]; then
   fi
 fi
 
-# Plain source files (not tests, not docs) require the software-engineering skill —
-# it loads project conventions and user preferences before any code is written.
+# Plain source files (not tests, not docs) require the engineering-standards skill —
+# it loads project conventions before any code is written.
 if [ "$IS_CODE" = true ] && [ "$IS_TEST" = false ] && [ "$IS_DOC" = false ]; then
-  if ! check_skill_flag "software-engineering"; then
-    echo "BLOCKED: You are editing a source file without having invoked /swe-team:software-engineering first. Call the Skill tool with skill=\"swe-team:software-engineering\" BEFORE writing or modifying code — it loads project conventions and user preferences that must inform the change." >&2
+  if ! check_skill_flag "engineering-standards"; then
+    echo "BLOCKED: You are editing a source file without having invoked /swe-team:engineering-standards first. Call the Skill tool with skill=\"swe-team:engineering-standards\" BEFORE writing or modifying code — it loads project conventions that must inform the change." >&2
     exit 2
   fi
 fi

@@ -48,7 +48,7 @@ Understand the kind of task you're executing. This affects your approach.
 - When rewriting a function, enumerate what the old code did (timing, logging, error format, return shape) and preserve those behaviors unless the task explicitly says to change them
 
 **New project** — building a new system:
-- Follow the project scaffold conventions from `/swe-team:software-engineering`
+- Follow the project scaffold conventions from `/swe-team:engineering-standards`
 - Get the skeleton building and running before adding features
 
 See [workflows/INDEX.md](workflows/INDEX.md) for detailed task templates.
@@ -75,6 +75,7 @@ Every task must be verified before returning results to the PM. Use the deepest 
 2. **Build**: Full project build — not just the file you changed
 3. **Test**: Run relevant tests. If the task specifies tests, run those. If you wrote new tests, run them.
 4. **Smoke test**: Actually execute the code path with sample input. "It compiles" is never sufficient.
+5. **Structure** (static/structured files): After any bulk or programmatic edit to markup/config (HTML, SVG, XML, JSON, YAML, TOML), run a well-formedness/parse check — see "Static & structured files" below. A value grep (colors, strings) does NOT verify structure.
 
 ### By language
 
@@ -91,6 +92,21 @@ gofmt -w . && go build ./... && go test ./...
 # Python
 black . && uv run pytest
 ```
+
+### Static & structured files
+
+HTML, SVG, XML, JSON, YAML, TOML have no build or test step — the ladder above does not apply. **Browser rendering is NOT verification:** browsers silently error-recover from malformed HTML/SVG, so a corrupted tag still looks fine on screen.
+
+After **any bulk or programmatic edit** (find/replace, attribute sweeps, multi-site color/string changes), confirm the file still parses:
+
+```bash
+xmllint --noout file.svg                                  # HTML/SVG/XML well-formedness
+grep -co '<rect' f.svg; grep -co '</rect>' f.svg           # fallback: open vs close counts must match
+jq . file.json >/dev/null                                  # JSON
+python3 -c "import yaml; yaml.safe_load(open('f.yaml'))"   # YAML
+```
+
+A sweep of N edits can corrupt structure at any site. Verify structural integrity separately from value correctness — a passing value grep (colors, strings) proves nothing about tag/bracket balance.
 
 ### Common runtime failures to check for
 

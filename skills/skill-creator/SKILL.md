@@ -41,7 +41,7 @@ Read 1-2 existing skills that are closest to what's being built:
 | CLI tool wrapper | `code-index/SKILL.md` or `nyx/SKILL.md` |
 | Analysis/workflow | `simplify/SKILL.md` |
 | Stateful process | `session-handoff/SKILL.md` |
-| Multi-step with composition | `code-reviewer/SKILL.md` |
+| Multi-step with composition | `code-review/SKILL.md` |
 | Testing/verification | `loki-test-desktop/SKILL.md` or `khora-test-web/SKILL.md` |
 
 Use the reference skill's structure as your template. Don't invent new structures.

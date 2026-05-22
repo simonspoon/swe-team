@@ -67,7 +67,7 @@ Does it follow project conventions and best practices?
 - Uses project's preferred patterns (DI, error handling, logging)
 - Follows language/framework idioms
 - Uses project's testing patterns
-- Output format matches skill's specified format (e.g., review output format for code-reviewer)
+- Output format matches skill's specified format (e.g., review output format for code-review)
 
 ## Scoring Process
 

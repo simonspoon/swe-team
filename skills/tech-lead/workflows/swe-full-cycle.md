@@ -14,15 +14,15 @@ Use this workflow when the task requires the full engineering cycle — not just
 
 | Phase | Skill | Purpose |
 |-------|-------|---------|
-| Plan | `/swe-team:software-engineering` | Load conventions, architecture knowledge |
-| Plan | `/swe-team:project-docs-explore` | Understand existing codebase |
+| Plan | `/swe-team:engineering-standards` | Load conventions, architecture knowledge |
+| Plan | `/swe-team:project-orientation` | Understand existing codebase |
 | Plan | `/swe-team:code-index` | Generate structural map of unfamiliar code |
 | Implement | (tech-lead) | Write code per task decomposition |
 | Test | `/swe-team:test-engineer` | Generate tests, run suites, analyze coverage |
-| Review | `/swe-team:code-reviewer` | Review diffs for bugs, security, conventions |
+| Review | `/swe-team:code-review` | Review diffs for bugs, security, conventions |
 | Review | `/swe-team:simplify` | Analyze changed code for unnecessary complexity |
 | CI/CD | `/swe-team:devops` | Create/update CI pipeline if needed |
-| Retrospective | `/swe-team:software-engineering`, `/swe-team:skill-reflection` | Capture lessons, fix skill/workflow gaps |
+| Retrospective | `/swe-team:engineering-standards`, `/swe-team:skill-reflection` | Capture lessons, fix skill/workflow gaps |
 | Deliver | `/swe-team:update-docs` | Update project docs to reflect changes |
 
 ## Task Hierarchy Pattern
@@ -31,7 +31,7 @@ Use this workflow when the task requires the full engineering cycle — not just
 SWE: <description>
 ├── Plan
 │   ├── Research & understand requirements
-│   ├── Explore codebase (project-docs-explore, code-index)
+│   ├── Explore codebase (project-orientation, code-index)
 │   ├── Design approach
 │   └── Define test plan (acceptance criteria)
 ├── Implement
@@ -42,7 +42,7 @@ SWE: <description>
 │   ├── Run test suite
 │   └── Coverage analysis
 ├── Review
-│   ├── Code review (code-reviewer)
+│   ├── Code review (code-review)
 │   ├── Simplify pass (simplify) — optional
 │   └── Address review feedback
 ├── CI/CD (if needed)
@@ -66,8 +66,8 @@ Load context before decomposing:
 
 ```bash
 # PM loads these during planning:
-# /swe-team:software-engineering — conventions and preferences
-# /swe-team:project-docs-explore — architecture docs
+# /swe-team:engineering-standards — conventions
+# /swe-team:project-orientation — architecture docs
 # /swe-team:code-index — structural map of unfamiliar areas (optional)
 ```
 
@@ -129,7 +129,7 @@ Test generation task should include context about:
 
 ### 4. Review Phase
 
-Use `/swe-team:code-reviewer` on all changes:
+Use `/swe-team:code-review` on all changes:
 
 ```bash
 limbo add "Review" --parent root                         # → rev
@@ -142,7 +142,7 @@ limbo block crev addr    # Address after review
 
 The code review task should:
 1. Run `git diff main..HEAD` (or appropriate base)
-2. Apply the code-reviewer activation protocol
+2. Apply the code-review activation protocol
 3. Produce structured output (Critical/Warnings/Info/Verdict)
 4. If verdict is REQUEST CHANGES, the "Address feedback" task becomes active
 
@@ -220,7 +220,7 @@ Conventions discovered, preferences to capture, mistakes to avoid. Only save thi
 | Finding type | Action | Destination |
 |-------------|--------|-------------|
 | Skill produced wrong/incomplete output | Fix the skill's docs directly, or run `/swe-team:skill-reflection` | Skill's SKILL.md or reference files |
-| New convention or preference | Save via `/swe-team:software-engineering` preference capture | `software-engineering/preferences/` |
+| New reusable engineering convention | Capture via `/swe-team:engineering-standards` Research Protocol | `engineering-standards/reference/` (conventions KB) |
 | Workflow gap (missing step, wrong ordering) | Update the workflow template directly | `workflows/swe-full-cycle.md` or other template |
 | Tool limitation or missing capability | Create a follow-up task or note for user | Limbo task or user communication |
 | Nothing noteworthy | Record "No findings" — this is a valid outcome | Gate task outcome |

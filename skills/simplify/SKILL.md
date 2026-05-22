@@ -15,18 +15,18 @@ Analyze code for unnecessary complexity and apply focused refactorings that pres
 
 ## Prerequisites
 
-- Invoke `/swe-team:software-engineering` first to load project conventions and preferences.
+- Invoke `/swe-team:engineering-standards` first to load project conventions.
 - Project must have tests. If no tests exist, write them before refactoring (invoke `/swe-team:test-engineer`).
 
 ## Activation Protocol
 
-1. Invoke `/swe-team:software-engineering` to load project conventions. If the user's message indicates it was already invoked in this conversation, skip this step.
+1. Invoke `/swe-team:engineering-standards` to load project conventions. If the user's message indicates it was already invoked in this conversation, skip this step.
 2. Determine scope: specific files, staged changes, or a module/class the user identified. If the user says "simplify everything" or gives no specific target, ask them to identify the files or module to analyze. Do not scan the entire codebase unprompted.
 3. Run the Analysis Workflow (which starts by reading the refactoring catalog, THEN the target code).
 4. Present findings to the user. Wait for approval before applying changes.
 5. Run the Refactoring Workflow for each approved change.
 6. Invoke `/swe-team:test-engineer` to verify all tests pass after changes.
-7. Invoke `/swe-team:code-reviewer` to review the refactored code.
+7. Invoke `/swe-team:code-review` to review the refactored code.
 
 ## Analysis Workflow
 
@@ -142,7 +142,7 @@ Use this EXACT format for each completed refactoring (do not use a different for
 2. **Never change behavior.** Refactoring means same inputs produce same outputs, same side effects, same errors.
 3. **One refactoring per commit.** Each change should be independently revertible.
 4. **Do not over-abstract.** Extracting a small helper function used once is not simplification. Introducing a design pattern where a plain function works is not simplification. Exception: extracting a cohesive group of methods from a God Object into a separate module IS simplification, even if each extracted module is used by only one caller.
-5. **Preserve the team's style.** Match existing conventions (from software-engineering preferences), not textbook ideals.
+5. **Preserve the team's style.** Match existing conventions (from engineering-standards), not textbook ideals.
 6. **When in doubt, leave it.** A refactoring you are unsure about is not "clearly an improvement."
 7. **Small files are not always simple.** Do not split a cohesive 300-line file into six 50-line files that require cross-file reading to understand.
 

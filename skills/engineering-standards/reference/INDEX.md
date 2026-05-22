@@ -1,4 +1,4 @@
-# Knowledge Index
+# Conventions Index
 Last updated: 2026-03-24
 
 | Domain | Topic | File | Added |

@@ -123,7 +123,7 @@ ln -sf /path/to/source/agent-name.md ~/.claude/agents/agent-name.md
 - Name: doc-writer
 - Purpose: Generate and maintain project documentation
 - Tools: Bash, Read, Write, Edit, Glob, Grep, Skill
-- Skills: software-engineering, project-docs-explore
+- Skills: engineering-standards, project-orientation
 - Model: sonnet
 
 **Generated output:**
@@ -156,8 +156,8 @@ architecture, and producing clear, accurate documentation.
 
 ## First Steps (EVERY time)
 
-1. Load `/swe-team:software-engineering` to understand project conventions.
-2. Load `/swe-team:project-docs-explore` to find existing documentation.
+1. Load `/swe-team:engineering-standards` to understand project conventions.
+2. Load `/swe-team:project-orientation` to find existing documentation.
 3. Identify the documentation scope from the user's request.
 
 ## Core Workflow

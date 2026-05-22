@@ -10,7 +10,7 @@ Create tasks manually using `limbo add` with the hierarchy pattern below. Use `-
 
 For features that need full engineering rigor, compose with these skills:
 - **Test phase**: Use `/swe-team:test-engineer` to generate tests and analyze coverage for new code
-- **Review phase**: Use `/swe-team:code-reviewer` to review the implementation before merging
+- **Review phase**: Use `/swe-team:code-review` to review the implementation before merging
 - **CI phase**: Use `/swe-team:devops` if the feature requires CI/CD pipeline changes
 
 For the complete plan→implement→test→review→deliver cycle, use [swe-full-cycle.md](swe-full-cycle.md) instead.
@@ -28,7 +28,7 @@ Feature: <name>
 ├── Testing
 │   ├── Unit tests (test-engineer)
 │   └── Integration tests
-├── Review (code-reviewer)
+├── Review (code-review)
 └── Documentation (if needed)
 ```
 

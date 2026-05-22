@@ -18,11 +18,11 @@ case "$SKILL_NAME" in
   test-engineer|swe-team:test-engineer)
     touch "${STATE_DIR}/${SESSION_ID}-test-engineer"
     ;;
-  code-reviewer|swe-team:code-reviewer)
-    touch "${STATE_DIR}/${SESSION_ID}-code-reviewer"
+  code-review|swe-team:code-review)
+    touch "${STATE_DIR}/${SESSION_ID}-code-review"
     ;;
-  software-engineering|swe-team:software-engineering)
-    touch "${STATE_DIR}/${SESSION_ID}-software-engineering"
+  engineering-standards|swe-team:engineering-standards)
+    touch "${STATE_DIR}/${SESSION_ID}-engineering-standards"
     ;;
   git-commit|swe-team:git-commit)
     touch "${STATE_DIR}/${SESSION_ID}-git-commit"

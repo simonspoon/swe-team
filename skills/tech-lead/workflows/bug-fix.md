@@ -10,7 +10,7 @@ Create tasks manually using `limbo add` with the hierarchy pattern below. Use `-
 
 For bug fixes that need thorough verification, compose with these skills:
 - **Test phase**: Use `/swe-team:test-engineer` to generate regression tests that prevent recurrence
-- **Review phase**: Use `/swe-team:code-reviewer` to review the fix for security and correctness
+- **Review phase**: Use `/swe-team:code-review` to review the fix for security and correctness
 - **CI phase**: Use `/swe-team:devops` if the fix reveals a CI gap (missing test step, etc.)
 
 ## Task Hierarchy Pattern
@@ -23,7 +23,7 @@ Bug: <description>
 │   └── Document findings
 ├── Fix
 │   ├── Implement fix
-│   └── Code review (code-reviewer)
+│   └── Code review (code-review)
 ├── Test
 │   ├── Verify fix
 │   └── Regression tests (test-engineer)

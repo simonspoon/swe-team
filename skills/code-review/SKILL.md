@@ -1,5 +1,5 @@
 ---
-name: code-reviewer
+name: code-review
 description: >
   Code review expert. ALWAYS invoke this skill when reviewing code, PRs, diffs, or
   checking for bugs and security issues. Do NOT review code manually — use this skill.
@@ -14,13 +14,13 @@ Systematic code review for diffs, files, and pull requests. Checks for bugs, sec
 ## Prerequisites
 
 - For PR reviews: `gh` CLI must be authenticated
-- For convention checking: invoke `/swe-team:software-engineering` first to load project preferences
+- For convention checking: invoke `/swe-team:engineering-standards` first to load project preferences
 
 ## Activation Protocol
 
 1. Determine review scope (see "What Are You Reviewing?" below).
-2. Read `reference/security-checklist.md` (once per session is sufficient).
-3. If `/swe-team:software-engineering` preferences have been loaded, apply them as style/convention rules. If not loaded, skip convention checking or note it as a limitation in your review.
+2. Read `../risk-analysis/reference/security-checklist.md` (once per session is sufficient).
+3. If `/swe-team:engineering-standards` conventions have been loaded, apply them as style/convention rules. If not loaded, skip convention checking or note it as a limitation in your review.
 4. Produce structured output using the Review Output Format below.
 
 ## What Are You Reviewing?
@@ -69,7 +69,7 @@ For changes over 30 lines, follow all 6 steps below. For small changes (under 30
 
 ### Step 2: Security Scan
 
-Read reference/security-checklist.md. Check every item against the diff.
+Read ../risk-analysis/reference/security-checklist.md. Check every item against the diff.
 
 **Immediate blockers (request changes):**
 - SQL injection, command injection, path traversal
@@ -110,7 +110,7 @@ async def fetch(url):
 ### Step 5: Style and Conventions
 
 - Naming consistency with existing codebase
-- Project-specific patterns (from software-engineering preferences)
+- Project-specific patterns (from engineering-standards conventions)
 - Dead code, unused imports, commented-out code
 - Missing or misleading documentation
 
@@ -160,7 +160,7 @@ gh pr review <number> --comment --body "Review summary here"
 ## Quick Checklist
 
 For small changes (under 30 lines), use this abbreviated checklist INSTEAD of the full 6-step Review Process above. Verify:
-1. No security issues (reference/security-checklist.md)
+1. No security issues (../risk-analysis/reference/security-checklist.md)
 2. No obvious bugs or logic errors
 3. Error handling present
 4. Consistent with surrounding code style
@@ -168,4 +168,4 @@ For small changes (under 30 lines), use this abbreviated checklist INSTEAD of th
 
 ## Reference
 
-- **Security** — Read reference/security-checklist.md
+- **Security** — Read ../risk-analysis/reference/security-checklist.md

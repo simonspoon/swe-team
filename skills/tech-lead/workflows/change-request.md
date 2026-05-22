@@ -63,7 +63,7 @@ limbo block uvwx ghij
 
 For change requests that involve refactoring, compose with:
 - **Test phase**: Use `/swe-team:test-engineer` — especially important for refactoring. Generate tests for newly extracted modules, don't just verify existing tests pass.
-- **Review phase**: Use `/swe-team:code-reviewer` to verify refactoring preserves behavior and doesn't break encapsulation.
+- **Review phase**: Use `/swe-team:code-review` to verify refactoring preserves behavior and doesn't break encapsulation.
 
 ### 5. Independent Tasks
 

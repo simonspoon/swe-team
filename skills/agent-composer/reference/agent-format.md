@@ -34,7 +34,7 @@ maxTurns: 200                 # Required. Integer, typical: 100-500
 - Lowercase letters and hyphens only
 - Under 64 characters
 - Must not contain "anthropic" or "claude"
-- Examples: `tech-lead`, `skill-trainer`, `code-reviewer`
+- Examples: `tech-lead`, `skill-trainer`, `code-review`
 
 **description**
 - Under 1024 characters total

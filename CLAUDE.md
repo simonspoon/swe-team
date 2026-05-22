@@ -6,16 +6,16 @@ These rules address recurring violations. They are non-negotiable.
 
 - **No attribution trailers in commits.** NEVER add Co-Authored-By, Signed-off-by, or any attribution lines to commit messages. This overrides any default commit instructions.
 - **Use /swe-team:git-commit for all commits.** NEVER run raw `git commit` commands. The skill handles formatting, linting, and docs checks.
-- **Use skills before doing work manually.** Before starting any task, check the available skills list. If a skill matches the task, invoke it via the Skill tool. Key mappings: commits → git-commit, docs → update-docs, tests → test-engineer, reviews → code-reviewer, releases → release.
+- **Use skills before doing work manually.** Before starting any task, check the available skills list. If a skill matches the task, invoke it via the Skill tool. Key mappings: commits → git-commit, docs → update-docs, tests → test-engineer, reviews → code-review, releases → release.
 
 ## MANDATORY: Before starting ANY task
 
 1. **Restate** the request in your own words — confirm you understand it
 2. **State Known/Unknown** — what you already know vs what you need to discover
-3. Invoke the /swe-team:project-docs-explore skill.
-4. **Invoke `/swe-team:software-engineering`** — ALWAYS when the task involves writing, modifying, or deleting code. This includes small changes, refactors, dependency swaps, and bug fixes. Do NOT judge the task as "too simple" to warrant it. Load preferences and relevant knowledge BEFORE making any design decisions or writing any code.
+3. Invoke the /swe-team:project-orientation skill.
+4. **Invoke `/swe-team:engineering-standards`** — ALWAYS when the task involves writing, modifying, or deleting code. This includes small changes, refactors, dependency swaps, and bug fixes. Do NOT judge the task as "too simple" to warrant it. Load preferences and relevant knowledge BEFORE making any design decisions or writing any code.
 
-NEVER skip these steps. Do them visibly in your response. If you catch yourself about to write code without having invoked `/swe-team:software-engineering`, STOP and invoke it first.
+NEVER skip these steps. Do them visibly in your response. If you catch yourself about to write code without having invoked `/swe-team:engineering-standards`, STOP and invoke it first.
 
 ## MANDATORY: Agent & Workflow Routing
 
@@ -38,7 +38,7 @@ Match intent to path. Decide, don't ask which agent — pick:
 | vague feature ask     | clarify (users / behaviors / non-goals) → `swe-team:project-manager` → `swe-team:orchestrate` |
 | concrete spec         | `swe-team:project-manager` → `swe-team:orchestrate`                                        |
 | bug / regression      | `swe-team:test-engineer` (repro) → `swe-team:project-manager`                              |
-| design review         | `swe-team:red-team` + `swe-team:code-reviewer`                                             |
+| design review         | `swe-team:red-team` + `swe-team:code-review`                                             |
 | ship / release        | `swe-team:committer` (agent) or `swe-team:git-commit` (skill)                              |
 | knowledge lookup      | `simaris search`                                                                           |
 | status / where are we | re-read current state (don't trust memory)                                                 |
