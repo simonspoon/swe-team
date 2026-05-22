@@ -1,12 +1,12 @@
 {
   "name": "swe-team",
-  "version": "1.29.0",
-  "description": "SWE agent team — skills, agents, and commands for autonomous software engineering workflows. Includes code review, testing, DevOps, verification orchestration, UI design, and meta-skills for self-improvement.",
+  "version": "2.0.0",
+  "description": "The Specialist Guild — a 9-agent autonomous software engineering team. Lean soul-plus-mandate agents (maestro, scout, planner, risk, adversary, engineer, reviewer, verifier, committer) drive an 8-stage task lifecycle; 15 single-source-of-truth skills hold all engineering knowledge.",
   "author": {
     "name": "simonspoon",
     "url": "https://github.com/simonspoon"
   },
   "repository": "https://github.com/simonspoon/swe-team",
   "license": "MIT",
-  "keywords": ["swe", "code-review", "testing", "devops", "verification", "agents"]
+  "keywords": ["swe", "code-review", "testing", "verification", "agents"]
 }

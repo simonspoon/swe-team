@@ -24,7 +24,7 @@ Build a **topic-to-file map** — for each doc file, note:
 - What topic/subsystem it covers
 - Whether it's developer-facing (`docs/dev/`) or user-facing (`docs/user/`)
 
-If no `docs/` directory and no `README.md` exist, tell the user: "No documentation found to update. Consider running the `setup-docs` skill first."
+If no `docs/` directory and no `README.md` exist, tell the user: "No documentation found to update. Consider creating a `docs/` directory or a `README.md` first."
 
 ### Step 2: Detect What Changed in Code
 

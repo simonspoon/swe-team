@@ -16,9 +16,8 @@ triggers:
 
 # Docs
 
-Update existing project documentation to reflect code changes. Works with any `docs/`
-structure — typically one created by the `setup-docs` skill, but any organized doc tree
-will do.
+Update existing project documentation to reflect code changes. Works with any organized
+`docs/` tree, whatever structure it uses.
 
 ## Activation Protocol
 

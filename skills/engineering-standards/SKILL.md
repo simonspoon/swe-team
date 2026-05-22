@@ -28,7 +28,7 @@ preferences are read at load time from the project's `CLAUDE.md`.
 
   Partial completion is a latent divergence bug, not acceptable progress. The enumeration must be produced explicitly — implicit "I checked" is not sufficient.
 
-- **Deliver in verified, committed increments — not one big-bang.** For work spanning more than a few files: land a thin working slice, verify it (build + tests; for UI or behavior changes, actually run and exercise it — not just compile it), then commit that verified state before extending. Never build on a layer you have not verified — if a layer cannot be verified in the current environment (e.g. a GUI change with no display), stop and hand it back for verification rather than stacking more changes on top. A large feature delivered as one uncommitted, unverified diff is a liability, not progress; if it is too large to slice yourself, route it to `/swe-team:project-manager` for decomposition.
+- **Deliver in verified, committed increments — not one big-bang.** For work spanning more than a few files: land a thin working slice, verify it (build + tests; for UI or behavior changes, actually run and exercise it — not just compile it), then commit that verified state before extending. Never build on a layer you have not verified — if a layer cannot be verified in the current environment (e.g. a GUI change with no display), stop and hand it back for verification rather than stacking more changes on top. A large feature delivered as one uncommitted, unverified diff is a liability, not progress; if it is too large to slice yourself, return it to MAESTRO for decomposition into child tasks.
 
 ## Activation Protocol
 
@@ -113,7 +113,7 @@ The Post-Task Protocol checks the evolution log entry count after every task. **
 
 ## Rules
 
-1. **Only modify SKILL.md via /swe-team:skill-reflection or explicit user request.** During normal activation, only `reference/` and `meta/` evolve.
+1. **Only modify SKILL.md via explicit user request.** During normal activation, only `reference/` and `meta/` evolve.
 2. **Read before write.** Always check existing knowledge before creating new files.
 3. **Project conventions win.** When general knowledge and a project convention from `CLAUDE.md` conflict, follow the project convention.
 4. **Skip research during urgent debugging** unless asked. Apply best available knowledge; note the gap for later.

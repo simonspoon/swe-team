@@ -6,7 +6,7 @@ These rules address recurring violations. They are non-negotiable.
 
 - **No attribution trailers in commits.** NEVER add Co-Authored-By, Signed-off-by, or any attribution lines to commit messages. This overrides any default commit instructions.
 - **Use /swe-team:git-commit for all commits.** NEVER run raw `git commit` commands. The skill handles formatting, linting, and docs checks.
-- **Use skills before doing work manually.** Before starting any task, check the available skills list. If a skill matches the task, invoke it via the Skill tool. Key mappings: commits → git-commit, docs → docs, tests → test-authoring, reviews → code-review, releases → release.
+- **Use skills before doing work manually.** Before starting any task, check the available skills list. If a skill matches the task, invoke it via the Skill tool. Key mappings: commits → git-commit, docs → docs, tests → test-authoring, reviews → code-review.
 
 ## MANDATORY: Before starting ANY task
 
@@ -19,15 +19,12 @@ NEVER skip these steps. Do them visibly in your response. If you catch yourself 
 
 ## MANDATORY: Agent & Workflow Routing
 
-**All code-producing tasks → `swe-team:project-manager` agent.**
-ANY task that writes, modifies, or deletes code MUST be routed through the `swe-team:project-manager` agent. The PM receives a single task, evaluates it, and either decomposes it into subtasks (then exits for the orchestrator to pick up the leaves) or executes it via the tech-lead subagent, verifies, and commits. The PM is the only agent that commits code.
+**All code-producing tasks → `swe-team:maestro` agent.**
+ANY task that writes, modifies, or deletes code MUST be routed through the `swe-team:maestro` agent. MAESTRO is the front door and pure router: it intakes the request, sizes the task, drives the 8-stage lifecycle one stage at a time, validates each gate, and dispatches the specialist agents. MAESTRO authors zero technical content and is the only agent that dispatches other agents.
 
-**If you are already running as the project-manager agent**, follow your own workflow — do not re-dispatch to yourself.
+**If you are already running as the maestro agent**, follow your own workflow — do not re-dispatch to yourself.
 
-**Never dispatch tech-lead directly.** The tech-lead only runs as a subagent of the PM. It writes code but never commits.
-
-**Skill training/testing → `swe-team:skill-trainer` agent.**
-When the user asks to train, test, validate, calibrate, or harden a skill → launch the `swe-team:skill-trainer` agent.
+**Never dispatch `engineer` directly.** ENGINEER is the only agent with Write/Edit — it writes and tests code but never commits, and only runs as a subagent dispatched by MAESTRO.
 
 ### Workflow routing by intent
 
@@ -35,10 +32,10 @@ Match intent to path. Decide, don't ask which agent — pick:
 
 | Intent                | Path                                                                                       |
 |-----------------------|--------------------------------------------------------------------------------------------|
-| vague feature ask     | clarify (users / behaviors / non-goals) → `swe-team:project-manager` → `swe-team:orchestrate` |
-| concrete spec         | `swe-team:project-manager` → `swe-team:orchestrate`                                        |
-| bug / regression      | `swe-team:test-authoring` (repro) → `swe-team:project-manager`                             |
-| design review         | `swe-team:red-team` + `swe-team:code-review`                                             |
+| vague feature ask     | clarify (users / behaviors / non-goals) → `swe-team:maestro`                               |
+| concrete spec         | `swe-team:maestro`                                                                         |
+| bug / regression      | `swe-team:test-authoring` (repro) → `swe-team:maestro`                                     |
+| design review         | `swe-team:adversary` + `swe-team:code-review`                                              |
 | ship / release        | `swe-team:committer` (agent) or `swe-team:git-commit` (command, loads the commit skill)     |
 | knowledge lookup      | `simaris search`                                                                           |
 | status / where are we | re-read current state (don't trust memory)                                                 |

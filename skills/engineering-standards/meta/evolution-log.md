@@ -6,7 +6,7 @@ Tracks additions and changes to the knowledge base.
 |------|--------|------|---------|
 | 2026-03-14 | created | (all) | Initial seed structure |
 | 2026-03-14 | added | reference/architecture/rust-cli-patterns.md | Seeded from dante project session — blocking HTTP, untyped returns, module structure, error handling, crate stack |
-| 2026-03-14 | modified | SKILL.md | Fixed activation protocol: skip empty preference files, clarified empty-state behavior, relaxed modification rule to allow /skill-reflection edits |
+| 2026-03-14 | modified | SKILL.md | Fixed activation protocol: skip empty preference files, clarified empty-state behavior, relaxed modification rule to allow reflection-driven edits |
 | 2026-03-15 | added | reference/tooling/rust-dependency-management.md | Current crate versions, semver guidance, upgrade workflow, breaking change patterns |
 | 2026-03-15 | modified | reference/architecture/rust-cli-patterns.md | Updated crate stack table with versions, linked to dependency management file |
 | 2026-03-15 | modified | SKILL.md | Added critical requirement: ask before upgrading deps. Added staleness tracking (Last researched date, 3-month threshold for tooling). Added tooling domain to activation protocol |
