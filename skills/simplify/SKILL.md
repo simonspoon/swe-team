@@ -16,7 +16,7 @@ Analyze code for unnecessary complexity and apply focused refactorings that pres
 ## Prerequisites
 
 - Invoke `/swe-team:engineering-standards` first to load project conventions.
-- Project must have tests. If no tests exist, write them before refactoring (invoke `/swe-team:test-engineer`).
+- Project must have tests. If no tests exist, write them before refactoring (invoke `/swe-team:test-authoring`).
 
 ## Activation Protocol
 
@@ -25,7 +25,7 @@ Analyze code for unnecessary complexity and apply focused refactorings that pres
 3. Run the Analysis Workflow (which starts by reading the refactoring catalog, THEN the target code).
 4. Present findings to the user. Wait for approval before applying changes.
 5. Run the Refactoring Workflow for each approved change.
-6. Invoke `/swe-team:test-engineer` to verify all tests pass after changes.
+6. Invoke `/swe-team:test-authoring` to verify all tests pass after changes.
 7. Invoke `/swe-team:code-review` to review the refactored code.
 
 ## Analysis Workflow
@@ -120,7 +120,7 @@ If tests fail:
 2. Check if the failure is a test that was testing implementation details, not behavior (update the test).
 3. If unclear, ask the user.
 
-**If the refactoring extracted new modules or files**, invoke `/swe-team:test-engineer` to generate unit tests for each newly created module. Existing tests only cover the original code — the new modules need their own tests.
+**If the refactoring extracted new modules or files**, invoke `/swe-team:test-authoring` to generate unit tests for each newly created module. Existing tests only cover the original code — the new modules need their own tests.
 
 ### Step 4: Report
 

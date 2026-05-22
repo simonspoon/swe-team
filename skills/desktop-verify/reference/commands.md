@@ -1,6 +1,9 @@
 # loki Command Reference
 
-Complete reference for all loki CLI commands.
+## Purpose
+
+The complete reference for every loki CLI command. Loaded by the `desktop-verify`
+SKILL.md when a workflow step needs the full command surface or option detail.
 
 ## Global Options
 

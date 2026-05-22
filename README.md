@@ -62,7 +62,8 @@ Skills are specialized capabilities invoked with `/swe-team:skill-name`. They pr
 | **risk-analysis** | `/swe-team:risk-analysis` | Enumerates and weights the risks of a planned change before code is written; runs a security review against the shared checklist. |
 | **codebase-research** | `/swe-team:codebase-research` | Investigates an unfamiliar codebase to ground a task, producing a structured research report with cited findings. |
 | **code-review** | `/swe-team:code-review` | Reviews diffs, PRs, and files for quality, bugs, security issues, and project conventions. |
-| **test-engineer** | `/swe-team:test-engineer` | Generates tests, runs suites, analyzes coverage, and reports results across languages. |
+| **test-strategy** | `/swe-team:test-strategy` | Detects the test framework and plans the test cases before any test is written. |
+| **test-authoring** | `/swe-team:test-authoring` | Writes tests, runs suites, analyzes coverage, and reports results across languages. |
 | **simplify** | `/swe-team:simplify` | Analyzes code for unnecessary complexity using 7 refactoring patterns and applies focused fixes. |
 | **code-index** | `/swe-team:code-index` | Generates a structural index of a codebase showing files and their exported symbols. |
 
@@ -81,11 +82,11 @@ Skills are specialized capabilities invoked with `/swe-team:skill-name`. They pr
 
 | Skill | Command | Description |
 |-------|---------|-------------|
-| **verification-orchestrator** | `/swe-team:verification-orchestrator` | Auto-detects project type (iOS/desktop/web) and routes to the appropriate QA tool. |
-| **qorvex-test-ios** | `/swe-team:qorvex-test-ios` | Tests iOS apps in simulators or on physical devices using qorvex CLI. |
+| **verification** | `/swe-team:verification` | Auto-detects project type (iOS/desktop/web) and routes to the appropriate QA skill. |
+| **ios-verify** | `/swe-team:ios-verify` | Tests iOS apps in simulators or on physical devices using qorvex CLI. |
 | **qorvex-app-explorer** | `/swe-team:qorvex-app-explorer` | Systematically explores and maps an iOS app's UI. |
-| **loki-test-desktop** | `/swe-team:loki-test-desktop` | Tests desktop apps on macOS using loki CLI via the Accessibility API. |
-| **khora-test-web** | `/swe-team:khora-test-web` | Tests web apps using khora CLI via Chrome DevTools Protocol. |
+| **desktop-verify** | `/swe-team:desktop-verify` | Tests desktop apps on macOS using loki CLI via the Accessibility API. |
+| **web-verify** | `/swe-team:web-verify` | Tests web apps using khora CLI via Chrome DevTools Protocol. |
 
 ### Design
 
@@ -97,7 +98,7 @@ Skills are specialized capabilities invoked with `/swe-team:skill-name`. They pr
 
 | Skill | Command | Description |
 |-------|---------|-------------|
-| **update-docs** | `/swe-team:update-docs` | Detects recent code changes and makes targeted updates to affected documentation. |
+| **docs** | `/swe-team:docs` | Detects recent code changes and makes targeted updates to affected documentation. |
 | **setup-docs** | `/swe-team:setup-docs` | Creates a progressive disclosure documentation system. |
 
 ### Skill & Agent Authoring
@@ -156,15 +157,15 @@ Indexes and searches Claude Code conversation history stored in `~/.claude/proje
 
 ### [qorvex](https://github.com/simonspoon/qorvex) — iOS Automation Toolkit
 
-Native iOS Simulator and physical device automation via a Swift XCTest agent. Supports tap, swipe, type, screenshot, accessibility tree inspection, long-press, and JSONL log-to-script conversion. Connects to simulators over localhost and to physical devices over WiFi/USB via mDNS. Used by the **qorvex-test-ios** and **qorvex-app-explorer** skills.
+Native iOS Simulator and physical device automation via a Swift XCTest agent. Supports tap, swipe, type, screenshot, accessibility tree inspection, long-press, and JSONL log-to-script conversion. Connects to simulators over localhost and to physical devices over WiFi/USB via mDNS. Used by the **ios-verify** and **qorvex-app-explorer** skills.
 
 ### [loki](https://github.com/simonspoon/loki) — Desktop QA Automation
 
-macOS desktop app automation via the Accessibility API. Launch apps, inspect accessibility trees, find elements, click, type, drag, and take screenshots — all from the command line. Built for CI/CD pipelines and agent workflows. Used by the **loki-test-desktop** skill.
+macOS desktop app automation via the Accessibility API. Launch apps, inspect accessibility trees, find elements, click, type, drag, and take screenshots — all from the command line. Built for CI/CD pipelines and agent workflows. Used by the **desktop-verify** skill.
 
 ### [khora](https://github.com/simonspoon/khora) — Web QA Automation
 
-Cross-platform web app automation via Chrome DevTools Protocol. Launch headless or headed Chrome sessions, navigate pages, find elements by CSS selector, click, type, screenshot, and evaluate JavaScript. Used by the **khora-test-web** skill.
+Cross-platform web app automation via Chrome DevTools Protocol. Launch headless or headed Chrome sessions, navigate pages, find elements by CSS selector, click, type, screenshot, and evaluate JavaScript. Used by the **web-verify** skill.
 
 ### [wisp](https://github.com/simonspoon/wisp) — Visual Design Canvas for Agents
 

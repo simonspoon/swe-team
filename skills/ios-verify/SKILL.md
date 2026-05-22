@@ -1,6 +1,11 @@
 ---
-name: qorvex-test-ios
+name: ios-verify
 description: Test and verify iOS applications running in the simulator or on physical devices using the qorvex CLI automation tool. Use when user mentions qorvex, testing iOS apps, simulator testing, physical device testing, WiFi device automation, UI automation, verifying app behavior, tapping buttons, taking screenshots, or checking UI elements on an iOS simulator or real device.
+triggers:
+  - verify the iOS app
+  - test this app in the simulator
+  - QA the iOS UI
+  - automate this iOS app with qorvex
 ---
 
 # Testing iOS Apps with qorvex
@@ -206,10 +211,9 @@ xcrun devicectl device process terminate --device <UDID> <BUNDLE_ID>  # physical
 - **Screenshot is base64**: Always pipe through `base64 -d` to get PNG.
 - **Stale session**: Run `qorvex status` to check; `qorvex start` to restart.
 
-## Troubleshooting
-
-See [troubleshooting.md](troubleshooting.md) for device connectivity, code signing, and common errors.
-
 ## Reference
 
-See [REFERENCE.md](REFERENCE.md) for complete command documentation.
+- `reference/commands.md` — the complete qorvex CLI command documentation. Read it
+  when a workflow step needs the full command surface or option detail.
+- `reference/troubleshooting.md` — device connectivity, code signing, and common
+  errors. Read it when a workflow step hits a connectivity or signing failure.

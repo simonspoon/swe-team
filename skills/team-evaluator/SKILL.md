@@ -52,8 +52,8 @@ Read `reference/benchmark-catalog.md` for the full catalog. Summary:
 | Bug Fix | Skill | Diagnose and fix a known bug | engineering-standards, code-review |
 | Feature Implementation | Skill | Build a small feature from spec | engineering-standards, tech-lead |
 | Code Review | Skill | Review code with planted issues | code-review, engineering-standards |
-| Test Generation | Skill | Generate tests for existing code | test-engineer, engineering-standards |
-| CI/CD Setup | Skill | Create pipeline for a project | devops, test-engineer |
+| Test Generation | Skill | Generate tests for existing code | test-authoring, engineering-standards |
+| CI/CD Setup | Skill | Create pipeline for a project | devops, test-strategy |
 | Refactoring | Skill | Improve code without changing behavior | engineering-standards, code-review |
 | Agent / Pipeline | Pipeline | Dispatch the PM and score end-to-end team behavior | project-manager, tech-lead, risk-assessor, test-engineer, code-reviewer, verifier, committer, researcher |
 

@@ -1,5 +1,11 @@
 # Troubleshooting qorvex iOS Testing
 
+## Purpose
+
+Device connectivity, code-signing, and common-error fixes for iOS verification.
+Loaded by the `ios-verify` SKILL.md when a workflow step hits a connectivity or
+signing failure.
+
 ## Physical Device Issues
 
 ### "Unlock X to Continue"
@@ -135,4 +141,4 @@ qorvex tap-location 394 304
 **Cause**: Missing `base64 -d` decode step.
 **Fix**: Always pipe: `qorvex screenshot 2>/dev/null | base64 -d > /tmp/screenshot.png`
 
-Back to [SKILL.md](SKILL.md)
+Back to [SKILL.md](../SKILL.md)

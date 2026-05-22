@@ -40,4 +40,4 @@ rm /tmp/xaku-*.sock
 
 ## No Browser Support
 
-xaku is a terminal multiplexer only. For browser automation, use the `khora-test-web` skill with the `khora` CLI.
+xaku is a terminal multiplexer only. For browser automation, use the `web-verify` skill with the `khora` CLI.

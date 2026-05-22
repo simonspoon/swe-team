@@ -1,13 +1,13 @@
 ---
 name: xaku-control
-description: Control terminals via the xaku headless terminal multiplexer. Use when you need to spawn interactive terminals, start Claude Code sessions, run REPLs/TUIs, read terminal output, send commands, or manage terminal sessions. For browser automation, use the khora-test-web skill instead. Triggers on xaku, terminal control, spawn terminal, interactive shell, screen reading, run command in terminal.
+description: Control terminals via the xaku headless terminal multiplexer. Use when you need to spawn interactive terminals, start Claude Code sessions, run REPLs/TUIs, read terminal output, send commands, or manage terminal sessions. For browser automation, use the web-verify skill instead. Triggers on xaku, terminal control, spawn terminal, interactive shell, screen reading, run command in terminal.
 ---
 
 # xaku Control — Headless Terminal Automation
 
 Control terminal sessions from Claude Code via the xaku headless terminal multiplexer. Use this skill to spin up shells, run commands in other terminals, start Claude Code sessions, interact with REPLs/TUIs, and read results back.
 
-For **browser automation**, use the **khora-test-web** skill instead.
+For **browser automation**, use the **web-verify** skill instead.
 
 ## Prerequisites
 
@@ -91,7 +91,7 @@ Read reference/common-workflows.md for step-by-step patterns including:
 3. **Both `--workspace` and `--surface` work** for send/send-key/read-screen. Use `--workspace` to target the active surface in a workspace.
 4. **Clean up** workspaces when done — don't leave orphaned terminals.
 5. **Shell init takes time.** After `new-workspace`, wait briefly (sleep 1-2s) before reading output if the shell has heavy init (.zshrc plugins, etc.).
-6. **For browser automation**, use the `khora-test-web` skill — xaku handles terminals only.
+6. **For browser automation**, use the `web-verify` skill — xaku handles terminals only.
 
 ## Known Issues
 

@@ -64,7 +64,7 @@ Key recommendation: Improve devops skill to detect actual project package manage
 
 ### Recommendations
 1. **[HIGH] Enhance devops skill**: Add package manager detection logic (check for lockfiles: pnpm-lock.yaml, package-lock.json, yarn.lock) before defaulting to user preference. When detected PM differs from preference, use detected PM and note the divergence.
-2. **[MEDIUM] Add Python version awareness**: engineering-standards and test-engineer skills should detect the runtime Python version and proactively add `from __future__ import annotations` when using 3.10+ type syntax on 3.8/3.9.
+2. **[MEDIUM] Add Python version awareness**: engineering-standards and test-authoring skills should detect the runtime Python version and proactively add `from __future__ import annotations` when using 3.10+ type syntax on 3.8/3.9.
 3. **[MEDIUM] Refactoring workflow improvement**: After extracting modules, the workflow should generate basic unit tests for each new module, not just verify existing tests pass.
 4. **[LOW] Feature implementation completeness**: When the spec mentions "docs", generate a brief usage section or update project README, not just docstrings.
 

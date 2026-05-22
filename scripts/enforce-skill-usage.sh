@@ -29,6 +29,11 @@ fi
 if echo "$BASENAME" | grep -qi "CLAUDE.md\|SKILL.md\|REFERENCE.md\|INDEX.md\|plugin.json\|hooks.json"; then
   IS_DOC=false
 fi
+# Files under skills/ are skill content, not project documentation — never gate them
+# as docs even when the path contains a "docs" segment (e.g. the docs skill itself).
+if echo "$FILE_PATH" | grep -q "/skills/\|^skills/"; then
+  IS_DOC=false
+fi
 
 # --- Test file detection ---
 IS_TEST=false
@@ -59,15 +64,15 @@ check_skill_flag() {
 
 # --- Enforce ---
 if [ "$IS_DOC" = true ]; then
-  if ! check_skill_flag "update-docs"; then
-    echo "BLOCKED: You are editing a documentation file without having invoked /swe-team:update-docs first. Call the Skill tool with skill=\"swe-team:update-docs\" BEFORE editing documentation files." >&2
+  if ! check_skill_flag "docs"; then
+    echo "BLOCKED: You are editing a documentation file without having invoked /swe-team:docs first. Call the Skill tool with skill=\"swe-team:docs\" BEFORE editing documentation files." >&2
     exit 2
   fi
 fi
 
 if [ "$IS_TEST" = true ]; then
-  if ! check_skill_flag "test-engineer"; then
-    echo "BLOCKED: You are editing a test file without having invoked /swe-team:test-engineer first. Call the Skill tool with skill=\"swe-team:test-engineer\" BEFORE writing or editing tests." >&2
+  if ! check_skill_flag "test-authoring"; then
+    echo "BLOCKED: You are editing a test file without having invoked /swe-team:test-authoring first. Call the Skill tool with skill=\"swe-team:test-authoring\" BEFORE writing or editing tests." >&2
     exit 2
   fi
 fi

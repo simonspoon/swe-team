@@ -12,11 +12,11 @@ SKILL_NAME=$(echo "$INPUT" | python3 -c "import sys,json; print(json.load(sys.st
 
 # Map skill names to flag names (handle both short and namespaced forms)
 case "$SKILL_NAME" in
-  update-docs|swe-team:update-docs)
-    touch "${STATE_DIR}/${SESSION_ID}-update-docs"
+  docs|swe-team:docs)
+    touch "${STATE_DIR}/${SESSION_ID}-docs"
     ;;
-  test-engineer|swe-team:test-engineer)
-    touch "${STATE_DIR}/${SESSION_ID}-test-engineer"
+  test-authoring|swe-team:test-authoring)
+    touch "${STATE_DIR}/${SESSION_ID}-test-authoring"
     ;;
   code-review|swe-team:code-review)
     touch "${STATE_DIR}/${SESSION_ID}-code-review"
@@ -24,8 +24,8 @@ case "$SKILL_NAME" in
   engineering-standards|swe-team:engineering-standards)
     touch "${STATE_DIR}/${SESSION_ID}-engineering-standards"
     ;;
-  git-commit|swe-team:git-commit)
-    touch "${STATE_DIR}/${SESSION_ID}-git-commit"
+  commit|swe-team:commit)
+    touch "${STATE_DIR}/${SESSION_ID}-commit"
     ;;
 esac
 

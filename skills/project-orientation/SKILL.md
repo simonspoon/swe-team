@@ -52,4 +52,4 @@ If helios is not installed, proceed with Glob/Grep exploration.
 ## Rules
 
 - Read docs **before** writing code, not after.
-- Do not modify docs via this skill — use `update-docs` for that.
+- Do not modify docs via this skill — use `docs` for that.

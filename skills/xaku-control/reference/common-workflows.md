@@ -30,7 +30,7 @@ sleep 5
 xaku read-screen --workspace workspace:N --lines 20
 # Look for "http://localhost:3000" or similar
 
-# To test in browser, use the khora-test-web skill:
+# To test in browser, use the web-verify skill:
 # SESSION=$(khora --format json launch | jq -r .id)
 # khora navigate "$SESSION" "http://localhost:3000"
 # khora screenshot "$SESSION" -o /tmp/app.png
@@ -160,4 +160,4 @@ xaku close-workspace --workspace workspace:N
    xaku close-workspace --workspace workspace:N
    ```
 
-5. **For browser testing**, use the `khora-test-web` skill. xaku handles terminals only.
+5. **For browser testing**, use the `web-verify` skill. xaku handles terminals only.

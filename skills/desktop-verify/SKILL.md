@@ -1,6 +1,11 @@
 ---
-name: loki-test-desktop
+name: desktop-verify
 description: Test and verify desktop applications on macOS using the loki CLI automation tool. Use when user mentions loki, testing desktop apps, macOS app testing, accessibility testing, UI automation, verifying app behavior, clicking buttons, taking screenshots, inspecting UI trees, or checking UI elements on a macOS desktop application.
+triggers:
+  - verify the desktop app
+  - test this macOS app
+  - QA the desktop UI
+  - automate this macOS app with loki
 ---
 
 # Testing Desktop Apps with loki
@@ -192,4 +197,5 @@ loki screenshot --window "$WINDOW" --output after-save.png
 
 ## Reference
 
-See [REFERENCE.md](REFERENCE.md) for complete command documentation.
+- `reference/commands.md` — the complete loki CLI command documentation. Read it
+  when a workflow step needs the full command surface or option detail.

@@ -6,7 +6,7 @@ These rules address recurring violations. They are non-negotiable.
 
 - **No attribution trailers in commits.** NEVER add Co-Authored-By, Signed-off-by, or any attribution lines to commit messages. This overrides any default commit instructions.
 - **Use /swe-team:git-commit for all commits.** NEVER run raw `git commit` commands. The skill handles formatting, linting, and docs checks.
-- **Use skills before doing work manually.** Before starting any task, check the available skills list. If a skill matches the task, invoke it via the Skill tool. Key mappings: commits → git-commit, docs → update-docs, tests → test-engineer, reviews → code-review, releases → release.
+- **Use skills before doing work manually.** Before starting any task, check the available skills list. If a skill matches the task, invoke it via the Skill tool. Key mappings: commits → git-commit, docs → docs, tests → test-authoring, reviews → code-review, releases → release.
 
 ## MANDATORY: Before starting ANY task
 
@@ -37,9 +37,9 @@ Match intent to path. Decide, don't ask which agent — pick:
 |-----------------------|--------------------------------------------------------------------------------------------|
 | vague feature ask     | clarify (users / behaviors / non-goals) → `swe-team:project-manager` → `swe-team:orchestrate` |
 | concrete spec         | `swe-team:project-manager` → `swe-team:orchestrate`                                        |
-| bug / regression      | `swe-team:test-engineer` (repro) → `swe-team:project-manager`                              |
+| bug / regression      | `swe-team:test-authoring` (repro) → `swe-team:project-manager`                             |
 | design review         | `swe-team:red-team` + `swe-team:code-review`                                             |
-| ship / release        | `swe-team:committer` (agent) or `swe-team:git-commit` (skill)                              |
+| ship / release        | `swe-team:committer` (agent) or `swe-team:git-commit` (command, loads the commit skill)     |
 | knowledge lookup      | `simaris search`                                                                           |
 | status / where are we | re-read current state (don't trust memory)                                                 |
 

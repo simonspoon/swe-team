@@ -419,11 +419,10 @@ class TestParseSkillFile:
 
 class TestExtractTriggerKeywords:
     def test_extracts_skill_name_parts(self):
-        kw = sv._extract_trigger_keywords("Some description", "khora-test-web")
-        assert "khora" in kw
-        assert "khora-test-web" in kw
-        assert "test" in kw
+        kw = sv._extract_trigger_keywords("Some description", "web-verify")
         assert "web" in kw
+        assert "web-verify" in kw
+        assert "verify" in kw
 
     def test_extracts_after_trigger_phrase(self):
         kw = sv._extract_trigger_keywords("Deploy stuff. Use when user mentions terraform, docker.", "deploy")

@@ -42,7 +42,7 @@ Read 1-2 existing skills that are closest to what's being built:
 | Analysis/workflow | `simplify/SKILL.md` |
 | Stateful process | `session-handoff/SKILL.md` |
 | Multi-step with composition | `code-review/SKILL.md` |
-| Testing/verification | `loki-test-desktop/SKILL.md` or `khora-test-web/SKILL.md` |
+| Testing/verification | `desktop-verify/SKILL.md` or `web-verify/SKILL.md` |
 
 Use the reference skill's structure as your template. Don't invent new structures.
 

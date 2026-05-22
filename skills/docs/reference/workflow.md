@@ -1,37 +1,12 @@
----
-name: update-docs
-description: >
-  Documentation update expert. ALWAYS invoke this skill when updating, syncing, or fixing
-  project documentation (docs/, README.md). Do NOT edit documentation files directly —
-  use this skill. Triggers: update docs, sync docs, docs are stale, update the readme,
-  after any code change that affects user-facing behavior.
-triggers:
-  - update docs
-  - update documentation
-  - sync docs
-  - docs are stale
-  - update the readme
-  - /update-docs
----
+# Documentation Update Workflow
 
-# Update Docs
+## Purpose
 
-Update existing project documentation to reflect code changes. Works with any `docs/` structure — typically one created by the `setup-docs` skill, but any organized doc tree will do.
+The full step-by-step procedure for updating project documentation to reflect code
+changes. Loaded by the `docs` SKILL.md "Workflow" section when a documentation update
+is in progress.
 
-## When to Use
-
-- After adding, removing, or renaming features, commands, types, or APIs
-- After changing build commands, flags, dependencies, or configuration
-- When a user says docs are stale or asks to sync them
-- As a post-implementation step after a feature branch
-
-## ⚠️ CRITICAL REQUIREMENTS
-
-- **README.md is a doc target** — you MUST read it and check it. If no changes are needed, say so explicitly. Do not silently skip it.
-- **Read before writing** — never guess at new behavior. Read the changed source code to extract exact details.
-- **Discover first** — never assume a doc structure exists. Read what's there before editing.
-
-## Workflow
+## Content
 
 ### Step 1: Discover the Doc Structure
 

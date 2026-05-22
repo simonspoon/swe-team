@@ -1,6 +1,9 @@
 # qorvex Command Reference
 
-Complete reference for all qorvex CLI commands.
+## Purpose
+
+The complete reference for every qorvex CLI command. Loaded by the `ios-verify`
+SKILL.md when a workflow step needs the full command surface or option detail.
 
 ## Global Options
 

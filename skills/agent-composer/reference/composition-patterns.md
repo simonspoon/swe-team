@@ -49,7 +49,7 @@ Orchestrator body pattern — dispatch subagents with the Agent tool:
 ```
 
 ### Focused Worker Agent
-Loads: 1-2 domain skills (e.g., test-engineer, code-review)
+Loads: 1-2 domain skills (e.g., test-authoring, code-review)
 Uses: Direct tool calls, no Agent tool
 Example: A dedicated test-writing agent
 
