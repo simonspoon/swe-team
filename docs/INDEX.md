@@ -12,3 +12,4 @@ individual files directly.
 | Orchestrate drain loop | [workflows/orchestrate.html](workflows/orchestrate.html) | Understanding how the orchestrator drains ready tasks from the queue |
 | Verification pipeline | [workflows/verification.html](workflows/verification.html) | Following the verification-orchestrator skill workflow when checking task output |
 | Release flow | [workflows/release.html](workflows/release.html) | Cutting a release — version bump, tag, and distribution steps |
+| Team architecture blueprint | [dev/team-architecture.md](dev/team-architecture.md) | Building or modifying the 9-agent team — the authoritative spec for agents, skills, and the lifecycle |
