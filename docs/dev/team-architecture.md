@@ -52,7 +52,7 @@ are exact and asymmetric — they are not interchangeable.
 | PLANNER | sonnet | Read, Bash, Glob, Grep, Skill | test-strategy, engineering-standards | refined to planned | Own the approach field and test-strategy. |
 | RISK | sonnet | Read, Bash, Glob, Grep, Skill | risk-analysis | refined to planned | Write the risks field only. |
 | ADVERSARY | sonnet | Read, Bash, Glob, Grep, Skill | adversarial-review | planned to ready; in-review | Attack the plan, then attack the code. |
-| ENGINEER | opus | Read, Write, Edit, Bash, Glob, Grep, Skill | engineering-standards, test-authoring, plus conditional | ready to in-review | Implement, test, self-verify, report. |
+| ENGINEER | opus | Read, Write, Edit, Bash, Glob, Grep, Skill | engineering-standards, test-authoring, plus conditional | ready through in-progress to in-review | Implement, test, self-verify, report. |
 | REVIEWER | sonnet | Read, Bash, Glob, Grep, Skill | code-review | in-review | Review the diff. |
 | VERIFIER | sonnet | Read, Bash, Glob, Grep, Skill | verification | in-review | Run the artifact via platform-matched QA. |
 | COMMITTER | haiku | Read, Bash, Skill | commit | commit | Stage, message, commit, verify, note the SHA. |
@@ -83,10 +83,13 @@ drives the lifecycle one stage at a time, validates each gate, rolls a task back
 when a gate fails, and dispatches COMMITTER at the end.
 
 MAESTRO is a pure router. It authors zero technical content — no approach, no
-risk entry, no acceptance criterion, no line of code. It dispatches exactly one
-agent at a time, reads that agent's limbo output, re-grounds against the limbo
-record, validates the gate for the current transition, and only then advances or
-rolls back. It owns the limbo `status` field.
+risk entry, no acceptance criterion, no line of code. Within a single task's
+lifecycle it dispatches exactly one agent at a time, reads that agent's limbo
+output, re-grounds against the limbo record, validates the gate for the current
+transition, and only then advances or rolls back. (Across independent leaf tasks
+it may batch dispatches into one turn — see Section 7; that batching is still one
+agent per leaf, never two agents on the same task at once.) It owns the limbo
+`status` field.
 
 Loads: lifecycle.
 
@@ -104,6 +107,11 @@ Loads: codebase-research, project-orientation.
 Owns refined to planned. Owns the `approach` field and the test-strategy. The
 approach must be concrete and the test-strategy must contain real, runnable test
 commands — not placeholders.
+
+PLANNER also raises flags. When its plan-level analysis detects ambiguity or a
+high-blast-radius change, PLANNER records a `FLAG: AMBIGUITY` or
+`FLAG: HIGH-BLAST-RADIUS` limbo note on the task. Those flag notes drive the
+risk-weighted checkpoint (Section 5).
 
 Loads: test-strategy, engineering-standards.
 
@@ -141,7 +149,7 @@ Loads: adversarial-review.
 
 ### 2.6 ENGINEER (opus)
 
-Owns ready to in-review. Implements the change, writes its tests, runs a
+Owns ready through in-progress to in-review. Implements the change, writes its tests, runs a
 self-verify against the test-strategy, and writes a `report` note. ENGINEER is
 the ONLY agent with Write and Edit. ENGINEER never commits — staging and
 committing belong to COMMITTER.
@@ -158,6 +166,12 @@ When neither condition holds, neither conditional skill is loaded.
 
 Runs at in-review. Reviews the diff for correctness, convention adherence, and
 scope discipline. Verdict: APPROVE, REQUEST_CHANGES, or COMMENT.
+
+The three verdicts have distinct lifecycle effects. APPROVE satisfies the
+in-review-to-done gate. REQUEST_CHANGES rolls the task back to in-progress.
+COMMENT is advisory only — it neither blocks the task nor rolls it back: the
+task advances on the strength of the other in-review verdicts, and the comments
+are recorded as limbo notes for the record (Section 4.1, Section 4.2).
 
 Loads: code-review.
 
@@ -247,6 +261,14 @@ paraphrased and must not be softened:
 | in-review to done | REVIEWER verdict is APPROVE, VERIFIER verdict is PASS or SKIPPED, and the ADVERSARY pre-ship pass is clear. |
 | done to commit | COMMITTER stages, commits, verifies, and notes the SHA. |
 
+A REVIEWER COMMENT verdict is advisory only: it is not APPROVE and does not on
+its own satisfy the in-review-to-done gate, but it does not block the task and
+does not roll it back. When the REVIEWER verdict is COMMENT, the gate is decided
+by the remaining inputs (the in-review-to-done gate requires an explicit APPROVE
+verdict from REVIEWER; a COMMENT does not satisfy it, so a standalone COMMENT
+pass leaves the task at in-review until an APPROVE is recorded), and the comments
+are kept as limbo notes.
+
 ### 4.2 Rollback rules
 
 When a gate fails, MAESTRO rolls the task back rather than forcing it forward:
@@ -256,10 +278,48 @@ When a gate fails, MAESTRO rolls the task back rather than forcing it forward:
 | REQUEST_CHANGES (REVIEWER) | in-progress |
 | FAIL (VERIFIER) | in-progress |
 | DEMOTE (ADVERSARY) | in-progress |
-| KILL (ADVERSARY) | planned or refined |
+| KILL (ADVERSARY), pre-build pass | planned |
+| KILL (ADVERSARY), pre-ship pass | refined |
+| COMMITTER failure | resolved by MAESTRO; re-dispatch COMMITTER, or block the task |
 
-A REVISE verdict is resolved in place before the gate is re-evaluated; it does
-not by itself force a stage rollback.
+A REVIEWER COMMENT verdict is not a rollback trigger. It is advisory only: the
+task neither rolls back nor is forced forward by a COMMENT — the comments are
+recorded as limbo notes and the in-review-to-done gate is decided by the other
+verdicts (Section 4.1).
+
+KILL is deterministic by pass. A KILL on the ADVERSARY pre-build pass
+(planned to ready) rolls the task back to `planned` — the plan failed and the
+planning specialists must rework it. A KILL on the ADVERSARY pre-ship pass
+(in-review) rolls the task back to `refined` — the built change is unsalvageable
+against the requirements, and the task must be re-scoped from its acceptance
+criteria forward.
+
+The REVISE procedure. A REVISE verdict does not by itself force a stage
+rollback; it is resolved in place before the gate is re-evaluated. The
+resolution is a defined sequence MAESTRO drives:
+
+1. MAESTRO re-dispatches the agent that owns the flagged content — ENGINEER for
+   code-level findings on the pre-ship pass, or the relevant planning specialist
+   (PLANNER for the `approach`, RISK for the `risks` field) for plan-level
+   findings on the pre-build pass.
+2. The owning agent revises only its own field, addressing the REVISE findings.
+3. MAESTRO re-dispatches ADVERSARY for the SAME pass to re-verify the revised
+   artifact.
+4. Only then is the gate re-evaluated against the fresh ADVERSARY verdict.
+
+When the REVISE findings span multiple owning agents — for example a pre-build
+pass that flags both the `approach` (PLANNER) and the `risks` field (RISK) —
+MAESTRO re-dispatches each owning agent sequentially in dependency order:
+PLANNER first, then RISK. Each agent revises only its own field. ADVERSARY is
+re-run exactly once, for the SAME pass, AFTER all owning agents have revised;
+the gate is then re-evaluated against that single fresh ADVERSARY verdict.
+There is one ADVERSARY re-run per REVISE resolution, never one per owning
+agent.
+
+COMMITTER failure. If COMMITTER fails to land the commit — a rejected pre-commit
+hook, branch protection, a dirty index, or any other cause — MAESTRO resolves
+the underlying cause and re-dispatches COMMITTER. If the cause cannot be
+resolved, the task is marked blocked rather than left in a half-committed state.
 
 ## 5. The Risk-Weighted Gate
 
@@ -307,19 +367,39 @@ simply skipped: the task still advances from planned to ready, just without an
 ADVERSARY verdict. A trivial task is never stuck waiting on a gate it does not
 run.
 
+The same override applies to the in-review-to-done gate. Because a trivial task
+runs no ADVERSARY pre-ship pass, the in-review-to-done gate (Section 4.1) drops
+its ADVERSARY-pre-ship-clear input for a trivial task: that gate is satisfied by
+REVIEWER APPROVE and VERIFIER PASS or SKIPPED alone. The skipped ADVERSARY
+passes are an explicit gate override for trivial tasks, not a stalled gate.
+
 ## 7. Decompose and Fan-Out
 
 A feature too large for a single task is decomposed into child limbo tasks with
 explicit dependencies between them.
 
 - Independent leaves — child tasks with no dependency on each other — are
-  dispatched to parallel ENGINEERs and run concurrently.
+  dispatched concurrently.
 - Dependent leaves — child tasks where one needs another's output — run
   sequentially in dependency order.
 
-Every leaf clears its own gates. Decomposition does not waive the lifecycle for
-any child: each child task runs its own stage machine, its own gates, and its
-own rollback rules.
+The concurrency mechanism is concrete. MAESTRO achieves parallelism by emitting
+multiple Task tool calls in a SINGLE turn; the runtime then runs those dispatched
+calls concurrently. The batched dispatch is scoped to ENGINEER (implementation)
+steps: independent leaves at the ready-to-in-progress stage run their ENGINEERs
+in parallel. Parallelism is therefore the batched dispatch of independent
+ENGINEER steps in one turn — it is not a separate orchestration layer and not
+unbounded per-leaf concurrency. Other agents (PLANNER, RISK, REVIEWER, and the
+rest) are not dispatched in parallel across leaves; doing so would risk
+one-writer-per-field violations.
+
+This bounds what runs in parallel. MAESTRO still drives each leaf's lifecycle
+itself: it batches the independent ENGINEER steps across leaves into a single
+turn, reads the returns, and advances each leaf one stage at a time. Where leaf
+lifecycles cannot be cleanly batched into one turn, those steps are serialized.
+Decomposition does not waive the lifecycle for any child: each child task runs
+its own stage machine, its own gates, and its own rollback rules, all driven by
+MAESTRO.
 
 ## 8. The Canonical Agent File Template
 
