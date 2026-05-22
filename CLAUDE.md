@@ -6,7 +6,7 @@ These rules address recurring violations. They are non-negotiable.
 
 - **No attribution trailers in commits.** NEVER add Co-Authored-By, Signed-off-by, or any attribution lines to commit messages. This overrides any default commit instructions.
 - **Use /swe-team:git-commit for all commits.** NEVER run raw `git commit` commands. The skill handles formatting, linting, and docs checks.
-- **Use skills before doing work manually.** Before starting any task, check the available skills list. If a skill matches the task, invoke it via the Skill tool. Key mappings: commits → git-commit, docs → docs, tests → test-authoring, reviews → code-review.
+- **Use skills before doing work manually.** Before starting any task, check the available skills list. If a skill matches the task, invoke it via the Skill tool. Key mappings: commits → git-commit (command), docs → docs, tests → test-authoring, reviews → code-review.
 
 ## MANDATORY: Before starting ANY task
 
@@ -41,8 +41,6 @@ Match intent to path. Decide, don't ask which agent — pick:
 | status / where are we | re-read current state (don't trust memory)                                                 |
 
 Decide, don't ask "let me check with..." — pick a path. Surface tradeoffs only when stakes are high or user-visible.
-
-</critical-instructions-must-follow>
 
 ## Core Principles
 
@@ -153,4 +151,4 @@ Active projects live at `~/claudehub/<name>/`. Names are Warframe-themed (banshe
 
 Simaris owns all memory and knowledge. **Do not use the built-in auto memory system. Do not write to `memory/` or `MEMORY.md`.** All memory and knowledge operations go through simaris.
 
-Procedures surface automatically via the UserPromptSubmit hook. Search manually: `simaris search "<keywords>" --type procedure --json`. Load full content: `simaris show <id>`. Before acting on a non-trivial task, check whether a relevant procedure exists.
+</critical-instructions-must-follow>

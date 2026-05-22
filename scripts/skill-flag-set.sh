@@ -24,9 +24,6 @@ case "$SKILL_NAME" in
   engineering-standards|swe-team:engineering-standards)
     touch "${STATE_DIR}/${SESSION_ID}-engineering-standards"
     ;;
-  commit|swe-team:commit)
-    touch "${STATE_DIR}/${SESSION_ID}-commit"
-    ;;
 esac
 
 exit 0

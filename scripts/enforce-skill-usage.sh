@@ -6,6 +6,13 @@ INPUT=$(cat)
 SESSION_ID=$(echo "$INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('session_id','unknown'))" 2>/dev/null)
 STATE_DIR="/tmp/claude-skill-state"
 
+# Resolve the plugin root from the script's own location (physical path, to
+# neutralize symlinks anywhere in the script path). Used below to anchor the
+# skills/ bypass guard so it matches ONLY this plugin's skills/ directory,
+# not any mid-tree directory named "skills".
+PLUGIN_ROOT=$(cd -P "$(dirname "$0")/.." 2>/dev/null && pwd)
+[ -z "$PLUGIN_ROOT" ] && exit 0
+
 # Extract file_path from tool_input
 FILE_PATH=$(echo "$INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('tool_input',{}).get('file_path',''))" 2>/dev/null)
 
@@ -18,8 +25,11 @@ BASENAME=$(basename "$FILE_PATH")
 DIRPATH=$(dirname "$FILE_PATH")
 
 # --- Documentation file detection ---
+# DIRPATH is the output of `dirname` (no trailing slash), so a bare "docs"
+# from a relative path like "docs/README.md" must match via ^docs$, not ^docs\b
+# (^docs\b would also false-positive on a "docs-extra" directory).
 IS_DOC=false
-if echo "$DIRPATH" | grep -q "/docs\b\|/docs/"; then
+if echo "$DIRPATH" | grep -q "/docs\b\|/docs/\|^docs$\|^docs/"; then
   IS_DOC=true
 fi
 if echo "$BASENAME" | grep -qi "^README"; then
@@ -29,9 +39,13 @@ fi
 if echo "$BASENAME" | grep -qi "CLAUDE.md\|SKILL.md\|REFERENCE.md\|INDEX.md\|plugin.json\|hooks.json"; then
   IS_DOC=false
 fi
-# Files under skills/ are skill content, not project documentation — never gate them
-# as docs even when the path contains a "docs" segment (e.g. the docs skill itself).
-if echo "$FILE_PATH" | grep -q "/skills/\|^skills/"; then
+# Files under THIS plugin's skills/ are skill content, not project documentation —
+# never gate them as docs even when the path contains a "docs" segment (e.g. the
+# docs skill itself). The guard is anchored to $PLUGIN_ROOT so a mid-tree
+# directory named "skills" (e.g. /usr/local/project/modules/skills/...) does
+# NOT suppress the doc gate. Claude Code emits absolute file_path values in
+# PreToolUse tool_input, so no relative-path branch is needed.
+if echo "$FILE_PATH" | grep -q "^$PLUGIN_ROOT/skills/"; then
   IS_DOC=false
 fi
 

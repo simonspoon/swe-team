@@ -8,7 +8,7 @@
 #
 # Mechanism per iteration:
 #   1. pick the next unblocked non-done leaf task
-#   2. spawn a background project-manager agent to execute it
+#   2. spawn a background swe-team:maestro agent to execute it
 #   3. poll limbo until the task is done (or blocked / decomposed / timed out)
 #   4. loop until nothing left to drain, then exit 0
 #
@@ -19,7 +19,7 @@
 set -euo pipefail
 
 POLL_INTERVAL="${LIMBODRAIN_POLL_INTERVAL:-5}"
-MAX_WAIT="${LIMBODRAIN_MAX_WAIT:-300}"
+MAX_WAIT="${LIMBODRAIN_MAX_WAIT:-3000}"
 
 # --- repo root -------------------------------------------------------------
 # limbo and the spawned agent must share a working directory so .limbo and
@@ -231,7 +231,7 @@ drain_one() {
 
   local bg_output bg_status
   set +e
-  bg_output=$(claude --dangerously-skip-permissions --agent project-manager --bg "Execute limbo task $id" 2>&1)
+  bg_output=$(claude --dangerously-skip-permissions --plugin-dir ~/claudehub/swe-team --mcp-config "" --strict-mcp-config --agent swe-team:maestro --bg "Execute limbo task $id" 2>&1)
   bg_status=$?
   set -e
 
