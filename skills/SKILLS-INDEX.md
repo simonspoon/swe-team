@@ -36,6 +36,8 @@ Quick reference for all active skills — when to use each and how they compose.
 | **global-backlog** | Cross-project task management via `limbo -g` | Global backlog, cross-project tasks, "add to backlog", "what's on the backlog", triage work across projects | tech-lead (can pick up backlog items) |
 | **status** | Force-refresh all project state — live git, simaris, limbo data | "status", "where are we", "catch me up", start of session, verifying state | global-backlog (reads backlog) |
 | **dream** | Offline knowledge-store hygiene — runs simaris lint/cluster/decay/vacuum, consolidates near-duplicates, synthesizes recommendations | Manually via `/dream`, on schedule, when simaris search/prime output is noisy | simaris (operates on knowledge units), skill-reflection (acts on improvement recommendations) |
+| **lifecycle** | The 8-stage task machine, gate criteria, rollback rules, risk-weighted gate, fast-path rubric, and fan-out logic MAESTRO drives | Loaded by MAESTRO on every task | (all agents — MAESTRO is the consumer) |
+| **adversarial-review** | Attack a plan (pre-build) or a git diff (pre-ship); produce KILL/DEMOTE/REVISE/PASS verdict | Loaded by ADVERSARY for planned-to-ready and in-review passes | lifecycle (verdict drives rollback rules) |
 
 ## Composition Patterns
 
