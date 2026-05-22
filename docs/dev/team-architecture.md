@@ -277,7 +277,8 @@ When a gate fails, MAESTRO rolls the task back rather than forcing it forward:
 |---------|---------------|
 | REQUEST_CHANGES (REVIEWER) | in-progress |
 | FAIL (VERIFIER) | in-progress |
-| DEMOTE (ADVERSARY) | in-progress |
+| DEMOTE (ADVERSARY), pre-build pass | planned |
+| DEMOTE (ADVERSARY), pre-ship pass | in-progress |
 | KILL (ADVERSARY), pre-build pass | planned |
 | KILL (ADVERSARY), pre-ship pass | refined |
 | COMMITTER failure | resolved by MAESTRO; re-dispatch COMMITTER, or block the task |
