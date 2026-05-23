@@ -39,98 +39,47 @@ claude plugin update swe-team@local
 
 ## Agents
 
-Agents are autonomous subprocesses that handle complex, multi-step tasks. They are launched automatically when Claude Code detects a matching request.
+The Specialist Guild is a 9-agent autonomous team. Each agent is a lean shell — a soul block plus a mandate — that loads skills on demand. MAESTRO is the front door and pure router; every other agent is a specialist dispatched into a single lifecycle stage.
 
 | Agent | Description |
 |-------|-------------|
-| **project-manager** | Stateless per-task orchestrator. Receives a single task, then clarifies (vague ask), decomposes (too big), or advances it through limbo's lifecycle by dispatching specialist subagents — researcher, test-engineer, risk-assessor, red-team, tech-lead, code-reviewer, verifier, committer — and synthesizing their output at each stage gate. Does no investigation, implementation, review, or verification itself. Only agent that commits code. |
-| **tech-lead** | Single-task code executor. Receives one task from the PM, implements the change, verifies it works, and returns. Never commits — the PM handles that. |
-| **code-review-agent** | Performs thorough, convention-aware code reviews combining security analysis, bug detection, performance checks, and style enforcement. |
-| **researcher-agent** | Conducts deep research across codebases, documentation, and the web. Produces structured, actionable reports. Supports a deep-research mode for cross-system surveys with comparison matrices. |
-| **red-team** | Adversarial critic. Stress-tests specs, designs, and code for failure modes, hidden assumptions, and rollback gaps. Never approves — surfaces what others miss. |
-| **skill-trainer** | Tests, validates, and hardens skills through structured multi-phase training and weak-model (Haiku) calibration. |
+| **maestro** | Front door and pure router. Intakes the request, sizes the task, drives the 8-stage lifecycle one stage at a time, validates each gate, rolls back when a gate fails, and dispatches COMMITTER at the end. Authors zero technical content; the only agent with the Agent tool. |
+| **scout** | Owns captured → refined. Investigates the codebase to ground the task, writes at least one testable acceptance criterion, proposes a sizing (trivial or full), and flags ambiguity or high blast radius for the risk-weighted gate. |
+| **planner** | Owns refined → planned. Owns the `approach` field and the test-strategy — both concrete, with real, runnable test commands. Also raises ambiguity and high-blast-radius flags. |
+| **risk** | Owns refined → planned alongside PLANNER. Writes the `risks` field ONLY. Never rewrites the `approach` — if the approach itself is flawed, that is recorded as a risk. |
+| **adversary** | Attacks the plan (pre-build pass, planned → ready) and then attacks the real `git diff` (pre-ship pass, in-review). Produces one verdict from KILL, DEMOTE, REVISE, PASS that gates or rolls back the task. |
+| **engineer** | Owns ready → in-progress → in-review. Implements the change, writes its tests, runs a self-verify against the test-strategy, and writes a `report` note. The ONLY agent with Write and Edit; never commits. |
+| **reviewer** | Runs at in-review. Reviews the diff for correctness, convention adherence, and scope discipline. Verdict: APPROVE, REQUEST_CHANGES, or COMMENT. |
+| **verifier** | Runs at in-review. Runs the built artifact through a platform-matched QA skill selected by the verification router. Verdict: PASS, FAIL, or SKIPPED. |
+| **committer** | Owns commit. Stages the change, writes the commit message, commits, verifies the commit landed, and records the SHA in a limbo note. Runs on haiku — a deterministic mechanical step. |
 
 ## Skills
 
-Skills are specialized capabilities invoked with `/swe-team:skill-name`. They provide domain knowledge and structured workflows.
-
-### Core Workflow
+Skills are specialized capabilities invoked with `/swe-team:skill-name`. They are the single source of truth — agents load them on demand. The Guild ships 15 skills.
 
 | Skill | Command | Description |
 |-------|---------|-------------|
-| **engineering-standards** | `/swe-team:engineering-standards` | Self-evolving engineering conventions KB for architecture, debugging, design patterns, testing, performance, and security; reads the project CLAUDE.md at load time. |
-| **risk-analysis** | `/swe-team:risk-analysis` | Enumerates and weights the risks of a planned change before code is written; runs a security review against the shared checklist. |
-| **codebase-research** | `/swe-team:codebase-research` | Investigates an unfamiliar codebase to ground a task, producing a structured research report with cited findings. |
-| **code-review** | `/swe-team:code-review` | Reviews diffs, PRs, and files for quality, bugs, security issues, and project conventions. |
-| **test-strategy** | `/swe-team:test-strategy` | Detects the test framework and plans the test cases before any test is written. |
-| **test-authoring** | `/swe-team:test-authoring` | Writes tests, runs suites, analyzes coverage, and reports results across languages. |
-| **simplify** | `/swe-team:simplify` | Analyzes code for unnecessary complexity using 7 refactoring patterns and applies focused fixes. |
-| **code-index** | `/swe-team:code-index` | Generates a structural index of a codebase showing files and their exported symbols. |
-
-### Project & Session Management
-
-| Skill | Command | Description |
-|-------|---------|-------------|
-| **tech-lead** | `/swe-team:tech-lead` | Single-task code executor — receives one task from the PM, implements, verifies, returns (no commits). |
-| **session-wrap** | `/swe-team:session-wrap` | End-of-session cleanup — commits dirty repos and optionally improves skills. |
-| **status** | `/swe-team:status` | Force-refreshes all project state by re-running every command live. Never uses cached data. |
-| **global-backlog** | `/swe-team:global-backlog` | Manages cross-project tasks in the global limbo backlog (`~/.limbo/`). |
-| **dream** | `/swe-team:dream` | Offline knowledge-store hygiene — runs simaris lint/cluster/decay/vacuum and synthesizes recommendations. |
-| **project-orientation** | `/swe-team:project-orientation` | Discovers and reads a project's documentation structure for quick onboarding. |
-
-### Verification & Testing
-
-| Skill | Command | Description |
-|-------|---------|-------------|
-| **verification** | `/swe-team:verification` | Auto-detects project type (iOS/desktop/web) and routes to the appropriate QA skill. |
-| **ios-verify** | `/swe-team:ios-verify` | Tests iOS apps in simulators or on physical devices using qorvex CLI. |
-| **qorvex-app-explorer** | `/swe-team:qorvex-app-explorer` | Systematically explores and maps an iOS app's UI. |
-| **desktop-verify** | `/swe-team:desktop-verify` | Tests desktop apps on macOS using loki CLI via the Accessibility API. |
-| **web-verify** | `/swe-team:web-verify` | Tests web apps using khora CLI via Chrome DevTools Protocol. |
-
-### Design
-
-| Skill | Command | Description |
-|-------|---------|-------------|
-| **wisp-design** | `/swe-team:wisp-design` | Builds and iterates on visual UI layouts using the Wisp desktop canvas and CLI. |
-
-### Documentation
-
-| Skill | Command | Description |
-|-------|---------|-------------|
-| **docs** | `/swe-team:docs` | Detects recent code changes and makes targeted updates to affected documentation. |
-| **setup-docs** | `/swe-team:setup-docs` | Creates a progressive disclosure documentation system. |
-
-### Skill & Agent Authoring
-
-| Skill | Command | Description |
-|-------|---------|-------------|
-| **skill-creator** | `/swe-team:skill-creator` | Creates new skills with proper structure, YAML frontmatter, and best practices. |
-| **skill-reflection** | `/swe-team:skill-reflection` | Analyzes session history to identify skill usage patterns and improvement opportunities. |
-| **skill-trainer** | `/swe-team:skill-trainer` | Validates and hardens skills through automated testing and weak-model calibration. |
-| **agent-composer** | `/swe-team:agent-composer` | Generates agent definition files from role descriptions, capabilities, and existing skills. |
-| **team-evaluator** | `/swe-team:team-evaluator` | Benchmarks the SWE agent team's capabilities, scores results, and identifies gaps. |
-
-### DevOps & Release
-
-| Skill | Command | Description |
-|-------|---------|-------------|
-| **devops** | `/swe-team:devops` | Creates and manages CI/CD pipelines, Docker configs, deployment scripts, and infrastructure. |
-| **release** | `/swe-team:release` | Release engineering — bumps versions, tags, pushes, and publishes to Homebrew. |
-
-### Utilities
-
-| Skill | Command | Description |
-|-------|---------|-------------|
-| **xaku-control** | `/swe-team:xaku-control` | Controls terminals via the xaku headless terminal multiplexer. |
-| **nyx** | `/swe-team:nyx` | Searches past Claude Code conversation history. |
+| **adversarial-review** | `/swe-team:adversarial-review` | Attack a plan (pre-build) or a git diff (pre-ship); produce a KILL/DEMOTE/REVISE/PASS verdict. |
+| **code-review** | `/swe-team:code-review` | Review a diff for correctness, convention adherence, and scope discipline. |
+| **codebase-research** | `/swe-team:codebase-research` | Investigate an unfamiliar codebase to ground a task before design decisions. |
+| **commit** | `/swe-team:commit` | Stage, message, commit, and verify a change with mandatory checks. |
+| **desktop-verify** | `/swe-team:desktop-verify` | QA a macOS desktop artifact via the loki CLI. |
+| **docs** | `/swe-team:docs` | Author or update project documentation to reflect code changes. |
+| **engineering-standards** | `/swe-team:engineering-standards` | Engineering conventions for implementation and planning; static conventions KB, reads project CLAUDE.md at load time. |
+| **ios-verify** | `/swe-team:ios-verify` | QA an iOS artifact on simulator or device. |
+| **lifecycle** | `/swe-team:lifecycle` | The 8-stage task machine, gate criteria, rollback rules, risk-weighted gate, fast-path rubric, and fan-out logic. |
+| **project-orientation** | `/swe-team:project-orientation` | Read project conventions, layout, and entry points via progressive-disclosure docs. |
+| **risk-analysis** | `/swe-team:risk-analysis` | Enumerate and weight the risks of a planned change before code is written. |
+| **test-authoring** | `/swe-team:test-authoring` | Write the tests that satisfy the strategy, run suites, analyze coverage, report results. |
+| **test-strategy** | `/swe-team:test-strategy` | Detect the test framework and plan the test cases with real, runnable commands before any test is written. |
+| **verification** | `/swe-team:verification` | Router — auto-detect the project type and route to the platform-matched QA skill. |
+| **web-verify** | `/swe-team:web-verify` | QA a web artifact via the khora CLI and Chrome DevTools Protocol. |
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
 | **git-commit** | `/swe-team:git-commit` — Stages and commits changes with a clear, concise commit message. |
-| **orchestrate** | `/swe-team:orchestrate` — Drains the limbo task queue. Pulls the next ready/unblocked leaf task and dispatches the project-manager to execute it. One task per invocation. |
 
 ---
 
@@ -142,22 +91,18 @@ All tools are available via Homebrew:
 
 ```bash
 brew tap simonspoon/tap
-brew install limbo nyx qorvex loki khora wisp-cli xaku
+brew install limbo qorvex loki khora
 ```
 
 Or download pre-built binaries from each tool's GitHub Releases page.
 
 ### [limbo](https://github.com/simonspoon/limbo) — Task Manager for Agents
 
-Hierarchical task manager designed for LLMs and AI agents. Stores tasks in a single JSON file (`.limbo/tasks.json`), outputs JSON for easy parsing, and supports progressive decomposition workflows. Used by the **project-manager** agent for task decomposition and the external orchestrator for sequencing execution.
-
-### [nyx](https://github.com/simonspoon/nyx) — Conversation History Search
-
-Indexes and searches Claude Code conversation history stored in `~/.claude/projects/`. Build a full-text index with `nyx index`, then search across all past sessions. Used by the **nyx** skill to recall prior decisions, find code patterns from earlier sessions, and answer "did we already..." questions.
+Hierarchical task manager designed for LLMs and AI agents. Stores tasks in a single JSON file (`.limbo/tasks.json`), outputs JSON for easy parsing, and supports progressive decomposition workflows. Used by the **maestro** agent to drive the 8-stage lifecycle and by the external orchestrator for sequencing execution.
 
 ### [qorvex](https://github.com/simonspoon/qorvex) — iOS Automation Toolkit
 
-Native iOS Simulator and physical device automation via a Swift XCTest agent. Supports tap, swipe, type, screenshot, accessibility tree inspection, long-press, and JSONL log-to-script conversion. Connects to simulators over localhost and to physical devices over WiFi/USB via mDNS. Used by the **ios-verify** and **qorvex-app-explorer** skills.
+Native iOS Simulator and physical device automation via a Swift XCTest agent. Supports tap, swipe, type, screenshot, accessibility tree inspection, long-press, and JSONL log-to-script conversion. Connects to simulators over localhost and to physical devices over WiFi/USB via mDNS. Used by the **ios-verify** skill.
 
 ### [loki](https://github.com/simonspoon/loki) — Desktop QA Automation
 
@@ -167,23 +112,15 @@ macOS desktop app automation via the Accessibility API. Launch apps, inspect acc
 
 Cross-platform web app automation via Chrome DevTools Protocol. Launch headless or headed Chrome sessions, navigate pages, find elements by CSS selector, click, type, screenshot, and evaluate JavaScript. Used by the **web-verify** skill.
 
-### [wisp](https://github.com/simonspoon/wisp) — Visual Design Canvas for Agents
-
-A desktop design surface that agents control through a CLI over WebSocket. The Wisp desktop app renders a live canvas; the `wisp` CLI sends JSON-RPC commands to create, edit, and arrange design nodes. Both human and agent share the same real-time view. Available for macOS, Windows, and Linux. Used by the **wisp-design** skill.
-
-### [xaku](https://github.com/simonspoon/xaku) — Headless Terminal Multiplexer
-
-Headless terminal multiplexer for spawning and controlling terminal sessions, Claude Code sessions, REPLs, and TUIs. Used by the **xaku-control** skill to run interactive shells, send commands, and read terminal output from within agent workflows.
-
 ---
 
 ## Documentation
 
-The [`docs/`](docs/index.html) folder contains self-contained HTML flowcharts of the agents, skills, and workflows — open `docs/index.html` in any browser (no build step or server required). It links to an agents/skills reference map and diagrams for the task lifecycle, orchestrate drain loop, verification pipeline, and release flow.
+The [`docs/`](docs/index.html) folder contains self-contained HTML flowcharts of the agents, skills, and workflows — open `docs/index.html` in any browser (no build step or server required). It links to an agents/skills reference map and diagrams for the task lifecycle and verification pipeline.
 
 ## CLAUDE.md
 
-The included `CLAUDE.md` configures Claude Code with mandatory pre-task steps and routing to the project-manager agent for all code-producing tasks. The `/swe-team:orchestrate` command (or an external orchestrator) watches limbo for unblocked leaf tasks and spawns PM sessions to handle them.
+The included `CLAUDE.md` configures Claude Code with mandatory pre-task steps and routing to the maestro agent for all code-producing tasks. The limbodrain skill (or an external orchestrator) watches limbo for unblocked leaf tasks and spawns sessions to handle them.
 
 ## Git Hooks
 
