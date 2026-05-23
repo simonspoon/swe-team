@@ -261,6 +261,8 @@ paraphrased and must not be softened:
 | in-review to done | REVIEWER verdict is APPROVE, VERIFIER verdict is PASS or SKIPPED, and the ADVERSARY pre-ship pass is clear. |
 | done to commit | COMMITTER stages, commits, verifies, and notes the SHA. |
 
+Trivial-task overrides to these gate criteria are enumerated in S6.
+
 A REVIEWER COMMENT verdict is advisory only: it is not APPROVE and does not on
 its own satisfy the in-review-to-done gate, but it does not block the task and
 does not roll it back. When the REVIEWER verdict is COMMENT, the gate is decided
@@ -373,6 +375,13 @@ runs no ADVERSARY pre-ship pass, the in-review-to-done gate (Section 4.1) drops
 its ADVERSARY-pre-ship-clear input for a trivial task: that gate is satisfied by
 REVIEWER APPROVE and VERIFIER PASS or SKIPPED alone. The skipped ADVERSARY
 passes are an explicit gate override for trivial tasks, not a stalled gate.
+
+A third override applies to the refined-to-planned gate. Because a trivial task
+skips RISK, the risks field is not populated by any agent. For a trivial task
+the refined-to-planned gate clause `"the risks field is populated"` (Section
+4.1) is suspended: that gate is satisfied by a concrete `approach` and a
+test-strategy with real test commands alone. A trivial task is never stuck
+waiting on a field no agent is mandated to write.
 
 ## 7. Decompose and Fan-Out
 

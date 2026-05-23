@@ -37,8 +37,9 @@ COMMITTER.
 
 ### Trivial gate overrides
 
-Skipping those passes changes two gates. The skips are explicit gate overrides
-for a trivial task — not a stalled gate.
+Skipping RISK and both ADVERSARY passes leaves several gate clauses with no
+input to resolve. Each is handled as an explicit gate override for a trivial
+task — not a stalled gate.
 
 **planned-to-ready override.** Because a trivial task runs no ADVERSARY
 pre-build pass, the planned-to-ready gate has no verdict to resolve. For a
@@ -50,3 +51,10 @@ waiting on a gate it does not run.
 pre-ship pass, the in-review-to-done gate drops its ADVERSARY-pre-ship-clear
 input for a trivial task: that gate is satisfied by REVIEWER APPROVE and
 VERIFIER PASS or SKIPPED alone.
+
+**refined-to-planned override.** Because a trivial task skips RISK, the risks
+field is not populated by any agent. For a trivial task the refined-to-planned
+gate clause `"the risks field is populated"` is suspended: that gate is
+satisfied by a concrete `approach` and a test-strategy with real test commands
+alone. A trivial task is never stuck waiting on a field no agent is mandated
+to write.
