@@ -15,7 +15,7 @@
 #
 set -euo pipefail
 
-REPO_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
+REPO_ROOT=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 HOOK="$REPO_ROOT/scripts/enforce-skill-usage.sh"
 
 STATE_DIR="/tmp/claude-skill-state"
